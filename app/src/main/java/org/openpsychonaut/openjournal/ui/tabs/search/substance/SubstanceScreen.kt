@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2022-2023. Isaak Hanimann.
  * This file is part of OpenJournal (PsychonautWiki Journal).
  *
- * PsychonautWiki Journal is free software: you can redistribute it and/or modify
+ * OpenJournal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
  *
- * PsychonautWiki Journal is distributed in the hope that it will be useful,
+ * OpenJournal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+ * along with OpenJournal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 package org.openpsychonaut.openjournal.ui.tabs.search.substance
@@ -63,7 +62,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -98,7 +96,6 @@ import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.duration.RoaD
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
 import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
-import org.openpsychonaut.openjournal.ui.theme.verticalPaddingCards
 import org.openpsychonaut.openjournal.ui.utils.getShortTimeText
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -521,57 +518,4 @@ fun RouteColorCircle(administrationRoute: AdministrationRoute) {
         modifier = Modifier
             .size(20.dp)
     ) {}
-}
-
-@Composable
-fun BulletPoints(points: List<String>, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        points.forEach {
-            Row(verticalAlignment = Alignment.Top) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .padding(top = 7.dp)
-                        .size(7.dp)
-                ) {}
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(text = it)
-            }
-        }
-    }
-}
-
-@Composable
-fun VerticalSpace() {
-    Spacer(modifier = Modifier.height(5.dp))
-}
-
-
-@Composable
-fun CategoryChipFromSubstanceScreen(
-    category: Category,
-    navigateToCategoryScreen: (categoryName: String) -> Unit
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clip(shape = CircleShape)
-            .clickable {
-                navigateToCategoryScreen(category.name)
-            }
-            .background(color = category.color.copy(alpha = 0.2f))
-            .height(48.dp)
-            .padding(horizontal = 12.dp)
-
-    ) {
-        Text(text = category.name)
-        Spacer(modifier = Modifier.width(3.dp))
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = "Go to",
-            modifier = Modifier.size(20.dp)
-        )
-    }
 }
