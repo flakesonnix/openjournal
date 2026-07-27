@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2022-2023. Isaak Hanimann.
- * This file is part of PsychonautWiki Journal.
+ * This file is part of OpenJournal (PsychonautWiki Journal).
  *
- * PsychonautWiki Journal is free software: you can redistribute it and/or modify
+ * OpenJournal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
  *
- * PsychonautWiki Journal is distributed in the hope that it will be useful,
+ * OpenJournal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+ * along with OpenJournal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 package com.isaakhanimann.journal.ui.tabs.settings
@@ -45,7 +45,6 @@ import androidx.compose.material.icons.outlined.Medication
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -94,7 +93,6 @@ fun SettingsPreview() {
         navigateToComboSettings = {},
         navigateToSubstanceColors = {},
         navigateToCustomUnits = {},
-        navigateToDonate = {},
         importFile = {},
         exportFile = {},
         snackbarHostState = remember { SnackbarHostState() },
@@ -114,14 +112,12 @@ fun SettingsScreen(
     navigateToComboSettings: () -> Unit,
     navigateToSubstanceColors: () -> Unit,
     navigateToCustomUnits: () -> Unit,
-    navigateToDonate: () -> Unit,
 ) {
     SettingsScreen(
         navigateToFAQ = navigateToFAQ,
         navigateToComboSettings = navigateToComboSettings,
         navigateToSubstanceColors = navigateToSubstanceColors,
         navigateToCustomUnits = navigateToCustomUnits,
-        navigateToDonate = navigateToDonate,
         deleteEverything = viewModel::deleteEverything,
         importFile = viewModel::importFile,
         exportFile = viewModel::exportFile,
@@ -142,7 +138,6 @@ fun SettingsScreen(
     navigateToComboSettings: () -> Unit,
     navigateToSubstanceColors: () -> Unit,
     navigateToCustomUnits: () -> Unit,
-    navigateToDonate: () -> Unit,
     deleteEverything: () -> Unit,
     importFile: (uri: Uri) -> Unit,
     exportFile: (uri: Uri) -> Unit,
@@ -298,7 +293,7 @@ fun SettingsScreen(
                                 onClick = {
                                     isShowingExportDialog = false
                                     launcherExport.launch(
-                                        "Journal ${
+                                        "OpenJournal ${
                                             Instant.now().getStringOfPattern("dd MMM yyyy")
                                         }.json"
                                     )
@@ -409,16 +404,12 @@ fun SettingsScreen(
                     imageVector = Icons.AutoMirrored.Outlined.ContactSupport,
                     text = "Question, bug report"
                 ) {
-                    uriHandler.openUri("https://t.me/+ss8uZhBF6g00MTY8")
-                }
-                HorizontalDivider()
-                SettingsButton(imageVector = Icons.Outlined.VolunteerActivism, text = "Donate") {
-                    navigateToDonate()
+                    uriHandler.openUri("https://github.com/OpenPsychonaut/openjournal/issues")
                 }
             }
             CardWithTitle(title = "App", innerPaddingHorizontal = 0.dp) {
                 SettingsButton(imageVector = Icons.Outlined.Code, text = "Source Code") {
-                    uriHandler.openUri("https://github.com/isaakhanimann/psychonautwiki-journal-android")
+                    uriHandler.openUri("https://github.com/OpenPsychonaut/openjournal")
                 }
                 HorizontalDivider()
                 val context = LocalContext.current
@@ -444,7 +435,7 @@ fun SettingsScreen(
     }
 }
 
-const val SHARE_APP_URL = "https://psychonautwiki.org/wiki/PsychonautWiki_Journal"
+const val SHARE_APP_URL = "https://github.com/OpenPsychonaut/openjournal"
 
 
 @Composable
