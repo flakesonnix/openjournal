@@ -87,7 +87,7 @@ import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.dose.Standard
 import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.time.IngestionTimePickerOption
 import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.time.TimePointOrRangePicker
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.components.CardWithTitle
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -144,7 +144,7 @@ fun EditIngestionScreen(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EditIngestionScreenPreview() {
-    JournalTheme {
+    OpenJournalTheme {
         EditIngestionScreen(
             note = "This is my note",
             onNoteChange = {},

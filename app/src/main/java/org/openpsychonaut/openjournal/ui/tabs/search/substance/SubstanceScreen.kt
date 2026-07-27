@@ -82,7 +82,7 @@ import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.ToleranceSect
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.dose.RoaDoseView
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.duration.RoaDurationView
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 import org.openpsychonaut.openjournal.ui.theme.verticalPaddingCards
 import org.openpsychonaut.openjournal.ui.utils.getShortTimeText
@@ -120,7 +120,7 @@ fun SubstanceScreen(
 fun SubstanceScreenPreview(
     @PreviewParameter(SubstanceWithCategoriesPreviewProvider::class) substanceWithCategories: SubstanceWithCategories
 ) {
-    JournalTheme {
+    OpenJournalTheme {
         SubstanceScreen(
             timelineDisplayOption = TimelineDisplayOption.Loading,
             ingestionTime = LocalDateTime.now(),

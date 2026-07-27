@@ -68,7 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.openpsychonaut.openjournal.ui.YOU
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 
 
@@ -93,7 +93,7 @@ fun StatsPreview(
         StatsPreviewProvider::class,
     ) statsModel: StatsModel
 ) {
-    JournalTheme {
+    OpenJournalTheme {
         StatsScreen(
             navigateToSubstanceCompanion = { _, _ -> },
             onTapOption = {},

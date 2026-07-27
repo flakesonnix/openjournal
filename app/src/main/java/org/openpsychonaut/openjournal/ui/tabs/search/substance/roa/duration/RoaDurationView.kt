@@ -30,14 +30,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import org.openpsychonaut.openjournal.data.substances.classes.roa.DurationRange
 import org.openpsychonaut.openjournal.data.substances.classes.roa.RoaDuration
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 
 @Preview(showBackground = true)
 @Composable
 fun RoaDurationPreview(
     @PreviewParameter(RoaDurationPreviewProvider::class) roaDuration: RoaDuration
 ) {
-    JournalTheme {
+    OpenJournalTheme {
         RoaDurationView(roaDuration = roaDuration)
     }
 }

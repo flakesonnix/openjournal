@@ -100,7 +100,7 @@ import org.openpsychonaut.openjournal.ui.tabs.journal.experience.models.Consumer
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.models.CumulativeDose
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.models.OneExperienceScreenModel
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.timeline.AllTimelines
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 import org.openpsychonaut.openjournal.ui.utils.getDateWithWeekdayText
 import kotlinx.coroutines.delay
@@ -177,7 +177,7 @@ fun ExperienceScreenPreview(
         limit = 1
     ) oneExperienceScreenModel: OneExperienceScreenModel
 ) {
-    JournalTheme {
+    OpenJournalTheme {
         ExperienceScreen(
             oneExperienceScreenModel = oneExperienceScreenModel,
             timelineDisplayOption = TimelineDisplayOption.Loading,

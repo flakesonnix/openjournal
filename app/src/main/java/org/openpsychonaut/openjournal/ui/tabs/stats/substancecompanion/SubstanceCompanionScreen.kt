@@ -51,7 +51,7 @@ import org.openpsychonaut.openjournal.data.room.experiences.entities.SubstanceCo
 import org.openpsychonaut.openjournal.data.substances.classes.Tolerance
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.components.CardWithTitle
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.ToleranceSection
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 import org.openpsychonaut.openjournal.ui.utils.getDateWithWeekdayText
 import org.openpsychonaut.openjournal.ui.utils.getShortTimeText
@@ -80,7 +80,7 @@ fun SubstanceCompanionScreen(
 @Preview
 @Composable
 fun SubstanceCompanionPreview(@PreviewParameter(SubstanceCompanionScreenPreviewProvider::class) pair: Pair<SubstanceCompanion, List<IngestionsBurst>>) {
-    JournalTheme {
+    OpenJournalTheme {
         SubstanceCompanionScreen(
             substanceCompanion = pair.first,
             ingestionBursts = pair.second,

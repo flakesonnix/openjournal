@@ -71,7 +71,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.relations.ExperienceWithIngestionsCompanionsAndRatings
 import org.openpsychonaut.openjournal.ui.tabs.journal.components.ExperienceRow
 import org.openpsychonaut.openjournal.ui.tabs.stats.EmptyScreenDisclaimer
-import org.openpsychonaut.openjournal.ui.theme.JournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 import kotlinx.coroutines.launch
 
@@ -112,7 +112,7 @@ fun ExperiencesScreenPreview(
         JournalScreenPreviewProvider::class,
     ) experiences: List<ExperienceWithIngestionsCompanionsAndRatings>,
 ) {
-    JournalTheme {
+    OpenJournalTheme {
         JournalScreen(
             navigateToExperiencePopNothing = {},
             navigateToAddIngestion = {},
