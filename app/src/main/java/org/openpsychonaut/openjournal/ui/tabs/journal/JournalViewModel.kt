@@ -27,13 +27,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import org.openpsychonaut.openjournal.data.room.experiences.ExperienceRepository
 import org.openpsychonaut.openjournal.data.substances.repositories.SearchRepository
+import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.time.hourLimitToSeparateIngestions
 import org.openpsychonaut.openjournal.ui.tabs.settings.combinations.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 val IS_MIGRATED_0 = booleanPreferencesKey("is_migrated_0")
@@ -103,6 +109,13 @@ class JournalViewModel @Inject constructor(
         }
     }
 
+    private val currentTimeFlow: Flow<Instant> = flow {
+        while (true) {
+            emit(Instant.now())
+            delay(timeMillis = 1000 * 30) // update every 30 seconds
+        }
+    }
+
     val experiences =
         experienceRepo.getSortedExperienceWithIngestionsCompanionsAndRatingsFlow()
             .combine(searchTextFlow) { experiencesWithIngestions, searchText ->
@@ -159,4 +172,23 @@ class JournalViewModel @Inject constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000)
             )
+
+    val activeExperiences = experiences.combine(currentTimeFlow) { experiences, currentTime ->
+        experiences.filter { exp ->
+            val lastIngestionTime = exp.ingestionsWithCompanions.map { it.ingestion.time }.maxOrNull()
+            lastIngestionTime != null && lastIngestionTime.isAfter(currentTime.minus(hourLimitToSeparateIngestions, ChronoUnit.HOURS))
+        }
+    }.stateIn(
+        initialValue = emptyList(),
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
+
+    val pastExperiences = experiences.combine(activeExperiences) { experiences, active ->
+        experiences.filter { it !in active }
+    }.stateIn(
+        initialValue = emptyList(),
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
 }
