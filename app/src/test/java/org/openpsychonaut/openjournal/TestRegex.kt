@@ -16,25 +16,23 @@
  * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-package com.isaakhanimann.journal
+package org.openpsychonaut.openjournal
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class TestRegex {
     @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.isaakhanimann.journal", appContext.packageName)
+    fun testRegex() {
+        val regex = Regex(
+            pattern = "5-MeO-xxT".replace(oldValue = "x", newValue = "[\\S]*", ignoreCase = true),
+            option = RegexOption.IGNORE_CASE
+        )
+        assertTrue(regex.matches("5-MeO-DALT"))
+        assertTrue(regex.matches("5-MeO-DMT"))
+        assertTrue(regex.matches("5-MeO-DiPT"))
+        assertTrue(regex.matches("5-MeO-EiPT"))
+        assertFalse(regex.matches("something else"))
     }
 }

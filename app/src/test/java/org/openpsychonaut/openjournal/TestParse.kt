@@ -16,9 +16,9 @@
  * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-package com.isaakhanimann.journal
+package org.openpsychonaut.openjournal
 
-import com.isaakhanimann.journal.data.substances.parse.SubstanceParser
+import org.openpsychonaut.openjournal.data.substances.parse.SubstanceParser
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
