@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.isaakhanimann.journal"
-    compileSdk = 35
+    namespace = "org.openpsychonaut.openjournal"
+    compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.isaakhanimann.journal"
+        applicationId = "org.openpsychonaut.openjournal"
         minSdk = 26
         targetSdk = 35
         versionCode = 62

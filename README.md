@@ -34,7 +34,7 @@ You can download the latest version directly or build it yourself.
 ## Development & Tech Stack
 
 * **Built Natively with:** [Jetpack Compose](https://developer.android.com/jetpack/compose) (Kotlin).
-* We welcome contributions from everyone! Please read our [Contributing Guidelines](https://www.google.com/search?q=https://github.com/OpenPsychonaut/openjournal/blob/main/CONTRIBUTING.md) before getting started.
+* We welcome contributions from everyone! Please read our [Contributing Guidelines](https://github.com/OpenPsychonaut/openjournal/blob/main/CONTRIBUTING.md) before getting started.
 
 ---
 
