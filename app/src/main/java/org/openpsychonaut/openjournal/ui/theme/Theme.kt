@@ -100,7 +100,7 @@ val verticalPaddingCards = 4.dp
 val minimumTouchTargetHeight = 48.dp
 
 @Composable
-fun OpenOpenJournalTheme(
+fun OpenJournalTheme(
     content: @Composable () -> Unit
 ) {
     val isDarkTheme = isSystemInDarkTheme()

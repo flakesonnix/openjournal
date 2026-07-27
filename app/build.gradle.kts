@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "org.openpsychonaut.openjournal"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "org.openpsychonaut.openjournal"

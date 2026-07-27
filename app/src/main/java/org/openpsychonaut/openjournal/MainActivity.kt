@@ -27,7 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.openpsychonaut.openjournal.ui.main.MainScreen
-import org.openpsychonaut.openjournal.ui.theme.OpenOpenJournalTheme
+import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            OpenOpenJournalTheme {
+            OpenJournalTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
