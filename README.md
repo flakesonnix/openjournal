@@ -1,43 +1,61 @@
-# ⚠️ Project Archived
+# OpenJournal
 
-This repository has been archived.
-Active development continues in a private repository.
+> **Open-source fork of PsychonautWiki Journal — an Android app focused on harm reduction, safe substance tracking, and conscious exploration.**
 
-While there were a few external contributions, I’m grateful to everyone who contributed and have received their consent to relicense the project from GPL-3 to a proprietary license.
-To make development sustainable, the app now includes a premium tier while keeping core features - including substance information and basic logging - free.
-Because of this partial monetization, future versions are closed-source to prevent redistribution of paid functionality.
+We believe that knowledge about psychoactive substances should be free, accessible, and scientifically accurate. This app is a tool for harm reduction and the safe documentation of experiences.
 
-You can still explore this repository to learn from its earlier open-source implementation, but it will not receive further updates or support.
+## Why this fork?
 
-Copyright (C) 2022 Isaak Hanimann.
+The original project was abruptly locked behind a paywall and archived by its original author to chase monetization, turning open-source harm reduction into a commercial product with arbitrary restrictions like subscription paywalls and artificial limits on active tracking. We created this fork because tools for human safety, collective knowledge, and harm reduction should never be weaponized for profit or restricted behind corporate gates.
 
-See the end of the file for license conditions.
+* **100% Free & Open Source:** We guarantee that the core of this app will always remain free, open-source, and accessible to everyone who needs it.
+* **No Arbitrary Limits:** Track as many active substances as you need simultaneously, completely free of charge. Safety shouldn't have a tier system.
+* **Community-Driven:** Development is based on transparency, solidarity, and community contributions—not corporate greed or subscription models.
+* **Focus on Safety:** All features are designed for the conscious and safe engagement with the subject matter, free from corporate extraction.
 
-# PsychonautWiki Journal
+---
 
-PsychonautWiki Journal is an Android app to make recreational drug users safer. The aim is to provide features that are attractive to users as well as useful from a harm-reduction perspective.
-This app is built natively with [Jetpack Compose](https://developer.android.com/jetpack/compose).
+## App Features
 
-![A presentation of the App](https://github.com/isaakhanimann/psychonautwiki-journal-android/blob/main/metadata/en-US/images/Google%20Pixel%204%20XL%20Presentation.png?raw=true)
+* **Substance Information:** Access to verified data from PsychonautWiki.
+* **Advanced Secure Logging:** Document experiences, dosages, and effects in a privacy-friendly environment without artificial limits on active tracking or multi-substance sessions.
+* **Harm Reduction Tools:** Built-in tools for risk minimization (e.g., interactions checker, dosage calculators) completely free and open.
 
-<a href='https://play.google.com/store/apps/details?id=com.isaakhanimann.journal&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height='100' /></a>
-<a href='https://f-droid.org/en/packages/com.isaakhanimann.journal/'><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100" /></a>
+---
 
-Or download the latest version from [GitHub releases](https://github.com/isaakhanimann/psychonautwiki-journal-android/releases/latest).
+## Get the App
 
-## License
+You can download the latest version directly or build it yourself.
 
-    This file is part of PsychonautWiki Journal.
+*(Note: Since we do not use proprietary services, the app will not be available on the Google Play Store, but primarily via GitHub Releases and F-Droid.)*
+
+---
+
+## Development & Tech Stack
+
+* **Built Natively with:** [Jetpack Compose](https://developer.android.com/jetpack/compose) (Kotlin).
+* We welcome contributions from everyone! Please read our [Contributing Guidelines](https://www.google.com/search?q=https://github.com/OpenPsychonaut/openjournal/blob/main/CONTRIBUTING.md) before getting started.
+
+---
+
+## License & Statement
+
+This project is a fork of the original PsychonautWiki Journal, relicensed to ensure continued open access.
+
+```text
+    This file is part of OpenJournal (PsychonautWiki Journal).
     
-    PsychonautWiki Journal is free software: you can redistribute it and/or modify
+    OpenJournal is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or (at
     your option) any later version.
     
-    PsychonautWiki Journal is distributed in the hope that it will be useful,
+    OpenJournal is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
     
     You should have received a copy of the GNU General Public License
-    along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+    along with OpenJournal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+
+```
