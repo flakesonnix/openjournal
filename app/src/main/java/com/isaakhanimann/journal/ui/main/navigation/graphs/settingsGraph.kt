@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2023. Isaak Hanimann.
- * This file is part of PsychonautWiki Journal.
+ * This file is part of OpenJournal (PsychonautWiki Journal).
  *
- * PsychonautWiki Journal is free software: you can redistribute it and/or modify
+ * OpenJournal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
  *
- * PsychonautWiki Journal is distributed in the hope that it will be useful,
+ * OpenJournal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+ * along with OpenJournal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 package com.isaakhanimann.journal.ui.main.navigation.graphs
@@ -23,7 +22,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import com.isaakhanimann.journal.ui.main.navigation.composableWithTransitions
 import com.isaakhanimann.journal.ui.main.navigation.SettingsTopLevelRoute
-import com.isaakhanimann.journal.ui.tabs.settings.DonateScreen
 import com.isaakhanimann.journal.ui.tabs.settings.FAQScreen
 import com.isaakhanimann.journal.ui.tabs.settings.SettingsScreen
 import com.isaakhanimann.journal.ui.tabs.settings.colors.SubstanceColorsScreen
@@ -51,13 +49,9 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 navigateToCustomUnits = {
                     navController.navigate(CustomUnitsRoute)
                 },
-                navigateToDonate = {
-                    navController.navigate(DonateRoute)
-                },
             )
         }
         composableWithTransitions<FAQRoute> { FAQScreen() }
-        composableWithTransitions<DonateRoute> { DonateScreen() }
         composableWithTransitions<CombinationSettingsRoute> { CombinationSettingsScreen() }
         composableWithTransitions<SubstanceColorsRoute> { SubstanceColorsScreen() }
         composableWithTransitions<CustomUnitArchiveRoute> {
@@ -90,9 +84,6 @@ object SettingsScreenRoute
 
 @Serializable
 object FAQRoute
-
-@Serializable
-object DonateRoute
 
 @Serializable
 object CombinationSettingsRoute
