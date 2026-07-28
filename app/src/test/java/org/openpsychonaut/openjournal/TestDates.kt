@@ -48,9 +48,10 @@ class TestDates {
 
     @Test
     fun dateDifferences() {
-        val fromDate = Instant.now().minus(2, ChronoUnit.DAYS).plus(3, ChronoUnit.HOURS)
-        val text = getTimeDifferenceText(fromDate, Instant.now())
-        assertEquals("1,9 days", text)
+        val toDate = Instant.now()
+        val fromDate = toDate.minus(2, ChronoUnit.DAYS).plus(3, ChronoUnit.HOURS)
+        val text = getTimeDifferenceText(fromDate, toDate)
+        assertEquals("1.9 days", text)
     }
 
     @Test

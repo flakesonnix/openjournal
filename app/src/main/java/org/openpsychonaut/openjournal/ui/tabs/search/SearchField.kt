@@ -18,10 +18,14 @@
 
 package org.openpsychonaut.openjournal.ui.tabs.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -36,8 +40,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -60,75 +67,87 @@ fun SearchField(
     isShowingFilter: Boolean
 ) {
     val focusManager = LocalFocusManager.current
-    TextField(
-        value = searchText,
-        onValueChange = { value ->
-            onChange(value)
-        },
-        modifier = modifier,
-        placeholder = { Text(text = "Search substances") },
-        leadingIcon = {
-            Icon(
-                Icons.Default.Search,
-                contentDescription = "Search",
+    Box(
+        modifier = modifier
+            .padding(12.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(28.dp)
             )
-        },
-        trailingIcon = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // clear search button
-                if (searchText.isNotEmpty()) {
-                    IconButton(onClick = {
-                        onChange("")
-                    }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "Close",
-                        )
+    ) {
+        TextField(
+            value = searchText,
+            onValueChange = { onChange(it) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "Search substances...", style = MaterialTheme.typography.bodyLarge) },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            trailingIcon = {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 4.dp)) {
+                    if (searchText.isNotEmpty()) {
+                        IconButton(onClick = { onChange("") }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                        }
                     }
-                }
-                // show filters button
-                if (isShowingFilter) {
-                    var isExpanded by remember { mutableStateOf(false) }
-                    val activeFilters = categories.filter { it.isActive }
-                    BadgedBox(
-                        modifier = Modifier
-                            .clickable(onClick = { isExpanded = true })
-                            .padding(horizontal = 16.dp), badge = {
-                            if (activeFilters.isNotEmpty()) {
-                                Badge { Text(activeFilters.size.toString()) }
-                            }
-                        }) {
-                        Icon(
-                            Icons.Default.FilterList, contentDescription = "Filter"
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = isExpanded,
-                        onDismissRequest = { isExpanded = false },
-                    ) {
-                        categories.forEach { categoryChipModel ->
-                            DropdownMenuItem(text = { Text(categoryChipModel.chipName) },
-                                onClick = { onFilterTapped(categoryChipModel.chipName) },
-                                leadingIcon = {
-                                    if (categoryChipModel.isActive) {
-                                        Icon(
-                                            Icons.Filled.Check,
-                                            contentDescription = "Check",
-                                            modifier = Modifier.size(ButtonDefaults.IconSize)
-                                        )
+                    if (isShowingFilter) {
+                        var isExpanded by remember { mutableStateOf(false) }
+                        val activeFilters = categories.filter { it.isActive }
+                        Box {
+                            IconButton(onClick = { isExpanded = true }) {
+                                BadgedBox(
+                                    badge = {
+                                        if (activeFilters.isNotEmpty()) {
+                                            Badge { Text(activeFilters.size.toString()) }
+                                        }
                                     }
-                                })
+                                ) {
+                                    Icon(Icons.Default.FilterList, contentDescription = "Filters")
+                                }
+                            }
+                            DropdownMenu(
+                                expanded = isExpanded,
+                                onDismissRequest = { isExpanded = false },
+                            ) {
+                                categories.forEach { category ->
+                                    DropdownMenuItem(
+                                        text = { Text(category.chipName) },
+                                        onClick = { onFilterTapped(category.chipName) },
+                                        leadingIcon = {
+                                            if (category.isActive) {
+                                                Icon(
+                                                    Icons.Filled.Check,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(18.dp)
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-            }
-        },
-        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-        keyboardOptions = KeyboardOptions.Default.copy(
-            autoCorrectEnabled = false,
-            imeAction = ImeAction.Done,
-            capitalization = KeyboardCapitalization.Words,
-        ),
-        singleLine = true
-    )
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                autoCorrectEnabled = false,
+                imeAction = ImeAction.Done,
+                capitalization = KeyboardCapitalization.Words,
+            ),
+            singleLine = true,
+            textStyle = MaterialTheme.typography.bodyLarge
+        )
+    }
 }

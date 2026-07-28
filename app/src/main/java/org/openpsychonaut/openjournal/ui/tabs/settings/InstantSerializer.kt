@@ -33,6 +33,5 @@ object InstantSerializer : KSerializer<Instant> {
     override fun serialize(encoder: Encoder, value: Instant) =
         encoder.encodeLong(value.toEpochMilli())
 
-    override fun deserialize(decoder: Decoder): Instant = Instant.ofEpochMilli(decoder.decodeDouble()
-        .toLong())
+    override fun deserialize(decoder: Decoder): Instant = Instant.ofEpochMilli(decoder.decodeLong())
 }

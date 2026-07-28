@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2022-2023. Isaak Hanimann.
  * This file is part of OpenJournal (PsychonautWiki Journal).
  *
- * PsychonautWiki Journal is free software: you can redistribute it and/or modify
+ * OpenJournal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
  *
- * PsychonautWiki Journal is distributed in the hope that it will be useful,
+ * OpenJournal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+ * along with OpenJournal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 package org.openpsychonaut.openjournal.ui.tabs.search.substance
@@ -36,13 +35,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.GppBad
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Medication
+import androidx.compose.material.icons.outlined.Scale
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -60,11 +68,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.entities.CustomUnit
 import org.openpsychonaut.openjournal.data.substances.AdministrationRoute
 import org.openpsychonaut.openjournal.data.substances.classes.Category
@@ -84,7 +96,6 @@ import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.duration.RoaD
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
 import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
-import org.openpsychonaut.openjournal.ui.theme.verticalPaddingCards
 import org.openpsychonaut.openjournal.ui.utils.getShortTimeText
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -159,12 +170,16 @@ fun SubstanceScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(substance.name) },
+                title = { 
+                    Text(
+                        substance.name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    ) 
+                },
                 actions = {
-                    TextButton(
-                        onClick = { uriHandler.openUri(substance.url) },
-                    ) {
-                        Text("Article")
+                    IconButton(onClick = { uriHandler.openUri(substance.url) }) {
+                        Icon(Icons.Default.OpenInBrowser, contentDescription = "Open PsychonautWiki")
                     }
                 }
             )
@@ -174,52 +189,54 @@ fun SubstanceScreen(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
+                .padding(bottom = 80.dp)
         ) {
             if (!substance.isApproved) {
                 ElevatedCard(
                     modifier = Modifier
-                        .padding(
-                            horizontal = horizontalPadding,
-                            vertical = verticalPaddingCards
-                        )
-                        .fillMaxWidth()
+                        .padding(horizontal = horizontalPadding, vertical = 8.dp)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
                 ) {
                     Row(
-                        modifier = Modifier.padding(
-                            vertical = 5.dp,
-                            horizontal = horizontalPadding
-                        )
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(imageVector = Icons.Default.GppBad, contentDescription = "Verified")
-                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Info is not approved")
+                        Icon(imageVector = Icons.Default.GppBad, contentDescription = "Warning")
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            text = "Info is not verified by PsychonautWiki",
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                 }
             }
+            
             val categories = substanceWithCategories.categories
             if (substance.summary != null || categories.isNotEmpty()) {
-                VerticalSpace()
                 ElevatedCard(
-                    modifier = Modifier.padding(
-                        horizontal = horizontalPadding,
-                        vertical = verticalPaddingCards
-                    )
+                    modifier = Modifier.padding(horizontal = horizontalPadding, vertical = 8.dp),
+                    shape = RoundedCornerShape(24.dp)
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(
-                                horizontal = horizontalPadding,
-                                vertical = 10.dp
-                            )
+                            .padding(16.dp)
                             .fillMaxWidth()
                     ) {
                         if (substance.summary != null) {
-                            Text(text = substance.summary)
-                            VerticalSpace()
+                            Text(
+                                text = substance.summary,
+                                style = MaterialTheme.typography.bodyLarge,
+                                lineHeight = 24.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                         FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(5.dp),
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             categories.forEach { category ->
                                 CategoryChipFromSubstanceScreen(category, navigateToCategoryScreen)
@@ -228,314 +245,269 @@ fun SubstanceScreen(
                     }
                 }
             }
+
             val roasWithDosesDefined = substance.roas.filter { roa ->
                 val roaDose = roa.roaDose
-                val isEveryDoseNull =
-                    roaDose?.lightMin == null && roaDose?.commonMin == null && roaDose?.strongMin == null && roaDose?.heavyMin == null
-                return@filter !isEveryDoseNull
+                roaDose?.lightMin != null || roaDose?.commonMin != null || roaDose?.strongMin != null || roaDose?.heavyMin != null
             }
+
             if (substance.dosageRemark != null || roasWithDosesDefined.isNotEmpty()) {
-                SectionWithTitle(title = "Dosage") {
-                    Column(Modifier.padding(horizontal = horizontalPadding)) {
+                ModernSection(title = "Dosage", icon = Icons.Outlined.Medication) {
+                    Column {
                         if (substance.dosageRemark != null) {
-                            Text(text = substance.dosageRemark)
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = substance.dosageRemark,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
                             HorizontalDivider()
                         }
-                        roasWithDosesDefined.forEach { roa ->
-                            Column(
-                                modifier = Modifier.padding(vertical = 5.dp)
-                            ) {
+                        roasWithDosesDefined.forEachIndexed { index, roa ->
+                            Column(modifier = Modifier.padding(vertical = 12.dp)) {
                                 Text(
                                     text = roa.route.displayText,
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
                                 if (roa.roaDose == null) {
-                                    Text(text = "No dosage info")
+                                    Text(text = "No dosage info available", style = MaterialTheme.typography.bodyMedium)
                                 } else {
                                     RoaDoseView(roaDose = roa.roaDose)
                                 }
+                                
                                 roa.roaDose?.let { roaDose ->
-                                    val customUnitsForRoute =
-                                        customUnits.filter { it.administrationRoute == roa.route && it.dose != null }
+                                    val customUnitsForRoute = customUnits.filter { it.administrationRoute == roa.route && it.dose != null }
                                     customUnitsForRoute.forEach { customUnit ->
-                                        Text(
-                                            text = customUnit.name,
-                                            style = MaterialTheme.typography.titleSmall
-                                        )
-                                        CustomUnitRoaDoseView(
-                                            roaDose = roaDose,
-                                            customUnit = customUnit
-                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text(text = customUnit.name, style = MaterialTheme.typography.labelLarge)
+                                        CustomUnitRoaDoseView(roaDose = roaDose, customUnit = customUnit)
                                     }
                                 }
-                                val bio = roa.bioavailability
-                                if (bio != null) {
-                                    Text(text = "Bioavailability: ${bio.min?.toReadableString() ?: ".."}-${bio.max?.toReadableString() ?: ".."}%")
-                                }
-                                if (roa.route == AdministrationRoute.SMOKED && substance.name != "Cannabis") {
-                                    Spacer(modifier = Modifier.height(5.dp))
-                                    ChasingTheDragonText(
-                                        titleStyle = MaterialTheme.typography.titleMedium
+
+                                roa.bioavailability?.let { bio ->
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = "Bioavailability: ${bio.min?.toReadableString() ?: ".."}-${bio.max?.toReadableString() ?: ".."}%",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.secondary
                                     )
                                 }
-                            }
-                            HorizontalDivider()
-                        }
-                        VerticalSpace()
-                        OptionalDosageUnitDisclaimer(substance.name)
-                        Text(text = DOSE_DISCLAIMER)
-                        VerticalSpace()
-                        if (substance.roas.any { it.roaDose?.shouldUseVolumetricDosing == true }) {
-                            HorizontalDivider()
-                            TextButton(onClick = navigateToVolumetricDosingScreen) {
-                                Icon(
-                                    Icons.Outlined.Info,
-                                    contentDescription = "Info",
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Volumetric dosing")
-                            }
-                        }
-                        HorizontalDivider()
-                        TextButton(onClick = navigateToDosageExplanationScreen) {
-                            Icon(
-                                Icons.Outlined.Info,
-                                contentDescription = "Info",
-                                modifier = Modifier.size(ButtonDefaults.IconSize)
-                            )
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("Dosage classification")
-                        }
 
-                    }
-                }
-            }
-            if (substance.tolerance != null || substance.crossTolerances.isNotEmpty()) {
-                SectionWithTitle(title = "Tolerance") {
-                    Column {
-                        VerticalSpace()
-                        ToleranceSection(
-                            tolerance = substance.tolerance,
-                            crossTolerances = substance.crossTolerances,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        VerticalSpace()
-                    }
-                }
-            }
-            if (substance.toxicities.isNotEmpty()) {
-                SectionWithTitle(title = "Toxicity") {
-                    Column {
-                        VerticalSpace()
-                        if (substance.toxicities.size == 1) {
-                            Text(
-                                substance.toxicities.firstOrNull() ?: "",
-                                modifier = Modifier.padding(horizontal = horizontalPadding)
-                            )
-                        } else {
-                            BulletPoints(
-                                points = substance.toxicities,
-                                modifier = Modifier.padding(horizontal = horizontalPadding)
-                            )
+                                if (roa.route == AdministrationRoute.SMOKED && substance.name != "Cannabis") {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    ChasingTheDragonText(titleStyle = MaterialTheme.typography.titleSmall)
+                                }
+                            }
+                            if (index < roasWithDosesDefined.size - 1) HorizontalDivider()
                         }
-                        VerticalSpace()
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = DOSE_DISCLAIMER,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        
+                        Row(modifier = Modifier.padding(top = 8.dp)) {
+                            if (substance.roas.any { it.roaDose?.shouldUseVolumetricDosing == true }) {
+                                TextButton(onClick = navigateToVolumetricDosingScreen) {
+                                    Icon(Icons.Outlined.Info, contentDescription = null, modifier = Modifier.size(18.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("Volumetric Dosing")
+                                }
+                            }
+                            TextButton(onClick = navigateToDosageExplanationScreen) {
+                                Icon(Icons.Outlined.Info, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(4.dp))
+                                Text("Classifications")
+                            }
+                        }
                     }
                 }
             }
-            val roasWithDurationsDefined = substance.roas.filter { roa ->
-                val roaDuration = roa.roaDuration
-                val isEveryDurationNull =
-                    roaDuration?.onset == null && roaDuration?.comeup == null && roaDuration?.peak == null && roaDuration?.offset == null && roaDuration?.total == null
-                return@filter !isEveryDurationNull
+
+            if (substance.tolerance != null || substance.crossTolerances.isNotEmpty()) {
+                ModernSection(title = "Tolerance", icon = Icons.Outlined.Scale) {
+                    ToleranceSection(
+                        tolerance = substance.tolerance,
+                        crossTolerances = substance.crossTolerances
+                    )
+                }
             }
+
+            val roasWithDurationsDefined = substance.roas.filter { roa ->
+                val d = roa.roaDuration
+                d?.onset != null || d?.comeup != null || d?.peak != null || d?.offset != null || d?.total != null
+            }
+
             if (roasWithDurationsDefined.isNotEmpty()) {
-                SectionWithTitle(title = "Duration") {
-                    Column(Modifier.padding(horizontal = horizontalPadding)) {
+                ModernSection(title = "Timeline", icon = Icons.Outlined.Timer) {
+                    Column {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Start:")
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Text("Preview from:", style = MaterialTheme.typography.labelLarge)
+                            Spacer(Modifier.width(8.dp))
                             TimePickerButton(
                                 localDateTime = ingestionTime,
                                 onChange = onChangeIngestionTime,
                                 timeString = ingestionTime.getShortTimeText(),
-                                hasOutline = false,
+                                hasOutline = true,
                             )
-                            val isTimeALotDifferentToNow = ChronoUnit.MINUTES.between(
-                                ingestionTime,
-                                LocalDateTime.now()
-                            ).absoluteValue > 5
-                            Spacer(modifier = Modifier.width(5.dp))
-                            AnimatedVisibility(visible = isTimeALotDifferentToNow) {
-                                IconButton(onClick = { onChangeIngestionTime(LocalDateTime.now()) }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Update,
-                                        contentDescription = "Reset to now"
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
+                            Spacer(Modifier.weight(1f))
                             IconButton(onClick = navigateToExplainTimeline) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Info,
-                                    contentDescription = "Timeline disclaimer"
-                                )
+                                Icon(Icons.Outlined.Info, contentDescription = "Info")
                             }
                         }
+                        
                         VerticalSpace()
+                        
                         when (timelineDisplayOption) {
-                            TimelineDisplayOption.Hidden -> {}
-                            TimelineDisplayOption.Loading -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                            TimelineDisplayOption.NotWorthDrawing -> {}
                             is TimelineDisplayOption.Shown -> {
-                                val timelineModel = timelineDisplayOption.allTimelinesModel
                                 AllTimelines(
-                                    model = timelineModel,
+                                    model = timelineDisplayOption.allTimelinesModel,
                                     isShowingCurrentTime = false,
                                     timeDisplayOption = TimeDisplayOption.RELATIVE_TO_NOW,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(200.dp)
+                                        .height(180.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                                 )
                             }
+                            TimelineDisplayOption.Loading -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                            else -> {}
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        HorizontalDivider()
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
                         roasWithDurationsDefined.forEachIndexed { index, roa ->
-                            Column(
-                                modifier = Modifier.padding(
-                                    vertical = 5.dp,
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
+                            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     RouteColorCircle(roa.route)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = roa.route.displayText,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(text = roa.route.displayText, style = MaterialTheme.typography.titleSmall)
                                 }
-                                val roaDuration = roa.roaDuration
-                                if (roaDuration == null) {
-                                    Text(text = "No duration info")
-                                } else {
-                                    Spacer(modifier = Modifier.height(3.dp))
-                                    RoaDurationView(roaDuration = roaDuration)
+                                roa.roaDuration?.let { 
+                                    RoaDurationView(roaDuration = it)
                                     if (roa.route == AdministrationRoute.ORAL) {
                                         Text(
                                             text = FULL_STOMACH_DISCLAIMER,
-                                            style = MaterialTheme.typography.bodySmall
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.secondary
                                         )
                                     }
                                 }
                             }
-                            if (index < roasWithDurationsDefined.size - 1) {
-                                HorizontalDivider()
-                            }
+                            if (index < roasWithDurationsDefined.size - 1) HorizontalDivider()
                         }
-                        VerticalSpace()
                     }
                 }
             }
-            val interactions = substance.interactions
-            if (interactions != null) {
-                if (interactions.dangerous.isNotEmpty() || interactions.unsafe.isNotEmpty() || interactions.uncertain.isNotEmpty()) {
-                    SectionWithTitle(title = "Interactions") {
-                        InteractionsView(
-                            interactions = substance.interactions,
-                            substanceURL = substance.url,
-                        )
+
+            if (substance.interactions != null) {
+                val inter = substance.interactions!!
+                if (inter.dangerous.isNotEmpty() || inter.unsafe.isNotEmpty() || inter.uncertain.isNotEmpty()) {
+                    ModernSection(title = "Interactions", icon = Icons.Outlined.Warning) {
+                        InteractionsView(interactions = inter, substanceURL = substance.url)
                     }
                 }
             }
+
             if (substance.effectsSummary != null) {
-                SectionWithTitle(title = "Effects") {
-                    Column {
-                        Text(
-                            text = substance.effectsSummary,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                ModernSection(title = "Effects", icon = Icons.Outlined.AutoAwesome) {
+                    Text(text = substance.effectsSummary!!, style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            if (substance.generalRisks != null && substance.longtermRisks != null) {
-                SectionWithTitle(title = "Risks") {
-                    Column {
-                        Text(
-                            text = substance.generalRisks,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-                SectionWithTitle(title = "Long-term") {
-                    Column {
-                        Text(
-                            text = substance.longtermRisks,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
+
             if (substance.saferUse.isNotEmpty()) {
-                SectionWithTitle(title = "Safer use") {
-                    Column {
-                        BulletPoints(
-                            points = substance.saferUse,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                ModernSection(title = "Safer Use", icon = Icons.Outlined.Shield) {
+                    BulletPoints(points = substance.saferUse)
                 }
             }
-            if (substance.addictionPotential != null) {
-                SectionWithTitle(title = "Addiction potential") {
-                    Column {
-                        Text(
-                            substance.addictionPotential,
-                            modifier = Modifier.padding(horizontal = horizontalPadding)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
-            val firstRoa = substance.roas.firstOrNull()
-            val useVolumetric = firstRoa?.roaDose?.shouldUseVolumetricDosing == true
-            if (substance.isHallucinogen || substance.isStimulant || useVolumetric) {
-                SectionWithTitle(title = "See also") {
-                    Column {
-                        if (substance.isHallucinogen) {
-                            TextButton(onClick = navigateToSaferHallucinogensScreen) {
-                                Text(
-                                    text = "Safer hallucinogen use",
-                                    modifier = Modifier.padding(horizontal = horizontalPadding)
-                                )
-                            }
-                            HorizontalDivider()
-                        }
-                        if (substance.isStimulant) {
-                            TextButton(onClick = navigateToSaferStimulantsScreen) {
-                                Text(
-                                    text = "Safer stimulant use",
-                                    modifier = Modifier.padding(horizontal = horizontalPadding)
-                                )
-                            }
-                            HorizontalDivider()
-                        }
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.height(70.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
+
+@Composable
+fun ModernSection(
+    title: String,
+    icon: ImageVector,
+    content: @Composable () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .padding(horizontal = horizontalPadding, vertical = 8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Spacer(Modifier.height(12.dp))
+            content()
+        }
+    }
+}
+
+@Composable
+fun BulletPoints(points: List<String>, modifier: Modifier = Modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        points.forEach {
+            Row(verticalAlignment = Alignment.Top) {
+                Text(text = "•", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = it, style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+    }
+}
+
+@Composable
+fun VerticalSpace() {
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+fun CategoryChipFromSubstanceScreen(
+    category: Category,
+    navigateToCategoryScreen: (categoryName: String) -> Unit
+) {
+    Surface(
+        onClick = { navigateToCategoryScreen(category.name) },
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+        modifier = Modifier.height(32.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = category.name, style = MaterialTheme.typography.labelMedium)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
 
 @Composable
 fun RouteColorCircle(administrationRoute: AdministrationRoute) {
@@ -546,57 +518,4 @@ fun RouteColorCircle(administrationRoute: AdministrationRoute) {
         modifier = Modifier
             .size(20.dp)
     ) {}
-}
-
-@Composable
-fun BulletPoints(points: List<String>, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        points.forEach {
-            Row(verticalAlignment = Alignment.Top) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .padding(top = 7.dp)
-                        .size(7.dp)
-                ) {}
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(text = it)
-            }
-        }
-    }
-}
-
-@Composable
-fun VerticalSpace() {
-    Spacer(modifier = Modifier.height(5.dp))
-}
-
-
-@Composable
-fun CategoryChipFromSubstanceScreen(
-    category: Category,
-    navigateToCategoryScreen: (categoryName: String) -> Unit
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clip(shape = CircleShape)
-            .clickable {
-                navigateToCategoryScreen(category.name)
-            }
-            .background(color = category.color.copy(alpha = 0.2f))
-            .height(48.dp)
-            .padding(horizontal = 12.dp)
-
-    ) {
-        Text(text = category.name)
-        Spacer(modifier = Modifier.width(3.dp))
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = "Go to",
-            modifier = Modifier.size(20.dp)
-        )
-    }
 }

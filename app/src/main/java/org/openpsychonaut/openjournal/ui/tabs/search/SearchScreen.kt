@@ -19,9 +19,13 @@
 package org.openpsychonaut.openjournal.ui.tabs.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,12 +33,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,6 +52,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -51,8 +60,9 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.ui.tabs.search.substancerow.SubstanceRow
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 
@@ -68,14 +78,17 @@ fun SearchScreen(
     Scaffold(
         floatingActionButton = {
             if (!isFocused) {
-                FloatingActionButton(
-                    onClick = { focusRequester.requestFocus() }) {
-                    Icon(Icons.Default.Keyboard, contentDescription = "Keyboard")
-                }
+                ExtendedFloatingActionButton(
+                    onClick = navigateToAddCustomSubstanceScreen,
+                    icon = { Icon(Icons.Default.Add, null) },
+                    text = { Text("Custom") }
+                )
             }
         },
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
             SearchField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,92 +111,101 @@ fun SearchScreen(
             val filteredSubstances = searchViewModel.filteredSubstancesFlow.collectAsState().value
             val filteredCustomSubstances =
                 searchViewModel.filteredCustomSubstancesFlow.collectAsState().value
+            
             if (activeFilters.isNotEmpty()) {
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    modifier = Modifier.padding(vertical = 6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier.padding(vertical = 8.dp)
                 ) {
-                    item {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
-                    items(activeFilters.size) {
-                        val categoryChipModel = activeFilters[it]
+                    items(activeFilters) { categoryChipModel ->
                         CategoryChipDelete(categoryChipModel = categoryChipModel) {
                             onFilterTapped(categoryChipModel.chipName)
                         }
                     }
-                    item {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
                 }
             }
+            
             if (filteredSubstances.isEmpty() && filteredCustomSubstances.isEmpty()) {
-                Column {
-                    val activeCategoryNames =
-                        activeFilters.filter { it.isActive }.map { it.chipName }
-                    if (activeCategoryNames.isEmpty()) {
-                        Text("No matching substance found", modifier = Modifier.padding(10.dp))
-                    } else if (activeCategoryNames.size == 1) {
-                        Text(
-                            "No matching substance with the tag '${activeCategoryNames[0]}' found",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    } else {
-                        val names = activeCategoryNames.joinToString(separator = "', '")
-                        Text(
-                            "No matching substance with tags '$names' found",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
-                    TextButton(
-                        onClick = navigateToAddCustomSubstanceScreen,
-                        modifier = Modifier.padding(horizontal = horizontalPadding)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(32.dp)
                     ) {
                         Icon(
-                            Icons.Outlined.Add, contentDescription = "Add"
+                            Icons.Outlined.Search,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.outlineVariant
                         )
-                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Add custom substance")
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "No substances found",
+                            style = MaterialTheme.typography.titleMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = "Try adjusting your filters or search terms.",
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(24.dp))
+                        TextButton(onClick = navigateToAddCustomSubstanceScreen) {
+                            Icon(Icons.Default.Add, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Add Custom Substance")
+                        }
                     }
                 }
             } else {
-                LazyColumn {
-                    items(filteredCustomSubstances) { customSubstance ->
-                        SubstanceRow(substanceModel = SubstanceModel(
-                            name = customSubstance.name,
-                            commonNames = emptyList(),
-                            categories = listOf(
-                                CategoryModel(
-                                    name = "custom", color = customColor
-                                )
-                            ),
-                            hasSaferUse = false,
-                            hasInteractions = false
-                        ), onTap = {
-                            onCustomSubstanceTap(customSubstance.id)
-                        })
-                        HorizontalDivider()
-                    }
-                    items(filteredSubstances) { substance ->
-                        SubstanceRow(substanceModel = substance, onTap = {
-                            onSubstanceTap(substance)
-                        })
-                        HorizontalDivider()
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 80.dp)
+                ) {
+                    if (filteredCustomSubstances.isNotEmpty()) {
+                        item {
+                            Text(
+                                "Your Substances",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
+                            )
+                        }
+                        items(filteredCustomSubstances) { customSubstance ->
+                            SubstanceRow(substanceModel = SubstanceModel(
+                                name = customSubstance.name,
+                                commonNames = emptyList(),
+                                categories = listOf(
+                                    CategoryModel(
+                                        name = "Custom", color = customColor
+                                    )
+                                ),
+                                hasSaferUse = false,
+                                hasInteractions = false
+                            ), onTap = {
+                                onCustomSubstanceTap(customSubstance.id)
+                            })
+                        }
+                        item { HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp)) }
                     }
 
-                    item {
-                        val addCustomSubstanceText = "Add custom substance"
-                        TextButton(
-                            onClick = navigateToAddCustomSubstanceScreen,
-                            modifier = Modifier
-                                .padding(horizontal = horizontalPadding)
-                                .semantics { contentDescription = addCustomSubstanceText }
-                        ) {
-                            Icon(
-                                Icons.Outlined.Add, contentDescription = "Add"
+                    if (filteredSubstances.isNotEmpty()) {
+                        item {
+                            Text(
+                                "Library",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
                             )
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text(text = addCustomSubstanceText)
+                        }
+                        items(filteredSubstances) { substance ->
+                            SubstanceRow(substanceModel = substance, onTap = {
+                                onSubstanceTap(substance)
+                            })
                         }
                     }
                 }
@@ -191,3 +213,4 @@ fun SearchScreen(
         }
     }
 }
+

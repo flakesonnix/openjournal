@@ -19,6 +19,8 @@
 package org.openpsychonaut.openjournal
 
 import org.openpsychonaut.openjournal.data.substances.parse.SubstanceParser
+import org.json.JSONArray
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -54,6 +56,13 @@ class TestParse {
   }
 }"""
         val result = SubstanceParser().extractSubstanceString(string = text)
-        assertTrue(result == "[{\"name\":\"Armodafinil\",\"roas\":[{\"name\":\"oral\"}]}]")
+        assert(result != null) { "Result should not be null" }
+        val array = JSONArray(result)
+        assertEquals(1, array.length())
+        val obj = array.getJSONObject(0)
+        assertEquals("Armodafinil", obj.getString("name"))
+        val roas = obj.getJSONArray("roas")
+        assertEquals(1, roas.length())
+        assertEquals("oral", roas.getJSONObject(0).getString("name"))
     }
 }

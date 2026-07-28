@@ -2,7 +2,7 @@ name: PR Build and Test
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ "**" ]
 
 jobs:
   build-test:
@@ -10,15 +10,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '21'
-          cache: 'gradle'
+      - name: Set up JDK 21 (JetBrains Runtime)
+        run: |
+          curl -L --retry 3 -o jbr.tar.gz "https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-21.0.11-linux-x64-b1163.116.tar.gz"
+          tar -xzf jbr.tar.gz
+          echo "JAVA_HOME=$GITHUB_WORKSPACE/jbrsdk-21.0.11-linux-x64-b1163.116" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/jbrsdk-21.0.11-linux-x64-b1163.116/bin" >> "$GITHUB_PATH"
+
+      - name: Verify JDK
+        run: |
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
+          ls "$JAVA_HOME/release" && cat "$JAVA_HOME/release"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Configure Gradle for JBR toolchain
+        run: |
+          mkdir -p "$HOME/.gradle"
+          cat >> "$HOME/.gradle/gradle.properties" << 'EOF'
+          org.gradle.java.installations.fromEnv=JAVA_HOME
+          org.gradle.java.installations.auto-download=false
+          EOF
+
       - name: Build and Run Unit Tests
-        run: ./gradlew testDebugUnitTest assembleDebug --no-daemon
+        run: ./gradlew testDebugUnitTest assembleDebug --no-daemon --stacktrace

@@ -42,7 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.entities.ShulginRatingOption
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.rating.FloatingDoneButton
 import org.openpsychonaut.openjournal.ui.tabs.journal.experience.rating.RatingPickerSection

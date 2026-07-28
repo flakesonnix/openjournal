@@ -21,6 +21,7 @@ package org.openpsychonaut.openjournal.ui.utils
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 fun getTimeDifferenceText(fromInstant: Instant, toInstant: Instant): String {
     val diff = Duration.between(fromInstant, toInstant)
@@ -50,6 +51,8 @@ fun getTimeDifferenceText(fromInstant: Instant, toInstant: Instant): String {
             fromInstant.getLocalDateTime(),
             toInstant.getLocalDateTime()
         ).toString() + " days"
+    } else if (hours > 24) {
+        String.format(Locale.US, "%.1f days", hours / 24f)
     } else if (hours > 3) {
         val duration = Duration.between(fromInstant, toInstant)
         val hoursRounded = (duration.toMinutes() / 60.0 + 0.5).toInt()

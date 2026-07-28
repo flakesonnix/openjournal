@@ -38,7 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.substances.AdministrationRoute
 import org.openpsychonaut.openjournal.data.substances.classes.roa.DoseClass
 import org.openpsychonaut.openjournal.data.substances.classes.roa.RoaDose
