@@ -1,21 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
     id("com.google.dagger.hilt.android")
     id("androidx.room")
-    kotlin("plugin.serialization") version "2.0.20"
-    id("kotlin-kapt") // this needs to be on bottom
 }
 
 android {
-    namespace = "com.isaakhanimann.journal"
-    compileSdk = 35
+    namespace = "org.openpsychonaut.openjournal"
+    compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.isaakhanimann.journal"
+        applicationId = "org.openpsychonaut.openjournal"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 62
         versionName = "11.11"
 
@@ -41,11 +40,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -61,6 +63,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     testImplementation(libs.junit)
+    testImplementation(libs.json)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -69,13 +72,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.kotlinx.coroutines.core)
@@ -90,8 +92,4 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
-}
-
-kapt {
-    correctErrorTypes = true
 }
