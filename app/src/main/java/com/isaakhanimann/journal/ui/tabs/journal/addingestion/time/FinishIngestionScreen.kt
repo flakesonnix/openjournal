@@ -22,10 +22,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,31 +38,48 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Notes
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -69,12 +90,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.isaakhanimann.journal.data.room.experiences.entities.AdaptiveColor
 import com.isaakhanimann.journal.data.room.experiences.relations.ExperienceWithIngestions
@@ -89,12 +114,16 @@ import java.time.LocalDateTime
 @Composable
 fun FinishIngestionScreen(
     dismissAddIngestionScreens: () -> Unit,
+    onSaveAndAddAnother: (experienceId: Int, startTimeMilli: Long) -> Unit,
     viewModel: FinishIngestionScreenViewModel = hiltViewModel()
 ) {
     val localDateTime = viewModel.localDateTimeStartFlow.collectAsState().value
     FinishIngestionScreen(
         createSaveAndDismissAfter = {
             viewModel.createSaveAndDismissAfter(dismiss = dismissAddIngestionScreens)
+        },
+        onSaveAndAddAnother = {
+            viewModel.createSaveAndContinue(onContinue = onSaveAndAddAnother)
         },
         ingestionTimePickerOption = viewModel.ingestionTimePickerOptionFlow.collectAsState().value,
         onChangeTimePickerOption = viewModel::onChangeTimePickerOption,
@@ -135,6 +164,7 @@ fun FinishIngestionScreenPreview() {
     }
     FinishIngestionScreen(
         createSaveAndDismissAfter = {},
+        onSaveAndAddAnother = {},
         ingestionTimePickerOption = IngestionTimePickerOption.POINT_IN_TIME,
         onChangeTimePickerOption = {},
         onChangeStartDateOrTime = {},
@@ -170,6 +200,7 @@ fun FinishIngestionScreenPreview() {
 @Composable
 fun FinishIngestionScreen(
     createSaveAndDismissAfter: () -> Unit,
+    onSaveAndAddAnother: () -> Unit,
     ingestionTimePickerOption: IngestionTimePickerOption,
     onChangeTimePickerOption: (option: IngestionTimePickerOption) -> Unit,
     onChangeStartDateOrTime: (LocalDateTime) -> Unit,
@@ -197,34 +228,70 @@ fun FinishIngestionScreen(
     consumerNamesSorted: List<String>
 ) {
     val focusManager = LocalFocusManager.current
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = { Text("$substanceName ingestion") }
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        "$substanceName",
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                scrollBehavior = scrollBehavior
             )
         },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = !isLoadingColor,
-                enter = fadeIn(),
-                exit = fadeOut()
+        bottomBar = {
+            Surface(
+                tonalElevation = 3.dp,
+                shadowElevation = 8.dp,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                FloatingDoneButton(
-                    onDone = createSaveAndDismissAfter,
-                    modifier = Modifier.imePadding()
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .padding(bottom = 16.dp)
+                        .imePadding()
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = onSaveAndAddAnother,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(vertical = 12.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Add another")
+                    }
+                    Button(
+                        onClick = createSaveAndDismissAfter,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(vertical = 12.dp)
+                    ) {
+                        Icon(Icons.Default.Done, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Done")
+                    }
+                }
             }
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .imePadding()
                 .verticalScroll(rememberScrollState())
         ) {
             LinearProgressIndicator(
-                progress = { 0.9f },
+                progress = { 0.95f },
                 modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,8 +299,9 @@ fun FinishIngestionScreen(
                     .fillMaxSize()
                     .padding(horizontal = horizontalPadding)
             ) {
-                Spacer(modifier = Modifier.height(3.dp))
-                CardWithTitle(title = "Time") {
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                FinishIngestionSection(title = "Time", icon = Icons.Outlined.Timer) {
                     TimePointOrRangePicker(
                         onChangeTimePickerOption = onChangeTimePickerOption,
                         ingestionTimePickerOption = ingestionTimePickerOption,
@@ -243,163 +311,143 @@ fun FinishIngestionScreen(
                         onChangeEndDateOrTime = onChangeEndDateOrTime
                     )
                 }
-                CardWithTitle(title = "Experience", modifier = Modifier.fillMaxWidth()) {
-                    var isShowingDropDownMenu by remember { mutableStateOf(false) }
-                    Box(
-                        modifier = Modifier
-                            .wrapContentSize(Alignment.TopEnd)
-                    ) {
-                        OutlinedButton(
-                            onClick = { isShowingDropDownMenu = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val selectedExperienceTitle = selectedExperience?.experience?.title
-                            Text(text = if (selectedExperienceTitle != null) "Part of $selectedExperienceTitle" else "Part of new experience")
-                        }
-                        DropdownMenu(
-                            expanded = isShowingDropDownMenu,
-                            onDismissRequest = { isShowingDropDownMenu = false }
-                        ) {
-                            experiencesInRange.forEach { experienceWithIngestions ->
-                                val experience = experienceWithIngestions.experience
-                                DropdownMenuItem(
-                                    text = { Text(experience.title) },
-                                    onClick = {
-                                        onChangeOfSelectedExperience(experienceWithIngestions)
-                                        isShowingDropDownMenu = false
-                                    }
+
+                FinishIngestionSection(title = "Session", icon = Icons.Outlined.Book) {
+                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        var isShowingDropDownMenu by remember { mutableStateOf(false) }
+                        
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            OutlinedButton(
+                                onClick = { isShowingDropDownMenu = true },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                val selectedExperienceTitle = selectedExperience?.experience?.title
+                                Text(
+                                    text = if (selectedExperienceTitle != null) "Ongoing: $selectedExperienceTitle" else "Start new session",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
-                            }
-                            DropdownMenuItem(
-                                text = { Text("New experience") },
-                                onClick = {
-                                    onChangeOfSelectedExperience(null)
-                                    isShowingDropDownMenu = false
-                                }
-                            )
-                        }
-                    }
-                    AnimatedVisibility(visible = selectedExperience == null) {
-                        OutlinedTextField(
-                            value = enteredTitle,
-                            onValueChange = onChangeOfEnteredTitle,
-                            singleLine = true,
-                            label = { Text(text = "New experience title") },
-                            isError = !isEnteredTitleOk,
-                            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done,
-                                capitalization = KeyboardCapitalization.Words
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 3.dp)
-                        )
-                    }
-                }
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            horizontal = horizontalPadding,
-                            vertical = 3.dp
-                        )
-                    ) {
-                        Text(
-                            text = "Consumed by: ${consumerName.ifBlank { YOU }}",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        if (consumerNamesSorted.isNotEmpty() || consumerName.isNotBlank()) {
-                            var areConsumerNamesExpanded by remember { mutableStateOf(false) }
-                            TextButton(onClick = { areConsumerNamesExpanded = true }) {
-                                Text(text = "Choose other consumer")
+                                Spacer(modifier = Modifier.weight(1f))
+                                Icon(Icons.Default.ArrowDropDown, null)
                             }
                             DropdownMenu(
-                                expanded = areConsumerNamesExpanded,
-                                onDismissRequest = { areConsumerNamesExpanded = false }
+                                expanded = isShowingDropDownMenu,
+                                onDismissRequest = { isShowingDropDownMenu = false },
+                                modifier = Modifier.fillMaxWidth(0.9f)
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text(YOU) },
-                                    onClick = {
-                                        onChangeOfConsumerName("")
-                                        areConsumerNamesExpanded = false
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Person,
-                                            contentDescription = "Consumer"
-                                        )
-                                    }
-                                )
-                                consumerNamesSorted.forEach { consumerName ->
+                                experiencesInRange.forEach { experienceWithIngestions ->
                                     DropdownMenuItem(
-                                        text = { Text(consumerName) },
+                                        text = { Text(experienceWithIngestions.experience.title) },
                                         onClick = {
-                                            onChangeOfConsumerName(consumerName)
-                                            areConsumerNamesExpanded = false
+                                            onChangeOfSelectedExperience(experienceWithIngestions)
+                                            isShowingDropDownMenu = false
                                         },
-                                        leadingIcon = {
-                                            Icon(
-                                                Icons.Default.Person,
-                                                contentDescription = "Consumer"
-                                            )
-                                        }
+                                        leadingIcon = { Icon(Icons.Outlined.Book, null) }
                                     )
                                 }
+                                DropdownMenuItem(
+                                    text = { Text("New Session") },
+                                    onClick = {
+                                        onChangeOfSelectedExperience(null)
+                                        isShowingDropDownMenu = false
+                                    },
+                                    leadingIcon = { Icon(Icons.Default.Add, null) }
+                                )
                             }
                         }
-                        var showNewConsumerTextField by remember { mutableStateOf(false) }
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Switch(
-                                checked = showNewConsumerTextField,
-                                onCheckedChange = {
-                                    showNewConsumerTextField = !showNewConsumerTextField
-                                })
-                            Text("Enter new consumer")
-                        }
-                        AnimatedVisibility(visible = showNewConsumerTextField) {
+                        
+                        AnimatedVisibility(visible = selectedExperience == null) {
                             OutlinedTextField(
-                                value = consumerName,
-                                onValueChange = onChangeOfConsumerName,
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Person,
-                                        contentDescription = "Consumer"
-                                    )
-                                },
-                                keyboardActions = KeyboardActions(onDone = {
-                                    focusManager.clearFocus()
-                                }),
+                                value = enteredTitle,
+                                onValueChange = onChangeOfEnteredTitle,
+                                singleLine = true,
+                                label = { Text("Session Title") },
+                                placeholder = { Text("e.g. Evening at home") },
+                                isError = !isEnteredTitleOk,
+                                shape = RoundedCornerShape(16.dp),
+                                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     imeAction = ImeAction.Done,
                                     capitalization = KeyboardCapitalization.Words
                                 ),
-                                placeholder = { Text("New consumer name") },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
                     }
                 }
-                CardWithTitle(title = "Ingestion note") {
-                    NoteSection(
-                        previousNotes,
-                        note,
-                        onNoteChange
-                    )
+
+                FinishIngestionSection(title = "Consumer", icon = Icons.Outlined.Person) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                                .padding(16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            Text(
+                                text = if (consumerName.isBlank()) "Tracking for: $YOU" else "Tracking for: $consumerName",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+
+                        var showConsumerSelection by remember { mutableStateOf(false) }
+                        TextButton(
+                            onClick = { showConsumerSelection = !showConsumerSelection },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text(if (showConsumerSelection) "Hide options" else "Change consumer")
+                        }
+
+                        AnimatedVisibility(visible = showConsumerSelection) {
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                if (consumerNamesSorted.isNotEmpty()) {
+                                    FlowRow(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        FilterChip(
+                                            onClick = { onChangeOfConsumerName("") },
+                                            label = { Text(YOU) },
+                                            selected = consumerName.isBlank()
+                                        )
+                                        consumerNamesSorted.forEach { name ->
+                                            FilterChip(
+                                                onClick = { onChangeOfConsumerName(name) },
+                                                label = { Text(name) },
+                                                selected = consumerName == name
+                                            )
+                                        }
+                                    }
+                                }
+                                
+                                OutlinedTextField(
+                                    value = consumerName,
+                                    onValueChange = onChangeOfConsumerName,
+                                    label = { Text("Other name") },
+                                    shape = RoundedCornerShape(16.dp),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
+                                )
+                            }
+                        }
+                    }
                 }
+
+                FinishIngestionSection(title = "Notes", icon = Icons.AutoMirrored.Outlined.Notes) {
+                    NoteSection(previousNotes, note, onNoteChange)
+                }
+
                 if (isShowingColorPicker) {
-                    CardWithTitle(
-                        title = "$substanceName color",
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                    FinishIngestionSection(title = "Identity Color", icon = Icons.Outlined.Palette) {
                         ColorPicker(
                             selectedColor = selectedColor,
                             onChangeOfColor = onChangeColor,
@@ -408,11 +456,43 @@ fun FinishIngestionScreen(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(70.dp))
+                
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
 }
+
+@Composable
+fun FinishIngestionSection(
+    title: String,
+    icon: ImageVector,
+    content: @Composable () -> Unit
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .padding(vertical = 10.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp),
+        border = CardDefaults.outlinedCardBorder().copy(width = 0.5.dp)
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Spacer(Modifier.height(16.dp))
+            content()
+        }
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -424,7 +504,7 @@ fun NoteSection(
     var isShowingSuggestions by remember { mutableStateOf(true) }
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
-    val bringIntoViewRequester = BringIntoViewRequester()
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
     Column {
         OutlinedTextField(
             value = note,
