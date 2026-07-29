@@ -23,7 +23,7 @@ import androidx.room.Relation
 import org.openpsychonaut.openjournal.data.room.experiences.entities.CustomUnit
 import org.openpsychonaut.openjournal.data.room.experiences.entities.Ingestion
 import org.openpsychonaut.openjournal.data.room.experiences.entities.SubstanceCompanion
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.search.suggestion.models.CustomUnitDose
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.search.suggestion.models.CustomUnitDose
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
 
 data class IngestionWithCompanionAndCustomUnit(

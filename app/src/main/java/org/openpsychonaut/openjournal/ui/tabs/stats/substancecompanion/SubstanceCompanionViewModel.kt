@@ -29,7 +29,7 @@ import org.openpsychonaut.openjournal.data.room.experiences.entities.Ingestion
 import org.openpsychonaut.openjournal.data.room.experiences.entities.SubstanceCompanion
 import org.openpsychonaut.openjournal.data.substances.repositories.SubstanceRepository
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.SubstanceCompanionRoute
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.search.suggestion.models.CustomUnitDose
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.search.suggestion.models.CustomUnitDose
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.toReadableString
 import org.openpsychonaut.openjournal.ui.utils.getTimeDifferenceText
 import dagger.hilt.android.lifecycle.HiltViewModel

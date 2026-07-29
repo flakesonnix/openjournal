@@ -24,15 +24,15 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import org.openpsychonaut.openjournal.data.substances.AdministrationRoute
 import org.openpsychonaut.openjournal.ui.main.navigation.composableWithTransitions
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.dose.ChooseDoseScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.dose.customsubstance.CustomSubstanceChooseDoseScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.dose.customunit.ChooseDoseCustomUnitScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.interactions.CheckInteractionsScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.route.ChooseRouteScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.route.CustomSubstanceChooseRouteScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.saferuse.CheckSaferUseScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.search.AddIngestionSearchScreen
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.time.FinishIngestionScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.dose.ChooseDoseScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.dose.customsubstance.CustomSubstanceChooseDoseScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.dose.customunit.ChooseDoseCustomUnitScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.interactions.CheckInteractionsScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.route.ChooseRouteScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.route.CustomSubstanceChooseRouteScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.saferuse.CheckSaferUseScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.search.AddIngestionSearchScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.time.FinishIngestionScreen
 import org.openpsychonaut.openjournal.ui.tabs.safer.RouteExplanationScreen
 import org.openpsychonaut.openjournal.ui.tabs.search.custom.AddCustomSubstanceAndContinueScreen
 import org.openpsychonaut.openjournal.ui.tabs.settings.customunits.add.FinishAddCustomUnitScreen
@@ -175,7 +175,7 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     )
                 },
                 navigateToRouteExplanationScreen = {
-                    navController.navigate(AdministrationRouteExplanationRouteOnJournalTab)
+                    navController.navigate(AdministrationRouteExplanationRouteOnOpenJournalTab)
                 }
             )
         }
@@ -221,7 +221,7 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     )
                 },
                 navigateToSaferSniffingScreen = {
-                    navController.navigate(SaferSniffingRouteOnJournalTab)
+                    navController.navigate(SaferSniffingRouteOnOpenJournalTab)
                 },
             )
         }
@@ -243,11 +243,11 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                         )
                     )
                 },
-                navigateToVolumetricDosingScreenOnJournalTab = {
-                    navController.navigate(VolumetricDosingOnJournalTabRoute)
+                navigateToVolumetricDosingScreenOnOpenJournalTab = {
+                    navController.navigate(VolumetricDosingOnOpenJournalTabRoute)
                 },
                 navigateToSaferSniffingScreen = {
-                    navController.navigate(SaferSniffingRouteOnJournalTab)
+                    navController.navigate(SaferSniffingRouteOnOpenJournalTab)
                 },
                 navigateToCreateCustomUnit = {
                     navController.navigate(
@@ -276,7 +276,7 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                 }
             )
         }
-        composableWithTransitions<AdministrationRouteExplanationRouteOnJournalTab> {
+        composableWithTransitions<AdministrationRouteExplanationRouteOnOpenJournalTab> {
             RouteExplanationScreen()
         }
         composableWithTransitions<FinishAddCustomUnitRoute> {
@@ -365,7 +365,7 @@ data class FinishIngestionRoute(
 )
 
 @Serializable
-object AdministrationRouteExplanationRouteOnJournalTab
+object AdministrationRouteExplanationRouteOnOpenJournalTab
 
 @Serializable
 data class AddCustomSubstanceRouteOnAddIngestionGraph(

@@ -24,7 +24,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import org.openpsychonaut.openjournal.data.substances.AdministrationRoute
 import org.openpsychonaut.openjournal.ui.main.navigation.composableWithTransitions
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.route.CustomSubstanceChooseRouteScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.route.CustomSubstanceChooseRouteScreen
 import org.openpsychonaut.openjournal.ui.tabs.settings.customunits.add.ChooseRouteDuringAddCustomUnitScreen
 import org.openpsychonaut.openjournal.ui.tabs.settings.customunits.add.AddIngestionSearchScreen
 import org.openpsychonaut.openjournal.ui.tabs.settings.customunits.add.FinishAddCustomUnitScreen

@@ -42,7 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.substances.AdministrationRoute
 import org.openpsychonaut.openjournal.data.substances.classes.roa.DoseClass
 import org.openpsychonaut.openjournal.data.substances.classes.roa.RoaDose
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.rating.FloatingDoneButton
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.rating.FloatingDoneButton
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.dose.RoaDosePreviewProvider
 import org.openpsychonaut.openjournal.ui.tabs.settings.customunits.add.EditCustomUnitSections
 
