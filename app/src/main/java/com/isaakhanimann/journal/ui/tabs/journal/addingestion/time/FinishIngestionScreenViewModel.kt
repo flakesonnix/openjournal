@@ -173,7 +173,13 @@ class FinishIngestionScreenViewModel @Inject constructor(
             val lastIngestionTimeOfExperience =
                 userPreferences.lastIngestionTimeOfExperienceFlow.first()
             val clonedIngestionTime = userPreferences.clonedIngestionTimeFlow.first()
-            if (clonedIngestionTime != null) {
+            
+            if (finishIngestionRoute.startTimeEpochMilli != null) {
+                val providedTime = Instant.ofEpochMilli(finishIngestionRoute.startTimeEpochMilli)
+                localDateTimeStartFlow.emit(providedTime.getLocalDateTime())
+                localDateTimeEndFlow.emit(providedTime.plus(30, ChronoUnit.MINUTES).getLocalDateTime())
+                updateTitleBasedOnTime(providedTime)
+            } else if (clonedIngestionTime != null) {
                 localDateTimeStartFlow.emit(clonedIngestionTime.getLocalDateTime())
                 localDateTimeEndFlow.emit(clonedIngestionTime.plus(30, ChronoUnit.MINUTES).getLocalDateTime())
                 updateTitleBasedOnTime(clonedIngestionTime)
@@ -186,7 +192,7 @@ class FinishIngestionScreenViewModel @Inject constructor(
                     updateTitleBasedOnTime(lastIngestionTimeOfExperience)
                 }
             }
-            updateExperiencesBasedOnSelectedTime()
+            updateExperiencesBasedOnSelectedTime(finishIngestionRoute.experienceId)
             val allCompanions = experienceRepo.getAllSubstanceCompanionsFlow().first()
             val thisCompanion = allCompanions.firstOrNull { it.substanceName == substanceName }
             substanceCompanion = thisCompanion
@@ -237,7 +243,7 @@ class FinishIngestionScreenViewModel @Inject constructor(
         enteredTitle = time.getStringOfPattern("dd MMMM yyyy")
     }
 
-    private suspend fun updateExperiencesBasedOnSelectedTime() {
+    private suspend fun updateExperiencesBasedOnSelectedTime(experienceId: Int? = null) {
         val selectedInstant = localDateTimeStartFlow.value.getInstant()
         val fromInstant = selectedInstant.minus(3, ChronoUnit.DAYS)
         val toInstant = selectedInstant.plus(1, ChronoUnit.DAYS)
@@ -247,19 +253,24 @@ class FinishIngestionScreenViewModel @Inject constructor(
                 toInstant = toInstant
             )
         experiencesInRangeFlow.emit(experiencesInRange)
-        val closestExperience = experiencesInRange.firstOrNull { experience ->
-            val sortedIngestions = experience.ingestions.sortedBy { it.time }
-            val firstIngestionTime =
-                sortedIngestions.firstOrNull()?.time ?: return@firstOrNull false
-            val upperBoundBasedOnFirstIngestion = firstIngestionTime.plus(15, ChronoUnit.HOURS)
-            val lastIngestionTime = sortedIngestions.lastOrNull()?.time ?: return@firstOrNull false
-            val upperBoundBasedOnLastIngestion = lastIngestionTime.plus(3, ChronoUnit.HOURS)
-            val finalUpperBound =
-                maxOf(upperBoundBasedOnFirstIngestion, upperBoundBasedOnLastIngestion)
-            val lowerBound = firstIngestionTime.minus(3, ChronoUnit.HOURS)
-            return@firstOrNull selectedInstant in lowerBound..finalUpperBound
+        
+        val selectedExperience = if (experienceId != null) {
+            experiencesInRange.firstOrNull { it.experience.id == experienceId }
+        } else {
+            experiencesInRange.firstOrNull { experience ->
+                val sortedIngestions = experience.ingestions.sortedBy { it.time }
+                val firstIngestionTime =
+                    sortedIngestions.firstOrNull()?.time ?: return@firstOrNull false
+                val upperBoundBasedOnFirstIngestion = firstIngestionTime.plus(15, ChronoUnit.HOURS)
+                val lastIngestionTime = sortedIngestions.lastOrNull()?.time ?: return@firstOrNull false
+                val upperBoundBasedOnLastIngestion = lastIngestionTime.plus(3, ChronoUnit.HOURS)
+                val finalUpperBound =
+                    maxOf(upperBoundBasedOnFirstIngestion, upperBoundBasedOnLastIngestion)
+                val lowerBound = firstIngestionTime.minus(3, ChronoUnit.HOURS)
+                return@firstOrNull selectedInstant in lowerBound..finalUpperBound
+            }
         }
-        selectedExperienceFlow.emit(closestExperience)
+        selectedExperienceFlow.emit(selectedExperience)
     }
 
     fun createSaveAndDismissAfter(dismiss: () -> Unit) {
@@ -271,13 +282,23 @@ class FinishIngestionScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createAndSaveIngestion() {
+    fun createSaveAndContinue(onContinue: (experienceId: Int, startTimeMilli: Long) -> Unit) {
+        viewModelScope.launch {
+            val experienceId = createAndSaveIngestion()
+            val startTimeMilli = localDateTimeStartFlow.first().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            withContext(Dispatchers.Main) {
+                onContinue(experienceId, startTimeMilli)
+            }
+        }
+    }
+
+    private suspend fun createAndSaveIngestion(): Int {
         val substanceCompanion = SubstanceCompanion(
             substanceName,
             color = selectedColor
         )
         val oldIdToUse = selectedExperienceFlow.firstOrNull()?.experience?.id
-        if (oldIdToUse == null) {
+        return if (oldIdToUse == null) {
             val newIdToUse = newExperienceIdToUseFlow.firstOrNull() ?: 1
             val ingestionTime =
                 localDateTimeStartFlow.first().atZone(ZoneId.systemDefault()).toInstant()
@@ -295,12 +316,14 @@ class FinishIngestionScreenViewModel @Inject constructor(
                 experience = newExperience,
                 substanceCompanion = substanceCompanion
             )
+            newExperience.id
         } else {
             val newIngestion = createNewIngestion(oldIdToUse)
             experienceRepo.insertIngestionAndCompanion(
                 ingestion = newIngestion,
                 substanceCompanion = substanceCompanion
             )
+            oldIdToUse
         }
     }
 

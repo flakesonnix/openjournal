@@ -40,18 +40,19 @@ import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
     navigation<AddIngestionRoute>(
-        startDestination = AddIngestionSearchRoute,
+        startDestination = AddIngestionSearchRoute(),
     ) {
-        composableWithTransitions<AddIngestionSearchRoute> {
+        composableWithTransitions<AddIngestionSearchRoute> { backStackEntry ->
+            val searchRoute = backStackEntry.toRoute<AddIngestionSearchRoute>()
             AddIngestionSearchScreen(
                 navigateToCheckInteractions = { substanceName ->
-                    navController.navigate(CheckInteractionsRoute(substanceName))
+                    navController.navigate(CheckInteractionsRoute(substanceName, searchRoute.experienceId, searchRoute.startTimeEpochMilli))
                 },
                 navigateToCheckSaferUse = { substanceName ->
-                    navController.navigate(CheckSaferUseRoute(substanceName))
+                    navController.navigate(CheckSaferUseRoute(substanceName, searchRoute.experienceId, searchRoute.startTimeEpochMilli))
                 },
                 navigateToCustomSubstanceChooseRoute = { customSubstanceName ->
-                    navController.navigate(CustomSubstanceChooseRouteRoute(customSubstanceName))
+                    navController.navigate(CustomSubstanceChooseRouteRoute(customSubstanceName, searchRoute.experienceId, searchRoute.startTimeEpochMilli))
                 },
                 navigateToChooseTime = { substanceName, administrationRoute, dose, units, isEstimate, estimatedDoseStandardDeviation, customUnitId ->
                     navController.navigate(
@@ -63,6 +64,8 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                             estimatedDoseStandardDeviation = estimatedDoseStandardDeviation,
                             substanceName = substanceName,
                             customUnitId = customUnitId,
+                            experienceId = searchRoute.experienceId,
+                            startTimeEpochMilli = searchRoute.startTimeEpochMilli
                         )
                     )
                 },
@@ -70,8 +73,9 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     navController.navigate(
                         ChooseCustomSubstanceDoseRoute(
                             customSubstanceName = customSubstanceName,
-                            administrationRoute = administrationRoute
-
+                            administrationRoute = administrationRoute,
+                            experienceId = searchRoute.experienceId,
+                            startTimeEpochMilli = searchRoute.startTimeEpochMilli
                         )
                     )
                 },
@@ -79,18 +83,20 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     navController.navigate(
                         ChooseDoseRoute(
                             substanceName = substanceName,
-                            administrationRoute = administrationRoute
+                            administrationRoute = administrationRoute,
+                            experienceId = searchRoute.experienceId,
+                            startTimeEpochMilli = searchRoute.startTimeEpochMilli
                         )
                     )
                 },
                 navigateToChooseRoute = { substanceName ->
-                    navController.navigate(ChooseRouteOfAddIngestionRoute(substanceName = substanceName))
+                    navController.navigate(ChooseRouteOfAddIngestionRoute(substanceName = substanceName, experienceId = searchRoute.experienceId, startTimeEpochMilli = searchRoute.startTimeEpochMilli))
                 },
                 navigateToAddCustomSubstanceScreen = { searchText ->
-                    navController.navigate(AddCustomSubstanceRouteOnAddIngestionGraph(searchText = searchText))
+                    navController.navigate(AddCustomSubstanceRouteOnAddIngestionGraph(searchText = searchText, experienceId = searchRoute.experienceId, startTimeEpochMilli = searchRoute.startTimeEpochMilli))
                 },
                 navigateToCustomUnitChooseDose = { customUnitId ->
-                    navController.navigate(ChooseDoseCustomUnitRoute(customUnitId = customUnitId))
+                    navController.navigate(ChooseDoseCustomUnitRoute(customUnitId = customUnitId, experienceId = searchRoute.experienceId, startTimeEpochMilli = searchRoute.startTimeEpochMilli))
                 }
             )
         }
@@ -98,8 +104,8 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
             val route = backStackEntry.toRoute<AddCustomSubstanceRouteOnAddIngestionGraph>()
             AddCustomSubstanceAndContinueScreen(
                 navigateToChooseRoa = { customSubstanceName ->
-                    navController.navigate(CustomSubstanceChooseRouteRoute(customSubstanceName)) {
-                        popUpTo(AddIngestionSearchRoute)
+                    navController.navigate(CustomSubstanceChooseRouteRoute(customSubstanceName, route.experienceId, route.startTimeEpochMilli)) {
+                        popUpTo(AddIngestionSearchRoute())
                     }
                 },
                 initialName = route.searchText
@@ -109,7 +115,7 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
             val route = backStackEntry.toRoute<CheckInteractionsRoute>()
             CheckInteractionsScreen(
                 navigateToNext = {
-                    navController.navigate(ChooseRouteOfAddIngestionRoute(substanceName = route.substanceName))
+                    navController.navigate(ChooseRouteOfAddIngestionRoute(substanceName = route.substanceName, experienceId = route.experienceId, startTimeEpochMilli = route.startTimeEpochMilli))
                 },
             )
         }
@@ -117,11 +123,12 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
             val route = backStackEntry.toRoute<CheckSaferUseRoute>()
             CheckSaferUseScreen(
                 navigateToNext = {
-                    navController.navigate(CheckInteractionsRoute(substanceName = route.substanceName))
+                    navController.navigate(CheckInteractionsRoute(substanceName = route.substanceName, experienceId = route.experienceId, startTimeEpochMilli = route.startTimeEpochMilli))
                 },
             )
         }
-        composableWithTransitions<ChooseDoseCustomUnitRoute> {
+        composableWithTransitions<ChooseDoseCustomUnitRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<ChooseDoseCustomUnitRoute>()
             ChooseDoseCustomUnitScreen(
                 navigateToChooseTimeAndMaybeColor = { administrationRoute: AdministrationRoute,
                                                       units: String?,
@@ -139,6 +146,8 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                             estimatedDoseStandardDeviation = estimatedDoseStandardDeviation,
                             substanceName = substanceName,
                             customUnitId = customUnitId,
+                            experienceId = route.experienceId,
+                            startTimeEpochMilli = route.startTimeEpochMilli
                         )
                     )
                 },
@@ -159,7 +168,9 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     navController.navigate(
                         ChooseDoseRoute(
                             substanceName = route.substanceName,
-                            administrationRoute = administrationRoute
+                            administrationRoute = administrationRoute,
+                            experienceId = route.experienceId,
+                            startTimeEpochMilli = route.startTimeEpochMilli
                         )
                     )
                 },
@@ -175,7 +186,9 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                     navController.navigate(
                         ChooseCustomSubstanceDoseRoute(
                             customSubstanceName = route.customSubstanceName,
-                            administrationRoute = administrationRoute
+                            administrationRoute = administrationRoute,
+                            experienceId = route.experienceId,
+                            startTimeEpochMilli = route.startTimeEpochMilli
                         )
                     )
                 }
@@ -193,7 +206,9 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                             dose = dose,
                             estimatedDoseStandardDeviation = estimatedDoseStandardDeviation,
                             substanceName = route.customSubstanceName,
-                            customUnitId = null
+                            customUnitId = null,
+                            experienceId = route.experienceId,
+                            startTimeEpochMilli = route.startTimeEpochMilli
                         )
                     )
                 },
@@ -223,6 +238,8 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                             estimatedDoseStandardDeviation = estimatedDoseStandardDeviation,
                             substanceName = route.substanceName,
                             customUnitId = null,
+                            experienceId = route.experienceId,
+                            startTimeEpochMilli = route.startTimeEpochMilli
                         )
                     )
                 },
@@ -247,6 +264,16 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
                 dismissAddIngestionScreens = {
                     navController.popBackStack(route = AddIngestionRoute, inclusive = true)
                 },
+                onSaveAndAddAnother = { experienceId, startTimeMilli ->
+                    navController.navigate(
+                        AddIngestionSearchRoute(
+                            experienceId = experienceId,
+                            startTimeEpochMilli = startTimeMilli
+                        )
+                    ) {
+                        popUpTo(AddIngestionRoute) { inclusive = false }
+                    }
+                }
             )
         }
         composableWithTransitions<AdministrationRouteExplanationRouteOnJournalTab> {
@@ -256,7 +283,7 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
             FinishAddCustomUnitScreen(
                 dismissAddCustomUnit = { customUnitId ->
                     navController.navigate(ChooseDoseCustomUnitRoute(customUnitId = customUnitId)) {
-                        popUpTo(AddIngestionSearchRoute)
+                        popUpTo(AddIngestionSearchRoute())
                     }
                 },
             )
@@ -268,33 +295,60 @@ fun NavGraphBuilder.addIngestionGraph(navController: NavController) {
 object AddIngestionRoute
 
 @Serializable
-object AddIngestionSearchRoute
+data class AddIngestionSearchRoute(
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
-data class CheckInteractionsRoute(val substanceName: String)
+data class CheckInteractionsRoute(
+    val substanceName: String,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
-data class CheckSaferUseRoute(val substanceName: String)
+data class CheckSaferUseRoute(
+    val substanceName: String,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
-data class ChooseDoseCustomUnitRoute(val customUnitId: Int)
+data class ChooseDoseCustomUnitRoute(
+    val customUnitId: Int,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
-data class ChooseRouteOfAddIngestionRoute(val substanceName: String)
+data class ChooseRouteOfAddIngestionRoute(
+    val substanceName: String,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
-data class CustomSubstanceChooseRouteRoute(val customSubstanceName: String)
+data class CustomSubstanceChooseRouteRoute(
+    val customSubstanceName: String,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
 
 @Serializable
 data class ChooseCustomSubstanceDoseRoute(
     val customSubstanceName: String,
     val administrationRoute: AdministrationRoute,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
 )
 
 @Serializable
 data class ChooseDoseRoute(
     val substanceName: String,
-    val administrationRoute: AdministrationRoute
+    val administrationRoute: AdministrationRoute,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
 )
 
 @Serializable
@@ -306,10 +360,16 @@ data class FinishIngestionRoute(
     val estimatedDoseStandardDeviation: Double?,
     val substanceName: String, // can be name of pw substance or custom substance
     val customUnitId: Int?,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
 )
 
 @Serializable
 object AdministrationRouteExplanationRouteOnJournalTab
 
 @Serializable
-data class AddCustomSubstanceRouteOnAddIngestionGraph(val searchText: String)
+data class AddCustomSubstanceRouteOnAddIngestionGraph(
+    val searchText: String,
+    val experienceId: Int? = null,
+    val startTimeEpochMilli: Long? = null
+)
