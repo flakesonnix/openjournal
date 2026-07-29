@@ -1,30 +1,27 @@
-# Walkthrough: Rename "Journal" to "OpenJournal"
+# Walkthrough: Setup Fastlane Metadata for F-Droid
 
-Completed the rebranding of project components from "Journal" to "OpenJournal" across symbols, files, and navigation.
+Successfully implemented the Fastlane metadata structure to enable automated metadata syncing with F-Droid.
 
 ## Changes Made
 
-### Package & File Renaming
-- Moved `org.openpsychonaut.openjournal.ui.tabs.journal` to `org.openpsychonaut.openjournal.ui.tabs.openjournal`.
-- Renamed major files:
-    - `JournalScreen.kt` -> [OpenJournalScreen.kt](file:///home/lucy/AndroidStudioProjects/openjournal/app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/openjournal/OpenJournalScreen.kt)
-    - `JournalViewModel.kt` -> [OpenJournalViewModel.kt](file:///home/lucy/AndroidStudioProjects/openjournal/app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/openjournal/OpenJournalViewModel.kt)
-    - `CalendarJournalScreen.kt` -> [CalendarOpenJournalScreen.kt](file:///home/lucy/AndroidStudioProjects/openjournal/app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/openjournal/calendar/CalendarOpenJournalScreen.kt)
-    - `journalGraph.kt` -> [openJournalGraph.kt](file:///home/lucy/AndroidStudioProjects/openjournal/app/src/main/java/org/openpsychonaut/openjournal/ui/main/navigation/graphs/openJournalGraph.kt)
-    - `JournalExport.kt` -> [OpenJournalExport.kt](file:///home/lucy/AndroidStudioProjects/openjournal/app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/settings/OpenJournalExport.kt)
+### Directory Structure
+- Created the required hierarchy: `fastlane/metadata/android/en-US/`.
+- Organized text assets and image assets according to Fastlane/F-Droid specifications.
 
-### Symbol & UI Renaming
-- Renamed classes: `JournalScreen`, `JournalViewModel`, `JournalExport`, etc. to use the `OpenJournal` prefix.
-- Updated Navigation routes and graph functions: `journalGraph` -> `openJournalGraph`, `JournalTopLevelRoute` -> `OpenJournalTopLevelRoute`.
-- Updated the label in the bottom navigation bar from "Journal" to "OpenJournal".
-- Renamed "Journal Entry" section in the experience screen to "Experience Notes" for better clarity and consistency.
+### Text Assets
+- [title.txt](file:///home/lucy/AndroidStudioProjects/openjournal/fastlane/metadata/android/en-US/title.txt): Set to "OpenJournal".
+- [short_description.txt](file:///home/lucy/AndroidStudioProjects/openjournal/fastlane/metadata/android/en-US/short_description.txt): Added a concise 80-character summary.
+- [full_description.txt](file:///home/lucy/AndroidStudioProjects/openjournal/fastlane/metadata/android/en-US/full_description.txt): Created a detailed description highlighting rebranding, privacy, and key features.
+- [changelogs/63.txt](file:///home/lucy/AndroidStudioProjects/openjournal/fastlane/metadata/android/en-US/changelogs/63.txt): Added release notes for version 12.0 (versionCode 63).
+
+### Image Assets
+- Copied existing high-quality assets to the new structure:
+    - `icon.png`: App icon.
+    - `phoneScreenshots/`: A collection of 6 screenshots demonstrating the app UI.
+    - `Google Pixel 4 XL Presentation.png`: Feature graphic.
 
 ## Verification Results
 
-### Automated Tests
-- Build successful with `gradle assembleDebug`.
-- Verified all imports and package declarations are updated correctly.
-
 ### Manual Verification
-- All routes and navigation flows are preserved.
-- The "OpenJournal" tab is correctly integrated into the main navigation.
+- Verified that all file paths match the F-Droid [Triple-T metadata](https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/) format.
+- Verified that the changelog filename (`63.txt`) correctly corresponds to the current `versionCode` defined in `app/build.gradle.kts`.

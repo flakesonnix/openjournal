@@ -1,16 +1,7 @@
-# Tasks: Rename "Journal" to "OpenJournal"
+# Tasks: Setup Fastlane Metadata for F-Droid
 
-- `[x]` Move directory `ui/tabs/journal` to `ui/tabs/openjournal`
-- `[x]` Update package declarations in moved files
-- `[x]` Rename core symbols and files:
-    - `[x]` `JournalExport.kt` -> `OpenJournalExport.kt` and class `JournalExport` -> `OpenJournalExport`
-    - `[x]` `JournalScreen.kt` -> `OpenJournalScreen.kt` and class `JournalScreen` -> `OpenJournalScreen`
-    - `[x]` `JournalViewModel.kt` -> `OpenJournalViewModel.kt` and class `JournalViewModel` -> `OpenJournalViewModel`
-    - `[x]` `JournalScreenPreviewProvider.kt` -> `OpenJournalScreenPreviewProvider.kt`
-    - `[x]` `CalendarJournalScreen.kt` -> `CalendarOpenJournalScreen.kt`
-- `[x]` Update navigation graph and routes:
-    - `[x]` `journalGraph.kt` -> `openJournalGraph.kt`
-    - `[x]` `journalGraph` function -> `openJournalGraph`
-    - `[x]` Update route objects (`JournalTopLevelRoute`, `JournalScreenRoute`, etc.)
-- `[x]` Global search and replace of imports and symbol usages
-- `[x]` Verify build and tests
+- `[x]` Create directory structure `fastlane/metadata/android/en-US/changelogs`
+- `[x]` Create `title.txt`, `short_description.txt`, `full_description.txt`
+- `[x]` Create `changelogs/63.txt` with release notes for v12.0
+- `[x]` Locate and copy image assets (icon, screenshots) to Fastlane structure
+- `[x]` Verify metadata formatting and paths

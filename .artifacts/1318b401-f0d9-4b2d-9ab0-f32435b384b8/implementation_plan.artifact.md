@@ -1,50 +1,34 @@
-# Rename "Journal" to "OpenJournal"
+# Setup Fastlane Metadata for F-Droid
 
-This plan covers renaming the remaining "Journal" references to "OpenJournal" in code symbols, filenames, and package names to complete the rebranding.
+This plan involves setting up the Fastlane metadata structure required for automated metadata syncing with F-Droid. This will allow F-Droid to automatically pull descriptions, screenshots, and changelogs directly from the repository.
 
 ## User Review Required
 
-> [!WARNING]
-> This change involves renaming the package `org.openpsychonaut.openjournal.ui.tabs.journal` to `org.openpsychonaut.openjournal.ui.tabs.openjournal`. This is a significant refactoring that will affect many files and imports.
->
-> Renaming `JournalExport` to `OpenJournalExport` may affect the compatibility of future export files with older app versions, although the schema remains identical. Since we are at version 12.0 (breaking changes), this is acceptable.
+> [!NOTE]
+> I will be extracting descriptions and titles from the current `README.md`.
+> I will also look for an app icon in the resources to include in the metadata.
 
 ## Proposed Changes
 
-### Core Symbols and Files
+### Metadata Files
 
-- **Screens & ViewModels**:
-    - `JournalScreen` -> `OpenJournalScreen`
-    - `JournalViewModel` -> `OpenJournalViewModel`
-    - `JournalScreenPreviewProvider` -> `OpenJournalScreenPreviewProvider`
-    - `CalendarJournalScreen` -> `CalendarOpenJournalScreen`
-- **Navigation**:
-    - `JournalTopLevelRoute` -> `OpenJournalTopLevelRoute`
-    - `journalGraph` -> `openJournalGraph`
-    - `JournalScreenRoute` -> `OpenJournalScreenRoute`
-    - Routes like `AdministrationRouteExplanationRouteOnJournalTab` -> `AdministrationRouteExplanationRouteOnOpenJournalTab`
-- **Data**:
-    - `JournalExport` -> `OpenJournalExport`
-- **Filenames**:
-    - `JournalScreen.kt` -> `OpenJournalScreen.kt`
-    - `JournalViewModel.kt` -> `OpenJournalViewModel.kt`
-    - `JournalScreenPreviewProvider.kt` -> `OpenJournalScreenPreviewProvider.kt`
-    - `CalendarJournalScreen.kt` -> `CalendarOpenJournalScreen.kt`
-    - `journalGraph.kt` -> `openJournalGraph.kt`
-    - `JournalExport.kt` -> `OpenJournalExport.kt`
+- Create the directory structure: `fastlane/metadata/android/en-US/`.
+- Create the following text files in `fastlane/metadata/android/en-US/`:
+    - `title.txt`: "OpenJournal"
+    - `short_description.txt`: A concise summary of the app.
+    - `full_description.txt`: A detailed description of the app's features and mission.
+- Create `fastlane/metadata/android/en-US/changelogs/63.txt`:
+    - This will contain the release notes for version 12.0 (versionCode 63).
 
-### Package Renaming
+### Graphics (Optional/Research)
 
-- Move directory `app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/journal` to `app/src/main/java/org/openpsychonaut/openjournal/ui/tabs/openjournal`.
-- Update all package declarations and imports from `org.openpsychonaut.openjournal.ui.tabs.journal` to `org.openpsychonaut.openjournal.ui.tabs.openjournal`.
+- Locate the high-resolution app icon and copy it to `fastlane/metadata/android/en-US/images/icon.png`.
+- If screenshots are available, they will be organized in `fastlane/metadata/android/en-US/images/phoneScreenshots/`.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run existing unit tests to ensure no regressions in data parsing or logic.
-- Verify that the app builds successfully.
+- N/A (Metadata only).
 
 ### Manual Verification
-- Verify navigation still works correctly.
-- Verify the "Journal" tab (now "OpenJournal") displays the list of experiences.
-- Verify that "Journal" strings in the UI are updated to "OpenJournal" where appropriate.
+- Verify that the directory structure and file contents match the specifications in the provided technical documentation.
