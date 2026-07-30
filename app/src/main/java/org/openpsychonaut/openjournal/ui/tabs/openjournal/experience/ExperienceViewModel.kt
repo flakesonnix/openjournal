@@ -62,6 +62,8 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlin.math.sqrt
+import kotlin.math.max
 
 @HiltViewModel
 class ExperienceViewModel @Inject constructor(
@@ -488,8 +490,8 @@ class ExperienceViewModel @Inject constructor(
                                     groupedIngestions.mapNotNull { it.ingestionWithCompanionAndCustomUnit.pureDose }
                                         .sum()
                                 val cumulativeDoseStandardDeviation =
-                                    groupedIngestions.mapNotNull { it.ingestionWithCompanionAndCustomUnit.pureDoseStandardDeviation }
-                                        .sum()
+                                    sqrt(groupedIngestions.mapNotNull { it.ingestionWithCompanionAndCustomUnit.pureDoseStandardDeviation }
+                                        .sumOf { it * it })
                                 val numDots = groupedIngestions.first().roaDose?.getNumDots(
                                     ingestionDose = cumulativeDose,
                                     ingestionUnits = units

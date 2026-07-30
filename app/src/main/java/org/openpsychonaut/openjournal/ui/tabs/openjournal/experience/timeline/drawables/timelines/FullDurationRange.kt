@@ -31,9 +31,12 @@ data class FullDurationRange(
 }
 
 fun DurationRange.toFullDurationRange(): FullDurationRange? {
-    return if (minInSec != null && maxInSec != null) {
-        FullDurationRange(minInSec, maxInSec)
-    } else {
-        null
+    val min = minInSec
+    val max = maxInSec
+    return when {
+        min != null && max != null -> FullDurationRange(min, max)
+        min != null -> FullDurationRange(min, min)
+        max != null -> FullDurationRange(max, max)
+        else -> null
     }
 }

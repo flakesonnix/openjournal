@@ -141,16 +141,10 @@ class InteractionChecker @Inject constructor(
 
     private fun isWildcardMatch(interactions: List<String>, substanceName: String): Boolean {
         val extendedInteractions = extendAndCleanInteractions(interactions)
-        return extendedInteractions.map { interaction ->
-            Regex(
-                pattern = interaction.replace(
-                    oldValue = "x",
-                    newValue = "[\\S]{2}",
-                    ignoreCase = true
-                ),
-                option = RegexOption.IGNORE_CASE
-            ).matches(substanceName)
-        }.any { it }
+        return extendedInteractions.filter { it.contains('x', ignoreCase = true) }.any { interaction ->
+            val pattern = interaction.replace("x", ".*", ignoreCase = true)
+            Regex("^$pattern$", RegexOption.IGNORE_CASE).matches(substanceName)
+        }
     }
 
     private fun isDirectMatch(interactions: List<String>, substanceName: String): Boolean {
@@ -168,7 +162,7 @@ class InteractionChecker @Inject constructor(
                     return@flatMap serotoninReleasers
                 }
                 "Tricyclic antidepressants" -> {
-                    return@flatMap emptyList() // remove because we don't want to match "depressant" with it and there is no substance that belongs to that class
+                    return@flatMap tricyclicAntidepressants
                 }
                 else -> {
                     return@flatMap listOf(name)
@@ -176,6 +170,16 @@ class InteractionChecker @Inject constructor(
             }
         }.distinct()
     }
+
+    private val tricyclicAntidepressants = listOf(
+        "Amitriptyline",
+        "Clomipramine",
+        "Dosulepin",
+        "Doxepin",
+        "Imipramine",
+        "Lofepramine",
+        "Nortriptyline"
+    )
 
     private val serotoninReleasers = listOf(
         "MDMA",
