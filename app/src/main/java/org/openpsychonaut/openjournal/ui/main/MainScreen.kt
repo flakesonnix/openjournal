@@ -30,12 +30,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.openpsychonaut.openjournal.ui.main.navigation.graphs.journalGraph
+import org.openpsychonaut.openjournal.ui.main.navigation.graphs.openJournalGraph
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.saferGraph
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.searchGraph
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.settingsGraph
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.statsGraph
-import org.openpsychonaut.openjournal.ui.main.navigation.JournalTopLevelRoute
+import org.openpsychonaut.openjournal.ui.main.navigation.OpenJournalTopLevelRoute
 import org.openpsychonaut.openjournal.ui.main.navigation.topLevelRoutes
 
 @Composable
@@ -89,9 +89,9 @@ fun MainScreen(
         ) {
             NavHost(
                 navController,
-                startDestination = JournalTopLevelRoute
+                startDestination = OpenJournalTopLevelRoute
             ) {
-                journalGraph(navController)
+                openJournalGraph(navController)
                 statsGraph(navController)
                 searchGraph(navController)
                 saferGraph(navController)

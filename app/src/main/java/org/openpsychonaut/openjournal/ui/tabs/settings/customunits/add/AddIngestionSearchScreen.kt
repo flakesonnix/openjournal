@@ -56,8 +56,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.entities.CustomSubstance
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.search.AddIngestionSearchViewModel
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.search.SubstanceRowAddIngestion
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.search.AddIngestionSearchViewModel
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.search.SubstanceRowAddIngestion
 import org.openpsychonaut.openjournal.ui.tabs.search.CategoryModel
 import org.openpsychonaut.openjournal.ui.tabs.search.SubstanceModel
 import org.openpsychonaut.openjournal.ui.tabs.search.customColor

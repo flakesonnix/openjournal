@@ -84,7 +84,7 @@ class SettingsViewModel @Inject constructor(
             } else {
                 try {
                     val json = Json { ignoreUnknownKeys = true }
-                    val journalExport = json.decodeFromString<JournalExport>(text)
+                    val journalExport = json.decodeFromString<OpenJournalExport>(text)
                     experienceRepository.deleteEverything()
                     experienceRepository.insertEverything(journalExport)
                     snackbarHostState.showSnackbar(
@@ -175,7 +175,7 @@ class SettingsViewModel @Inject constructor(
                     note = it.note
                 )
             }
-            val journalExport = JournalExport(
+            val journalExport = OpenJournalExport(
                 experiences = experiencesSerializable,
                 substanceCompanions = experienceRepository.getAllSubstanceCompanions(),
                 customSubstances = experienceRepository.getAllCustomSubstances(),

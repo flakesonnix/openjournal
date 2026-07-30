@@ -41,7 +41,7 @@ import org.openpsychonaut.openjournal.data.room.experiences.relations.Experience
 import org.openpsychonaut.openjournal.data.room.experiences.relations.IngestionWithCompanion
 import org.openpsychonaut.openjournal.data.room.experiences.relations.IngestionWithCompanionAndCustomUnit
 import org.openpsychonaut.openjournal.data.room.experiences.relations.IngestionWithExperienceAndCustomUnit
-import org.openpsychonaut.openjournal.ui.tabs.settings.JournalExport
+import org.openpsychonaut.openjournal.ui.tabs.settings.OpenJournalExport
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -342,7 +342,7 @@ interface ExperienceDao {
 
     @Transaction
     suspend fun insertEverything(
-        journalExport: JournalExport
+        journalExport: OpenJournalExport
     ) {
         journalExport.experiences.forEachIndexed { indexExperience, experienceSerializable ->
             val experienceID = indexExperience + 1

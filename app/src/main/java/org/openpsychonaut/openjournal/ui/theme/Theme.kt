@@ -113,6 +113,7 @@ fun OpenJournalTheme(
     }
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = Typography,
         content = content
     )
 }

@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import org.openpsychonaut.openjournal.ui.main.navigation.composableWithTransitions
 import org.openpsychonaut.openjournal.ui.main.navigation.DrugsTopLevelRoute
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.timeline.ExplainTimelineScreen
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.timeline.ExplainTimelineScreen
 import org.openpsychonaut.openjournal.ui.tabs.safer.DoseExplanationScreen
 import org.openpsychonaut.openjournal.ui.tabs.safer.VolumetricDosingScreen
 import org.openpsychonaut.openjournal.ui.tabs.search.SearchScreen

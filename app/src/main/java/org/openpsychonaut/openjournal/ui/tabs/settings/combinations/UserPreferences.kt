@@ -24,7 +24,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.components.SavedTimeDisplayOption
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.components.SavedTimeDisplayOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant

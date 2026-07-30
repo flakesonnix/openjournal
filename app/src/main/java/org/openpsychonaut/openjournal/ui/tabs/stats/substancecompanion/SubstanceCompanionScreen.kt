@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.entities.SubstanceCompanion
 import org.openpsychonaut.openjournal.data.substances.classes.Tolerance
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.components.CardWithTitle
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.components.CardWithTitle
 import org.openpsychonaut.openjournal.ui.tabs.search.substance.roa.ToleranceSection
 import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding

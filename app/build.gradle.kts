@@ -15,8 +15,8 @@ android {
         applicationId = "org.openpsychonaut.openjournal"
         minSdk = 26
         targetSdk = 37
-        versionCode = 62
-        versionName = "11.11"
+        versionCode = 63
+        versionName = "12.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

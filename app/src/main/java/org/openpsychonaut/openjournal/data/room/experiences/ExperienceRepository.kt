@@ -32,7 +32,7 @@ import org.openpsychonaut.openjournal.data.room.experiences.relations.Experience
 import org.openpsychonaut.openjournal.data.room.experiences.relations.ExperienceWithIngestionsTimedNotesAndRatings
 import org.openpsychonaut.openjournal.data.room.experiences.relations.IngestionWithCompanion
 import org.openpsychonaut.openjournal.data.room.experiences.relations.IngestionWithExperienceAndCustomUnit
-import org.openpsychonaut.openjournal.ui.tabs.settings.JournalExport
+import org.openpsychonaut.openjournal.ui.tabs.settings.OpenJournalExport
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -65,7 +65,7 @@ class ExperienceRepository @Inject constructor(private val experienceDao: Experi
     )
 
     suspend fun insertEverything(
-        journalExport: JournalExport
+        journalExport: OpenJournalExport
     ) = experienceDao.insertEverything(journalExport)
 
     suspend fun insertIngestionAndCompanion(

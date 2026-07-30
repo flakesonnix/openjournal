@@ -25,9 +25,9 @@ import androidx.navigation.toRoute
 import org.openpsychonaut.openjournal.data.room.experiences.ExperienceRepository
 import org.openpsychonaut.openjournal.data.substances.repositories.SubstanceRepository
 import org.openpsychonaut.openjournal.ui.main.navigation.graphs.SubstanceRoute
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.TimelineDisplayOption
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.components.DataForOneEffectLine
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.timeline.AllTimelinesModel
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.TimelineDisplayOption
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.components.DataForOneEffectLine
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.timeline.AllTimelinesModel
 import org.openpsychonaut.openjournal.ui.utils.getInstant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

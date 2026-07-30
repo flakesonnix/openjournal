@@ -23,7 +23,7 @@ data class TopLevelRoute<T : Any>(
 
 val topLevelRoutes = listOf(
     TopLevelRoute("Stats", StatsTopLevelRoute, Icons.Filled.BarChart, Icons.Outlined.BarChart),
-    TopLevelRoute("Journal", JournalTopLevelRoute, Icons.Filled.Book, Icons.Outlined.Book),
+    TopLevelRoute("OpenJournal", OpenJournalTopLevelRoute, Icons.Filled.Book, Icons.Outlined.Book),
     TopLevelRoute("Drugs", DrugsTopLevelRoute, Icons.Filled.Medication, Icons.Outlined.Medication),
     TopLevelRoute("Safer", SaferUseTopLevelRoute, Icons.Filled.HealthAndSafety, Icons.Outlined.HealthAndSafety),
     TopLevelRoute("Settings", SettingsTopLevelRoute, Icons.Filled.Settings, Icons.Outlined.Settings)
@@ -33,7 +33,7 @@ val topLevelRoutes = listOf(
 object StatsTopLevelRoute
 
 @Serializable
-object JournalTopLevelRoute
+object OpenJournalTopLevelRoute
 
 @Serializable
 object DrugsTopLevelRoute

@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.openpsychonaut.openjournal.data.room.experiences.entities.AdaptiveColor
 import org.openpsychonaut.openjournal.data.room.experiences.entities.SubstanceCompanion
-import org.openpsychonaut.openjournal.ui.tabs.journal.addingestion.time.ColorPicker
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.addingestion.time.ColorPicker
 import org.openpsychonaut.openjournal.ui.theme.horizontalPadding
 
 @Composable

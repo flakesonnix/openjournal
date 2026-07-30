@@ -18,7 +18,7 @@
 
 package org.openpsychonaut.openjournal
 
-import org.openpsychonaut.openjournal.ui.tabs.journal.experience.timeline.drawables.AxisDrawable
+import org.openpsychonaut.openjournal.ui.tabs.openjournal.experience.timeline.drawables.AxisDrawable
 import org.openpsychonaut.openjournal.ui.utils.getInstant
 import org.openpsychonaut.openjournal.ui.utils.getStringOfPattern
 import org.openpsychonaut.openjournal.ui.utils.getTimeDifferenceText
