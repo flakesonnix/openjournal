@@ -85,8 +85,7 @@ class SettingsViewModel @Inject constructor(
                 try {
                     val json = Json { ignoreUnknownKeys = true }
                     val journalExport = json.decodeFromString<OpenJournalExport>(text)
-                    experienceRepository.deleteEverything()
-                    experienceRepository.insertEverything(journalExport)
+                    experienceRepository.replaceEverything(journalExport)
                     snackbarHostState.showSnackbar(
                         message = "Import successful",
                         duration = SnackbarDuration.Short

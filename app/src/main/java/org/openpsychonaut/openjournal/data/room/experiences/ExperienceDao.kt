@@ -341,6 +341,12 @@ interface ExperienceDao {
     }
 
     @Transaction
+    suspend fun replaceEverything(journalExport: OpenJournalExport) {
+        deleteEverything()
+        insertEverything(journalExport)
+    }
+
+    @Transaction
     suspend fun insertEverything(
         journalExport: OpenJournalExport
     ) {
