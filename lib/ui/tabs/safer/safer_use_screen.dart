@@ -20,7 +20,9 @@ class SaferUseScreen extends StatelessWidget {
                   leading: const Icon(Icons.science_outlined),
                   title: const Text('Reagent Testing'),
                   subtitle: const Text('Verify what you have'),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/reagent-testing');
+                  },
                 ),
                 const Divider(),
                 ListTile(
