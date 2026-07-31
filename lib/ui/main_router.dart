@@ -6,6 +6,7 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/edit/edit_experience_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/experience/rating/add_rating_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/calendar/calendar_screen.dart';
 import 'package:openjournal/ui/tabs/safer/volumetric_dosing_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
@@ -40,6 +41,13 @@ final router = GoRouter(
       builder: (context, state) {
         final id = int.parse(state.pathParameters['id']!);
         return EditExperienceScreen(experienceId: id);
+      },
+    ),
+    GoRoute(
+      path: '/add-rating/:id',
+      builder: (context, state) {
+        final id = int.parse(state.pathParameters['id']!);
+        return AddRatingScreen(experienceId: id);
       },
     ),
     GoRoute(

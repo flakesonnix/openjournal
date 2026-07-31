@@ -44,10 +44,14 @@ class ExperienceDetailScreen extends ConsumerWidget {
                 actions: [
                   IconButton(icon: const Icon(Icons.timer_outlined), onPressed: () {}),
                   IconButton(icon: const Icon(Icons.star_outline), onPressed: () {}),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      context.push('/edit-experience/${exp.id}');
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(value: 'rating', child: Text('Add Rating')),
+                      const PopupMenuItem(value: 'edit', child: Text('Edit Details')),
+                    ],
+                    onSelected: (val) {
+                      if (val == 'edit') context.push('/edit-experience/${exp.id}');
+                      if (val == 'rating') context.push('/add-rating/${exp.id}');
                     },
                   ),
                 ],
