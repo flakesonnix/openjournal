@@ -290,6 +290,17 @@ class OpenJournalRepository {
     return _db.into(_db.customSubstances).insert(customSubstance);
   }
 
+  Future<int> insertCustomUnit(CustomUnitsCompanion customUnit) {
+    return _db.into(_db.customUnits).insert(customUnit);
+  }
+
+  Stream<List<CustomUnit>> watchCustomUnits(String substanceName) {
+    return (_db.select(_db.customUnits)
+          ..where((t) => t.substanceName.equals(substanceName))
+          ..orderBy([(t) => OrderingTerm(expression: t.creationDate, mode: OrderingMode.desc)]))
+        .watch();
+  }
+
   Future<bool> updateExperience(ExperiencesCompanion experience) {
     return _db.update(_db.experiences).replace(experience);
   }
