@@ -124,6 +124,21 @@ class ChooseDoseScreen extends ConsumerWidget {
                   convertedDoseAndUnitText: state.impureDoseWithUnit,
                 ),
               ),
+            CardWithTitle(
+              title: "Units",
+              child: Column(
+                children: [
+                  Text("Prefer to log with a different unit?"),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: () {
+                      context.push('/add-ingestion/add-custom-unit/$substanceName/$route');
+                    },
+                    child: const Text("Create a custom unit"),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 80),
           ],
         ),
