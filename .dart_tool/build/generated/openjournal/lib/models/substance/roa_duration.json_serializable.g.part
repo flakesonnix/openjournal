@@ -1,0 +1,34 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+RoaDuration _$RoaDurationFromJson(Map<String, dynamic> json) => RoaDuration(
+  onset: json['onset'] == null
+      ? null
+      : DurationRange.fromJson(json['onset'] as Map<String, dynamic>),
+  comeup: json['comeup'] == null
+      ? null
+      : DurationRange.fromJson(json['comeup'] as Map<String, dynamic>),
+  peak: json['peak'] == null
+      ? null
+      : DurationRange.fromJson(json['peak'] as Map<String, dynamic>),
+  offset: json['offset'] == null
+      ? null
+      : DurationRange.fromJson(json['offset'] as Map<String, dynamic>),
+  total: json['total'] == null
+      ? null
+      : DurationRange.fromJson(json['total'] as Map<String, dynamic>),
+  afterglow: json['afterglow'] == null
+      ? null
+      : DurationRange.fromJson(json['afterglow'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$RoaDurationToJson(RoaDuration instance) =>
+    <String, dynamic>{
+      'onset': instance.onset,
+      'comeup': instance.comeup,
+      'peak': instance.peak,
+      'offset': instance.offset,
+      'total': instance.total,
+      'afterglow': instance.afterglow,
+    };

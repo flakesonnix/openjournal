@@ -693,6 +693,9 @@ class $IngestionsTable extends Ingestions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES experiences (id)',
+    ),
   );
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
@@ -703,17 +706,18 @@ class $IngestionsTable extends Ingestions
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _stomachFullnessMeta = const VerificationMeta(
-    'stomachFullness',
-  );
   @override
-  late final GeneratedColumn<String> stomachFullness = GeneratedColumn<String>(
-    'stomach_fullness',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<StomachFullness?, String>
+  stomachFullness =
+      GeneratedColumn<String>(
+        'stomach_fullness',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<StomachFullness?>(
+        $IngestionsTable.$converterstomachFullnessn,
+      );
   static const VerificationMeta _consumerNameMeta = const VerificationMeta(
     'consumerName',
   );
@@ -863,15 +867,6 @@ class $IngestionsTable extends Ingestions
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
-    if (data.containsKey('stomach_fullness')) {
-      context.handle(
-        _stomachFullnessMeta,
-        stomachFullness.isAcceptableOrUnknown(
-          data['stomach_fullness']!,
-          _stomachFullnessMeta,
-        ),
-      );
-    }
     if (data.containsKey('consumer_name')) {
       context.handle(
         _consumerNameMeta,
@@ -947,9 +942,11 @@ class $IngestionsTable extends Ingestions
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
-      stomachFullness: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}stomach_fullness'],
+      stomachFullness: $IngestionsTable.$converterstomachFullnessn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}stomach_fullness'],
+        ),
       ),
       consumerName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -966,6 +963,15 @@ class $IngestionsTable extends Ingestions
   $IngestionsTable createAlias(String alias) {
     return $IngestionsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<StomachFullness, String, String>
+  $converterstomachFullness = const EnumNameConverter<StomachFullness>(
+    StomachFullness.values,
+  );
+  static JsonTypeConverter2<StomachFullness?, String?, String?>
+  $converterstomachFullnessn = JsonTypeConverter2.asNullable(
+    $converterstomachFullness,
+  );
 }
 
 class Ingestion extends DataClass implements Insertable<Ingestion> {
@@ -981,7 +987,7 @@ class Ingestion extends DataClass implements Insertable<Ingestion> {
   final String? units;
   final int experienceId;
   final String? notes;
-  final String? stomachFullness;
+  final StomachFullness? stomachFullness;
   final String? consumerName;
   final int? customUnitId;
   const Ingestion({
@@ -1031,7 +1037,9 @@ class Ingestion extends DataClass implements Insertable<Ingestion> {
       map['notes'] = Variable<String>(notes);
     }
     if (!nullToAbsent || stomachFullness != null) {
-      map['stomach_fullness'] = Variable<String>(stomachFullness);
+      map['stomach_fullness'] = Variable<String>(
+        $IngestionsTable.$converterstomachFullnessn.toSql(stomachFullness),
+      );
     }
     if (!nullToAbsent || consumerName != null) {
       map['consumer_name'] = Variable<String>(consumerName);
@@ -1101,7 +1109,9 @@ class Ingestion extends DataClass implements Insertable<Ingestion> {
       units: serializer.fromJson<String?>(json['units']),
       experienceId: serializer.fromJson<int>(json['experienceId']),
       notes: serializer.fromJson<String?>(json['notes']),
-      stomachFullness: serializer.fromJson<String?>(json['stomachFullness']),
+      stomachFullness: $IngestionsTable.$converterstomachFullnessn.fromJson(
+        serializer.fromJson<String?>(json['stomachFullness']),
+      ),
       consumerName: serializer.fromJson<String?>(json['consumerName']),
       customUnitId: serializer.fromJson<int?>(json['customUnitId']),
     );
@@ -1124,7 +1134,9 @@ class Ingestion extends DataClass implements Insertable<Ingestion> {
       'units': serializer.toJson<String?>(units),
       'experienceId': serializer.toJson<int>(experienceId),
       'notes': serializer.toJson<String?>(notes),
-      'stomachFullness': serializer.toJson<String?>(stomachFullness),
+      'stomachFullness': serializer.toJson<String?>(
+        $IngestionsTable.$converterstomachFullnessn.toJson(stomachFullness),
+      ),
       'consumerName': serializer.toJson<String?>(consumerName),
       'customUnitId': serializer.toJson<int?>(customUnitId),
     };
@@ -1143,7 +1155,7 @@ class Ingestion extends DataClass implements Insertable<Ingestion> {
     Value<String?> units = const Value.absent(),
     int? experienceId,
     Value<String?> notes = const Value.absent(),
-    Value<String?> stomachFullness = const Value.absent(),
+    Value<StomachFullness?> stomachFullness = const Value.absent(),
     Value<String?> consumerName = const Value.absent(),
     Value<int?> customUnitId = const Value.absent(),
   }) => Ingestion(
@@ -1283,7 +1295,7 @@ class IngestionsCompanion extends UpdateCompanion<Ingestion> {
   final Value<String?> units;
   final Value<int> experienceId;
   final Value<String?> notes;
-  final Value<String?> stomachFullness;
+  final Value<StomachFullness?> stomachFullness;
   final Value<String?> consumerName;
   final Value<int?> customUnitId;
   const IngestionsCompanion({
@@ -1375,7 +1387,7 @@ class IngestionsCompanion extends UpdateCompanion<Ingestion> {
     Value<String?>? units,
     Value<int>? experienceId,
     Value<String?>? notes,
-    Value<String?>? stomachFullness,
+    Value<StomachFullness?>? stomachFullness,
     Value<String?>? consumerName,
     Value<int?>? customUnitId,
   }) {
@@ -1441,7 +1453,11 @@ class IngestionsCompanion extends UpdateCompanion<Ingestion> {
       map['notes'] = Variable<String>(notes.value);
     }
     if (stomachFullness.present) {
-      map['stomach_fullness'] = Variable<String>(stomachFullness.value);
+      map['stomach_fullness'] = Variable<String>(
+        $IngestionsTable.$converterstomachFullnessn.toSql(
+          stomachFullness.value,
+        ),
+      );
     }
     if (consumerName.present) {
       map['consumer_name'] = Variable<String>(consumerName.value);
@@ -1494,15 +1510,15 @@ class $SubstanceCompanionsTable extends SubstanceCompanions
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumn<String> color = GeneratedColumn<String>(
-    'color',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<AdaptiveColor, String> color =
+      GeneratedColumn<String>(
+        'color',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<AdaptiveColor>($SubstanceCompanionsTable.$convertercolor);
   @override
   List<GeneratedColumn> get $columns => [substanceName, color];
   @override
@@ -1528,14 +1544,6 @@ class $SubstanceCompanionsTable extends SubstanceCompanions
     } else if (isInserting) {
       context.missing(_substanceNameMeta);
     }
-    if (data.containsKey('color')) {
-      context.handle(
-        _colorMeta,
-        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_colorMeta);
-    }
     return context;
   }
 
@@ -1549,10 +1557,12 @@ class $SubstanceCompanionsTable extends SubstanceCompanions
         DriftSqlType.string,
         data['${effectivePrefix}substance_name'],
       )!,
-      color: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}color'],
-      )!,
+      color: $SubstanceCompanionsTable.$convertercolor.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}color'],
+        )!,
+      ),
     );
   }
 
@@ -1560,18 +1570,25 @@ class $SubstanceCompanionsTable extends SubstanceCompanions
   $SubstanceCompanionsTable createAlias(String alias) {
     return $SubstanceCompanionsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<AdaptiveColor, String, String> $convertercolor =
+      const EnumNameConverter<AdaptiveColor>(AdaptiveColor.values);
 }
 
 class SubstanceCompanion extends DataClass
     implements Insertable<SubstanceCompanion> {
   final String substanceName;
-  final String color;
+  final AdaptiveColor color;
   const SubstanceCompanion({required this.substanceName, required this.color});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['substance_name'] = Variable<String>(substanceName);
-    map['color'] = Variable<String>(color);
+    {
+      map['color'] = Variable<String>(
+        $SubstanceCompanionsTable.$convertercolor.toSql(color),
+      );
+    }
     return map;
   }
 
@@ -1589,7 +1606,9 @@ class SubstanceCompanion extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SubstanceCompanion(
       substanceName: serializer.fromJson<String>(json['substanceName']),
-      color: serializer.fromJson<String>(json['color']),
+      color: $SubstanceCompanionsTable.$convertercolor.fromJson(
+        serializer.fromJson<String>(json['color']),
+      ),
     );
   }
   @override
@@ -1597,11 +1616,13 @@ class SubstanceCompanion extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'substanceName': serializer.toJson<String>(substanceName),
-      'color': serializer.toJson<String>(color),
+      'color': serializer.toJson<String>(
+        $SubstanceCompanionsTable.$convertercolor.toJson(color),
+      ),
     };
   }
 
-  SubstanceCompanion copyWith({String? substanceName, String? color}) =>
+  SubstanceCompanion copyWith({String? substanceName, AdaptiveColor? color}) =>
       SubstanceCompanion(
         substanceName: substanceName ?? this.substanceName,
         color: color ?? this.color,
@@ -1636,7 +1657,7 @@ class SubstanceCompanion extends DataClass
 
 class SubstanceCompanionsCompanion extends UpdateCompanion<SubstanceCompanion> {
   final Value<String> substanceName;
-  final Value<String> color;
+  final Value<AdaptiveColor> color;
   final Value<int> rowid;
   const SubstanceCompanionsCompanion({
     this.substanceName = const Value.absent(),
@@ -1645,7 +1666,7 @@ class SubstanceCompanionsCompanion extends UpdateCompanion<SubstanceCompanion> {
   });
   SubstanceCompanionsCompanion.insert({
     required String substanceName,
-    required String color,
+    required AdaptiveColor color,
     this.rowid = const Value.absent(),
   }) : substanceName = Value(substanceName),
        color = Value(color);
@@ -1663,7 +1684,7 @@ class SubstanceCompanionsCompanion extends UpdateCompanion<SubstanceCompanion> {
 
   SubstanceCompanionsCompanion copyWith({
     Value<String>? substanceName,
-    Value<String>? color,
+    Value<AdaptiveColor>? color,
     Value<int>? rowid,
   }) {
     return SubstanceCompanionsCompanion(
@@ -1680,7 +1701,9 @@ class SubstanceCompanionsCompanion extends UpdateCompanion<SubstanceCompanion> {
       map['substance_name'] = Variable<String>(substanceName.value);
     }
     if (color.present) {
-      map['color'] = Variable<String>(color.value);
+      map['color'] = Variable<String>(
+        $SubstanceCompanionsTable.$convertercolor.toSql(color.value),
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -2039,15 +2062,15 @@ class $ShulginRatingsTable extends ShulginRatings
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _optionMeta = const VerificationMeta('option');
   @override
-  late final GeneratedColumn<String> option = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<ShulginRatingOption, String>
+  option = GeneratedColumn<String>(
     'option',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<ShulginRatingOption>($ShulginRatingsTable.$converteroption);
   static const VerificationMeta _experienceIdMeta = const VerificationMeta(
     'experienceId',
   );
@@ -2058,6 +2081,9 @@ class $ShulginRatingsTable extends ShulginRatings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES experiences (id)',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -2097,14 +2123,6 @@ class $ShulginRatingsTable extends ShulginRatings
         ),
       );
     }
-    if (data.containsKey('option')) {
-      context.handle(
-        _optionMeta,
-        option.isAcceptableOrUnknown(data['option']!, _optionMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_optionMeta);
-    }
     if (data.containsKey('experience_id')) {
       context.handle(
         _experienceIdMeta,
@@ -2137,10 +2155,12 @@ class $ShulginRatingsTable extends ShulginRatings
         DriftSqlType.dateTime,
         data['${effectivePrefix}creation_date'],
       ),
-      option: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}option'],
-      )!,
+      option: $ShulginRatingsTable.$converteroption.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}option'],
+        )!,
+      ),
       experienceId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}experience_id'],
@@ -2152,13 +2172,18 @@ class $ShulginRatingsTable extends ShulginRatings
   $ShulginRatingsTable createAlias(String alias) {
     return $ShulginRatingsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<ShulginRatingOption, String, String>
+  $converteroption = const EnumNameConverter<ShulginRatingOption>(
+    ShulginRatingOption.values,
+  );
 }
 
 class ShulginRating extends DataClass implements Insertable<ShulginRating> {
   final int id;
   final DateTime? time;
   final DateTime? creationDate;
-  final String option;
+  final ShulginRatingOption option;
   final int experienceId;
   const ShulginRating({
     required this.id,
@@ -2177,7 +2202,11 @@ class ShulginRating extends DataClass implements Insertable<ShulginRating> {
     if (!nullToAbsent || creationDate != null) {
       map['creation_date'] = Variable<DateTime>(creationDate);
     }
-    map['option'] = Variable<String>(option);
+    {
+      map['option'] = Variable<String>(
+        $ShulginRatingsTable.$converteroption.toSql(option),
+      );
+    }
     map['experience_id'] = Variable<int>(experienceId);
     return map;
   }
@@ -2203,7 +2232,9 @@ class ShulginRating extends DataClass implements Insertable<ShulginRating> {
       id: serializer.fromJson<int>(json['id']),
       time: serializer.fromJson<DateTime?>(json['time']),
       creationDate: serializer.fromJson<DateTime?>(json['creationDate']),
-      option: serializer.fromJson<String>(json['option']),
+      option: $ShulginRatingsTable.$converteroption.fromJson(
+        serializer.fromJson<String>(json['option']),
+      ),
       experienceId: serializer.fromJson<int>(json['experienceId']),
     );
   }
@@ -2214,7 +2245,9 @@ class ShulginRating extends DataClass implements Insertable<ShulginRating> {
       'id': serializer.toJson<int>(id),
       'time': serializer.toJson<DateTime?>(time),
       'creationDate': serializer.toJson<DateTime?>(creationDate),
-      'option': serializer.toJson<String>(option),
+      'option': serializer.toJson<String>(
+        $ShulginRatingsTable.$converteroption.toJson(option),
+      ),
       'experienceId': serializer.toJson<int>(experienceId),
     };
   }
@@ -2223,7 +2256,7 @@ class ShulginRating extends DataClass implements Insertable<ShulginRating> {
     int? id,
     Value<DateTime?> time = const Value.absent(),
     Value<DateTime?> creationDate = const Value.absent(),
-    String? option,
+    ShulginRatingOption? option,
     int? experienceId,
   }) => ShulginRating(
     id: id ?? this.id,
@@ -2275,7 +2308,7 @@ class ShulginRatingsCompanion extends UpdateCompanion<ShulginRating> {
   final Value<int> id;
   final Value<DateTime?> time;
   final Value<DateTime?> creationDate;
-  final Value<String> option;
+  final Value<ShulginRatingOption> option;
   final Value<int> experienceId;
   const ShulginRatingsCompanion({
     this.id = const Value.absent(),
@@ -2288,7 +2321,7 @@ class ShulginRatingsCompanion extends UpdateCompanion<ShulginRating> {
     this.id = const Value.absent(),
     this.time = const Value.absent(),
     this.creationDate = const Value.absent(),
-    required String option,
+    required ShulginRatingOption option,
     required int experienceId,
   }) : option = Value(option),
        experienceId = Value(experienceId);
@@ -2312,7 +2345,7 @@ class ShulginRatingsCompanion extends UpdateCompanion<ShulginRating> {
     Value<int>? id,
     Value<DateTime?>? time,
     Value<DateTime?>? creationDate,
-    Value<String>? option,
+    Value<ShulginRatingOption>? option,
     Value<int>? experienceId,
   }) {
     return ShulginRatingsCompanion(
@@ -2337,7 +2370,9 @@ class ShulginRatingsCompanion extends UpdateCompanion<ShulginRating> {
       map['creation_date'] = Variable<DateTime>(creationDate.value);
     }
     if (option.present) {
-      map['option'] = Variable<String>(option.value);
+      map['option'] = Variable<String>(
+        $ShulginRatingsTable.$converteroption.toSql(option.value),
+      );
     }
     if (experienceId.present) {
       map['experience_id'] = Variable<int>(experienceId.value);
@@ -2406,15 +2441,15 @@ class $TimedNotesTable extends TimedNotes
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumn<String> color = GeneratedColumn<String>(
-    'color',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<AdaptiveColor, String> color =
+      GeneratedColumn<String>(
+        'color',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<AdaptiveColor>($TimedNotesTable.$convertercolor);
   static const VerificationMeta _experienceIdMeta = const VerificationMeta(
     'experienceId',
   );
@@ -2425,6 +2460,9 @@ class $TimedNotesTable extends TimedNotes
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES experiences (id)',
+    ),
   );
   static const VerificationMeta _isPartOfTimelineMeta = const VerificationMeta(
     'isPartOfTimeline',
@@ -2492,14 +2530,6 @@ class $TimedNotesTable extends TimedNotes
     } else if (isInserting) {
       context.missing(_noteMeta);
     }
-    if (data.containsKey('color')) {
-      context.handle(
-        _colorMeta,
-        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_colorMeta);
-    }
     if (data.containsKey('experience_id')) {
       context.handle(
         _experienceIdMeta,
@@ -2547,10 +2577,12 @@ class $TimedNotesTable extends TimedNotes
         DriftSqlType.string,
         data['${effectivePrefix}note'],
       )!,
-      color: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}color'],
-      )!,
+      color: $TimedNotesTable.$convertercolor.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}color'],
+        )!,
+      ),
       experienceId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}experience_id'],
@@ -2566,6 +2598,9 @@ class $TimedNotesTable extends TimedNotes
   $TimedNotesTable createAlias(String alias) {
     return $TimedNotesTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<AdaptiveColor, String, String> $convertercolor =
+      const EnumNameConverter<AdaptiveColor>(AdaptiveColor.values);
 }
 
 class TimedNote extends DataClass implements Insertable<TimedNote> {
@@ -2573,7 +2608,7 @@ class TimedNote extends DataClass implements Insertable<TimedNote> {
   final DateTime creationDate;
   final DateTime time;
   final String note;
-  final String color;
+  final AdaptiveColor color;
   final int experienceId;
   final bool isPartOfTimeline;
   const TimedNote({
@@ -2592,7 +2627,11 @@ class TimedNote extends DataClass implements Insertable<TimedNote> {
     map['creation_date'] = Variable<DateTime>(creationDate);
     map['time'] = Variable<DateTime>(time);
     map['note'] = Variable<String>(note);
-    map['color'] = Variable<String>(color);
+    {
+      map['color'] = Variable<String>(
+        $TimedNotesTable.$convertercolor.toSql(color),
+      );
+    }
     map['experience_id'] = Variable<int>(experienceId);
     map['is_part_of_timeline'] = Variable<bool>(isPartOfTimeline);
     return map;
@@ -2620,7 +2659,9 @@ class TimedNote extends DataClass implements Insertable<TimedNote> {
       creationDate: serializer.fromJson<DateTime>(json['creationDate']),
       time: serializer.fromJson<DateTime>(json['time']),
       note: serializer.fromJson<String>(json['note']),
-      color: serializer.fromJson<String>(json['color']),
+      color: $TimedNotesTable.$convertercolor.fromJson(
+        serializer.fromJson<String>(json['color']),
+      ),
       experienceId: serializer.fromJson<int>(json['experienceId']),
       isPartOfTimeline: serializer.fromJson<bool>(json['isPartOfTimeline']),
     );
@@ -2633,7 +2674,9 @@ class TimedNote extends DataClass implements Insertable<TimedNote> {
       'creationDate': serializer.toJson<DateTime>(creationDate),
       'time': serializer.toJson<DateTime>(time),
       'note': serializer.toJson<String>(note),
-      'color': serializer.toJson<String>(color),
+      'color': serializer.toJson<String>(
+        $TimedNotesTable.$convertercolor.toJson(color),
+      ),
       'experienceId': serializer.toJson<int>(experienceId),
       'isPartOfTimeline': serializer.toJson<bool>(isPartOfTimeline),
     };
@@ -2644,7 +2687,7 @@ class TimedNote extends DataClass implements Insertable<TimedNote> {
     DateTime? creationDate,
     DateTime? time,
     String? note,
-    String? color,
+    AdaptiveColor? color,
     int? experienceId,
     bool? isPartOfTimeline,
   }) => TimedNote(
@@ -2716,7 +2759,7 @@ class TimedNotesCompanion extends UpdateCompanion<TimedNote> {
   final Value<DateTime> creationDate;
   final Value<DateTime> time;
   final Value<String> note;
-  final Value<String> color;
+  final Value<AdaptiveColor> color;
   final Value<int> experienceId;
   final Value<bool> isPartOfTimeline;
   const TimedNotesCompanion({
@@ -2733,7 +2776,7 @@ class TimedNotesCompanion extends UpdateCompanion<TimedNote> {
     required DateTime creationDate,
     required DateTime time,
     required String note,
-    required String color,
+    required AdaptiveColor color,
     required int experienceId,
     required bool isPartOfTimeline,
   }) : creationDate = Value(creationDate),
@@ -2767,7 +2810,7 @@ class TimedNotesCompanion extends UpdateCompanion<TimedNote> {
     Value<DateTime>? creationDate,
     Value<DateTime>? time,
     Value<String>? note,
-    Value<String>? color,
+    Value<AdaptiveColor>? color,
     Value<int>? experienceId,
     Value<bool>? isPartOfTimeline,
   }) {
@@ -2798,7 +2841,9 @@ class TimedNotesCompanion extends UpdateCompanion<TimedNote> {
       map['note'] = Variable<String>(note.value);
     }
     if (color.present) {
-      map['color'] = Variable<String>(color.value);
+      map['color'] = Variable<String>(
+        $TimedNotesTable.$convertercolor.toSql(color.value),
+      );
     }
     if (experienceId.present) {
       map['experience_id'] = Variable<int>(experienceId.value);
@@ -3671,6 +3716,65 @@ typedef $$ExperiencesTableUpdateCompanionBuilder =
       Value<double?> latitude,
     });
 
+final class $$ExperiencesTableReferences
+    extends BaseReferences<_$AppDatabase, $ExperiencesTable, Experience> {
+  $$ExperiencesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$IngestionsTable, List<Ingestion>>
+  _ingestionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.ingestions,
+    aliasName: 'experiences__id__ingestions__experience_id',
+  );
+
+  $$IngestionsTableProcessedTableManager get ingestionsRefs {
+    final manager = $$IngestionsTableTableManager(
+      $_db,
+      $_db.ingestions,
+    ).filter((f) => f.experienceId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ingestionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ShulginRatingsTable, List<ShulginRating>>
+  _shulginRatingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.shulginRatings,
+    aliasName: 'experiences__id__shulgin_ratings__experience_id',
+  );
+
+  $$ShulginRatingsTableProcessedTableManager get shulginRatingsRefs {
+    final manager = $$ShulginRatingsTableTableManager(
+      $_db,
+      $_db.shulginRatings,
+    ).filter((f) => f.experienceId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_shulginRatingsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimedNotesTable, List<TimedNote>>
+  _timedNotesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.timedNotes,
+    aliasName: 'experiences__id__timed_notes__experience_id',
+  );
+
+  $$TimedNotesTableProcessedTableManager get timedNotesRefs {
+    final manager = $$TimedNotesTableTableManager(
+      $_db,
+      $_db.timedNotes,
+    ).filter((f) => f.experienceId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timedNotesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$ExperiencesTableFilterComposer
     extends Composer<_$AppDatabase, $ExperiencesTable> {
   $$ExperiencesTableFilterComposer({
@@ -3724,6 +3828,81 @@ class $$ExperiencesTableFilterComposer
     column: $table.latitude,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> ingestionsRefs(
+    Expression<bool> Function($$IngestionsTableFilterComposer f) f,
+  ) {
+    final $$IngestionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ingestions,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$IngestionsTableFilterComposer(
+            $db: $db,
+            $table: $db.ingestions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> shulginRatingsRefs(
+    Expression<bool> Function($$ShulginRatingsTableFilterComposer f) f,
+  ) {
+    final $$ShulginRatingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shulginRatings,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShulginRatingsTableFilterComposer(
+            $db: $db,
+            $table: $db.shulginRatings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timedNotesRefs(
+    Expression<bool> Function($$TimedNotesTableFilterComposer f) f,
+  ) {
+    final $$TimedNotesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timedNotes,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimedNotesTableFilterComposer(
+            $db: $db,
+            $table: $db.timedNotes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ExperiencesTableOrderingComposer
@@ -3824,6 +4003,81 @@ class $$ExperiencesTableAnnotationComposer
 
   GeneratedColumn<double> get latitude =>
       $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  Expression<T> ingestionsRefs<T extends Object>(
+    Expression<T> Function($$IngestionsTableAnnotationComposer a) f,
+  ) {
+    final $$IngestionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ingestions,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$IngestionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.ingestions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> shulginRatingsRefs<T extends Object>(
+    Expression<T> Function($$ShulginRatingsTableAnnotationComposer a) f,
+  ) {
+    final $$ShulginRatingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shulginRatings,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShulginRatingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.shulginRatings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> timedNotesRefs<T extends Object>(
+    Expression<T> Function($$TimedNotesTableAnnotationComposer a) f,
+  ) {
+    final $$TimedNotesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timedNotes,
+      getReferencedColumn: (t) => t.experienceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimedNotesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timedNotes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ExperiencesTableTableManager
@@ -3837,12 +4091,13 @@ class $$ExperiencesTableTableManager
           $$ExperiencesTableAnnotationComposer,
           $$ExperiencesTableCreateCompanionBuilder,
           $$ExperiencesTableUpdateCompanionBuilder,
-          (
-            Experience,
-            BaseReferences<_$AppDatabase, $ExperiencesTable, Experience>,
-          ),
+          (Experience, $$ExperiencesTableReferences),
           Experience,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool ingestionsRefs,
+            bool shulginRatingsRefs,
+            bool timedNotesRefs,
+          })
         > {
   $$ExperiencesTableTableManager(_$AppDatabase db, $ExperiencesTable table)
     : super(
@@ -3900,9 +4155,96 @@ class $$ExperiencesTableTableManager
                 latitude: latitude,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ExperiencesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                ingestionsRefs = false,
+                shulginRatingsRefs = false,
+                timedNotesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (ingestionsRefs) db.ingestions,
+                    if (shulginRatingsRefs) db.shulginRatings,
+                    if (timedNotesRefs) db.timedNotes,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (ingestionsRefs)
+                        await $_getPrefetchedData<
+                          Experience,
+                          $ExperiencesTable,
+                          Ingestion
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ExperiencesTableReferences
+                              ._ingestionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ExperiencesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).ingestionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.experienceId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (shulginRatingsRefs)
+                        await $_getPrefetchedData<
+                          Experience,
+                          $ExperiencesTable,
+                          ShulginRating
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ExperiencesTableReferences
+                              ._shulginRatingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ExperiencesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).shulginRatingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.experienceId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (timedNotesRefs)
+                        await $_getPrefetchedData<
+                          Experience,
+                          $ExperiencesTable,
+                          TimedNote
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ExperiencesTableReferences
+                              ._timedNotesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ExperiencesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timedNotesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.experienceId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -3917,12 +4259,13 @@ typedef $$ExperiencesTableProcessedTableManager =
       $$ExperiencesTableAnnotationComposer,
       $$ExperiencesTableCreateCompanionBuilder,
       $$ExperiencesTableUpdateCompanionBuilder,
-      (
-        Experience,
-        BaseReferences<_$AppDatabase, $ExperiencesTable, Experience>,
-      ),
+      (Experience, $$ExperiencesTableReferences),
       Experience,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool ingestionsRefs,
+        bool shulginRatingsRefs,
+        bool timedNotesRefs,
+      })
     >;
 typedef $$IngestionsTableCreateCompanionBuilder =
     IngestionsCompanion Function({
@@ -3938,7 +4281,7 @@ typedef $$IngestionsTableCreateCompanionBuilder =
       Value<String?> units,
       required int experienceId,
       Value<String?> notes,
-      Value<String?> stomachFullness,
+      Value<StomachFullness?> stomachFullness,
       Value<String?> consumerName,
       Value<int?> customUnitId,
     });
@@ -3956,10 +4299,32 @@ typedef $$IngestionsTableUpdateCompanionBuilder =
       Value<String?> units,
       Value<int> experienceId,
       Value<String?> notes,
-      Value<String?> stomachFullness,
+      Value<StomachFullness?> stomachFullness,
       Value<String?> consumerName,
       Value<int?> customUnitId,
     });
+
+final class $$IngestionsTableReferences
+    extends BaseReferences<_$AppDatabase, $IngestionsTable, Ingestion> {
+  $$IngestionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ExperiencesTable _experienceIdTable(_$AppDatabase db) =>
+      db.experiences.createAlias('ingestions__experience_id__experiences__id');
+
+  $$ExperiencesTableProcessedTableManager get experienceId {
+    final $_column = $_itemColumn<int>('experience_id')!;
+
+    final manager = $$ExperiencesTableTableManager(
+      $_db,
+      $_db.experiences,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_experienceIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$IngestionsTableFilterComposer
     extends Composer<_$AppDatabase, $IngestionsTable> {
@@ -4021,19 +4386,15 @@ class $$IngestionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get notes => $composableBuilder(
     column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get stomachFullness => $composableBuilder(
+  ColumnWithTypeConverterFilters<StomachFullness?, StomachFullness, String>
+  get stomachFullness => $composableBuilder(
     column: $table.stomachFullness,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get consumerName => $composableBuilder(
@@ -4045,6 +4406,29 @@ class $$IngestionsTableFilterComposer
     column: $table.customUnitId,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ExperiencesTableFilterComposer get experienceId {
+    final $$ExperiencesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableFilterComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$IngestionsTableOrderingComposer
@@ -4107,11 +4491,6 @@ class $$IngestionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get notes => $composableBuilder(
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
@@ -4131,6 +4510,29 @@ class $$IngestionsTableOrderingComposer
     column: $table.customUnitId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ExperiencesTableOrderingComposer get experienceId {
+    final $$ExperiencesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableOrderingComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$IngestionsTableAnnotationComposer
@@ -4183,15 +4585,11 @@ class $$IngestionsTableAnnotationComposer
   GeneratedColumn<String> get units =>
       $composableBuilder(column: $table.units, builder: (column) => column);
 
-  GeneratedColumn<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 
-  GeneratedColumn<String> get stomachFullness => $composableBuilder(
+  GeneratedColumnWithTypeConverter<StomachFullness?, String>
+  get stomachFullness => $composableBuilder(
     column: $table.stomachFullness,
     builder: (column) => column,
   );
@@ -4205,6 +4603,29 @@ class $$IngestionsTableAnnotationComposer
     column: $table.customUnitId,
     builder: (column) => column,
   );
+
+  $$ExperiencesTableAnnotationComposer get experienceId {
+    final $$ExperiencesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$IngestionsTableTableManager
@@ -4218,12 +4639,9 @@ class $$IngestionsTableTableManager
           $$IngestionsTableAnnotationComposer,
           $$IngestionsTableCreateCompanionBuilder,
           $$IngestionsTableUpdateCompanionBuilder,
-          (
-            Ingestion,
-            BaseReferences<_$AppDatabase, $IngestionsTable, Ingestion>,
-          ),
+          (Ingestion, $$IngestionsTableReferences),
           Ingestion,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool experienceId})
         > {
   $$IngestionsTableTableManager(_$AppDatabase db, $IngestionsTable table)
     : super(
@@ -4251,7 +4669,7 @@ class $$IngestionsTableTableManager
                 Value<String?> units = const Value.absent(),
                 Value<int> experienceId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-                Value<String?> stomachFullness = const Value.absent(),
+                Value<StomachFullness?> stomachFullness = const Value.absent(),
                 Value<String?> consumerName = const Value.absent(),
                 Value<int?> customUnitId = const Value.absent(),
               }) => IngestionsCompanion(
@@ -4286,7 +4704,7 @@ class $$IngestionsTableTableManager
                 Value<String?> units = const Value.absent(),
                 required int experienceId,
                 Value<String?> notes = const Value.absent(),
-                Value<String?> stomachFullness = const Value.absent(),
+                Value<StomachFullness?> stomachFullness = const Value.absent(),
                 Value<String?> consumerName = const Value.absent(),
                 Value<int?> customUnitId = const Value.absent(),
               }) => IngestionsCompanion.insert(
@@ -4307,9 +4725,54 @@ class $$IngestionsTableTableManager
                 customUnitId: customUnitId,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$IngestionsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({experienceId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (experienceId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.experienceId,
+                                referencedTable: $$IngestionsTableReferences
+                                    ._experienceIdTable(db),
+                                referencedColumn: $$IngestionsTableReferences
+                                    ._experienceIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -4324,20 +4787,20 @@ typedef $$IngestionsTableProcessedTableManager =
       $$IngestionsTableAnnotationComposer,
       $$IngestionsTableCreateCompanionBuilder,
       $$IngestionsTableUpdateCompanionBuilder,
-      (Ingestion, BaseReferences<_$AppDatabase, $IngestionsTable, Ingestion>),
+      (Ingestion, $$IngestionsTableReferences),
       Ingestion,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool experienceId})
     >;
 typedef $$SubstanceCompanionsTableCreateCompanionBuilder =
     SubstanceCompanionsCompanion Function({
       required String substanceName,
-      required String color,
+      required AdaptiveColor color,
       Value<int> rowid,
     });
 typedef $$SubstanceCompanionsTableUpdateCompanionBuilder =
     SubstanceCompanionsCompanion Function({
       Value<String> substanceName,
-      Value<String> color,
+      Value<AdaptiveColor> color,
       Value<int> rowid,
     });
 
@@ -4355,9 +4818,10 @@ class $$SubstanceCompanionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get color => $composableBuilder(
+  ColumnWithTypeConverterFilters<AdaptiveColor, AdaptiveColor, String>
+  get color => $composableBuilder(
     column: $table.color,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -4395,7 +4859,7 @@ class $$SubstanceCompanionsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get color =>
+  GeneratedColumnWithTypeConverter<AdaptiveColor, String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
 }
 
@@ -4443,7 +4907,7 @@ class $$SubstanceCompanionsTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> substanceName = const Value.absent(),
-                Value<String> color = const Value.absent(),
+                Value<AdaptiveColor> color = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubstanceCompanionsCompanion(
                 substanceName: substanceName,
@@ -4453,7 +4917,7 @@ class $$SubstanceCompanionsTableTableManager
           createCompanionCallback:
               ({
                 required String substanceName,
-                required String color,
+                required AdaptiveColor color,
                 Value<int> rowid = const Value.absent(),
               }) => SubstanceCompanionsCompanion.insert(
                 substanceName: substanceName,
@@ -4677,7 +5141,7 @@ typedef $$ShulginRatingsTableCreateCompanionBuilder =
       Value<int> id,
       Value<DateTime?> time,
       Value<DateTime?> creationDate,
-      required String option,
+      required ShulginRatingOption option,
       required int experienceId,
     });
 typedef $$ShulginRatingsTableUpdateCompanionBuilder =
@@ -4685,9 +5149,36 @@ typedef $$ShulginRatingsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<DateTime?> time,
       Value<DateTime?> creationDate,
-      Value<String> option,
+      Value<ShulginRatingOption> option,
       Value<int> experienceId,
     });
+
+final class $$ShulginRatingsTableReferences
+    extends BaseReferences<_$AppDatabase, $ShulginRatingsTable, ShulginRating> {
+  $$ShulginRatingsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ExperiencesTable _experienceIdTable(_$AppDatabase db) => db
+      .experiences
+      .createAlias('shulgin_ratings__experience_id__experiences__id');
+
+  $$ExperiencesTableProcessedTableManager get experienceId {
+    final $_column = $_itemColumn<int>('experience_id')!;
+
+    final manager = $$ExperiencesTableTableManager(
+      $_db,
+      $_db.experiences,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_experienceIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$ShulginRatingsTableFilterComposer
     extends Composer<_$AppDatabase, $ShulginRatingsTable> {
@@ -4713,15 +5204,38 @@ class $$ShulginRatingsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get option => $composableBuilder(
+  ColumnWithTypeConverterFilters<
+    ShulginRatingOption,
+    ShulginRatingOption,
+    String
+  >
+  get option => $composableBuilder(
     column: $table.option,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnFilters(column),
-  );
+  $$ExperiencesTableFilterComposer get experienceId {
+    final $$ExperiencesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableFilterComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShulginRatingsTableOrderingComposer
@@ -4753,10 +5267,28 @@ class $$ShulginRatingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnOrderings(column),
-  );
+  $$ExperiencesTableOrderingComposer get experienceId {
+    final $$ExperiencesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableOrderingComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShulginRatingsTableAnnotationComposer
@@ -4779,13 +5311,31 @@ class $$ShulginRatingsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get option =>
+  GeneratedColumnWithTypeConverter<ShulginRatingOption, String> get option =>
       $composableBuilder(column: $table.option, builder: (column) => column);
 
-  GeneratedColumn<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => column,
-  );
+  $$ExperiencesTableAnnotationComposer get experienceId {
+    final $$ExperiencesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShulginRatingsTableTableManager
@@ -4799,12 +5349,9 @@ class $$ShulginRatingsTableTableManager
           $$ShulginRatingsTableAnnotationComposer,
           $$ShulginRatingsTableCreateCompanionBuilder,
           $$ShulginRatingsTableUpdateCompanionBuilder,
-          (
-            ShulginRating,
-            BaseReferences<_$AppDatabase, $ShulginRatingsTable, ShulginRating>,
-          ),
+          (ShulginRating, $$ShulginRatingsTableReferences),
           ShulginRating,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool experienceId})
         > {
   $$ShulginRatingsTableTableManager(
     _$AppDatabase db,
@@ -4824,7 +5371,7 @@ class $$ShulginRatingsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<DateTime?> time = const Value.absent(),
                 Value<DateTime?> creationDate = const Value.absent(),
-                Value<String> option = const Value.absent(),
+                Value<ShulginRatingOption> option = const Value.absent(),
                 Value<int> experienceId = const Value.absent(),
               }) => ShulginRatingsCompanion(
                 id: id,
@@ -4838,7 +5385,7 @@ class $$ShulginRatingsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<DateTime?> time = const Value.absent(),
                 Value<DateTime?> creationDate = const Value.absent(),
-                required String option,
+                required ShulginRatingOption option,
                 required int experienceId,
               }) => ShulginRatingsCompanion.insert(
                 id: id,
@@ -4848,9 +5395,55 @@ class $$ShulginRatingsTableTableManager
                 experienceId: experienceId,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ShulginRatingsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({experienceId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (experienceId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.experienceId,
+                                referencedTable: $$ShulginRatingsTableReferences
+                                    ._experienceIdTable(db),
+                                referencedColumn:
+                                    $$ShulginRatingsTableReferences
+                                        ._experienceIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -4865,12 +5458,9 @@ typedef $$ShulginRatingsTableProcessedTableManager =
       $$ShulginRatingsTableAnnotationComposer,
       $$ShulginRatingsTableCreateCompanionBuilder,
       $$ShulginRatingsTableUpdateCompanionBuilder,
-      (
-        ShulginRating,
-        BaseReferences<_$AppDatabase, $ShulginRatingsTable, ShulginRating>,
-      ),
+      (ShulginRating, $$ShulginRatingsTableReferences),
       ShulginRating,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool experienceId})
     >;
 typedef $$TimedNotesTableCreateCompanionBuilder =
     TimedNotesCompanion Function({
@@ -4878,7 +5468,7 @@ typedef $$TimedNotesTableCreateCompanionBuilder =
       required DateTime creationDate,
       required DateTime time,
       required String note,
-      required String color,
+      required AdaptiveColor color,
       required int experienceId,
       required bool isPartOfTimeline,
     });
@@ -4888,10 +5478,32 @@ typedef $$TimedNotesTableUpdateCompanionBuilder =
       Value<DateTime> creationDate,
       Value<DateTime> time,
       Value<String> note,
-      Value<String> color,
+      Value<AdaptiveColor> color,
       Value<int> experienceId,
       Value<bool> isPartOfTimeline,
     });
+
+final class $$TimedNotesTableReferences
+    extends BaseReferences<_$AppDatabase, $TimedNotesTable, TimedNote> {
+  $$TimedNotesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ExperiencesTable _experienceIdTable(_$AppDatabase db) =>
+      db.experiences.createAlias('timed_notes__experience_id__experiences__id');
+
+  $$ExperiencesTableProcessedTableManager get experienceId {
+    final $_column = $_itemColumn<int>('experience_id')!;
+
+    final manager = $$ExperiencesTableTableManager(
+      $_db,
+      $_db.experiences,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_experienceIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$TimedNotesTableFilterComposer
     extends Composer<_$AppDatabase, $TimedNotesTable> {
@@ -4922,20 +5534,39 @@ class $$TimedNotesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get color => $composableBuilder(
+  ColumnWithTypeConverterFilters<AdaptiveColor, AdaptiveColor, String>
+  get color => $composableBuilder(
     column: $table.color,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<bool> get isPartOfTimeline => $composableBuilder(
     column: $table.isPartOfTimeline,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ExperiencesTableFilterComposer get experienceId {
+    final $$ExperiencesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableFilterComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TimedNotesTableOrderingComposer
@@ -4972,15 +5603,33 @@ class $$TimedNotesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<bool> get isPartOfTimeline => $composableBuilder(
     column: $table.isPartOfTimeline,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ExperiencesTableOrderingComposer get experienceId {
+    final $$ExperiencesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableOrderingComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TimedNotesTableAnnotationComposer
@@ -5006,18 +5655,36 @@ class $$TimedNotesTableAnnotationComposer
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
 
-  GeneratedColumn<String> get color =>
+  GeneratedColumnWithTypeConverter<AdaptiveColor, String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
-
-  GeneratedColumn<int> get experienceId => $composableBuilder(
-    column: $table.experienceId,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<bool> get isPartOfTimeline => $composableBuilder(
     column: $table.isPartOfTimeline,
     builder: (column) => column,
   );
+
+  $$ExperiencesTableAnnotationComposer get experienceId {
+    final $$ExperiencesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.experienceId,
+      referencedTable: $db.experiences,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExperiencesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.experiences,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TimedNotesTableTableManager
@@ -5031,12 +5698,9 @@ class $$TimedNotesTableTableManager
           $$TimedNotesTableAnnotationComposer,
           $$TimedNotesTableCreateCompanionBuilder,
           $$TimedNotesTableUpdateCompanionBuilder,
-          (
-            TimedNote,
-            BaseReferences<_$AppDatabase, $TimedNotesTable, TimedNote>,
-          ),
+          (TimedNote, $$TimedNotesTableReferences),
           TimedNote,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool experienceId})
         > {
   $$TimedNotesTableTableManager(_$AppDatabase db, $TimedNotesTable table)
     : super(
@@ -5055,7 +5719,7 @@ class $$TimedNotesTableTableManager
                 Value<DateTime> creationDate = const Value.absent(),
                 Value<DateTime> time = const Value.absent(),
                 Value<String> note = const Value.absent(),
-                Value<String> color = const Value.absent(),
+                Value<AdaptiveColor> color = const Value.absent(),
                 Value<int> experienceId = const Value.absent(),
                 Value<bool> isPartOfTimeline = const Value.absent(),
               }) => TimedNotesCompanion(
@@ -5073,7 +5737,7 @@ class $$TimedNotesTableTableManager
                 required DateTime creationDate,
                 required DateTime time,
                 required String note,
-                required String color,
+                required AdaptiveColor color,
                 required int experienceId,
                 required bool isPartOfTimeline,
               }) => TimedNotesCompanion.insert(
@@ -5086,9 +5750,54 @@ class $$TimedNotesTableTableManager
                 isPartOfTimeline: isPartOfTimeline,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TimedNotesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({experienceId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (experienceId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.experienceId,
+                                referencedTable: $$TimedNotesTableReferences
+                                    ._experienceIdTable(db),
+                                referencedColumn: $$TimedNotesTableReferences
+                                    ._experienceIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -5103,9 +5812,9 @@ typedef $$TimedNotesTableProcessedTableManager =
       $$TimedNotesTableAnnotationComposer,
       $$TimedNotesTableCreateCompanionBuilder,
       $$TimedNotesTableUpdateCompanionBuilder,
-      (TimedNote, BaseReferences<_$AppDatabase, $TimedNotesTable, TimedNote>),
+      (TimedNote, $$TimedNotesTableReferences),
       TimedNote,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool experienceId})
     >;
 typedef $$CustomUnitsTableCreateCompanionBuilder =
     CustomUnitsCompanion Function({

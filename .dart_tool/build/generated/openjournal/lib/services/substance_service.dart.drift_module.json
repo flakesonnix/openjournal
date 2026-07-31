@@ -1,0 +1,8 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/services.dart",
+    "package:openjournal/models/substance/substance.dart",
+    "package:flutter_riverpod/flutter_riverpod.dart"
+  ]
+}

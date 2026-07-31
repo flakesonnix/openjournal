@@ -46,6 +46,50 @@ class UserPreferences @Inject constructor(private val dataStore: DataStore<Prefe
         val KEY_HIDE_DOSAGE_DOTS = booleanPreferencesKey("key_hide_dosage_dots")
         val KEY_ARE_SUBSTANCE_HEIGHTS_INDEPENDENT = booleanPreferencesKey("KEY_ARE_SUBSTANCE_HEIGHTS_INDEPENDENT")
         val KEY_IS_TIMELINE_HIDDEN = booleanPreferencesKey("KEY_IS_TIMELINE_HIDDEN")
+
+        val KEY_IS_APP_LOCK_ENABLED = booleanPreferencesKey("KEY_IS_APP_LOCK_ENABLED")
+        val KEY_LOCK_VALUE = stringPreferencesKey("KEY_LOCK_VALUE")
+        val KEY_LOCK_SALT = stringPreferencesKey("KEY_LOCK_SALT")
+        val KEY_LOCK_TYPE = stringPreferencesKey("KEY_LOCK_TYPE")
+        val KEY_IS_BIOMETRIC_ENABLED = booleanPreferencesKey("KEY_IS_BIOMETRIC_ENABLED")
+    }
+
+    enum class LockType {
+        NONE, PIN, PATTERN
+    }
+
+    val isAppLockEnabledFlow: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.KEY_IS_APP_LOCK_ENABLED] ?: false }
+    val lockValueFlow: Flow<String?> = dataStore.data.map { it[PreferencesKeys.KEY_LOCK_VALUE] }
+    val lockSaltFlow: Flow<String?> = dataStore.data.map { it[PreferencesKeys.KEY_LOCK_SALT] }
+    val lockTypeFlow: Flow<LockType> = dataStore.data.map {
+        LockType.valueOf(it[PreferencesKeys.KEY_LOCK_TYPE] ?: LockType.NONE.name)
+    }
+    val isBiometricEnabledFlow: Flow<Boolean> = dataStore.data.map { it[PreferencesKeys.KEY_IS_BIOMETRIC_ENABLED] ?: false }
+
+    suspend fun saveAppLockEnabled(value: Boolean) {
+        dataStore.edit { it[PreferencesKeys.KEY_IS_APP_LOCK_ENABLED] = value }
+    }
+
+    suspend fun saveLockValue(value: String?) {
+        dataStore.edit { preferences ->
+            if (value == null) preferences.remove(PreferencesKeys.KEY_LOCK_VALUE)
+            else preferences[PreferencesKeys.KEY_LOCK_VALUE] = value
+        }
+    }
+
+    suspend fun saveLockSalt(value: String?) {
+        dataStore.edit { preferences ->
+            if (value == null) preferences.remove(PreferencesKeys.KEY_LOCK_SALT)
+            else preferences[PreferencesKeys.KEY_LOCK_SALT] = value
+        }
+    }
+
+    suspend fun saveLockType(value: LockType) {
+        dataStore.edit { it[PreferencesKeys.KEY_LOCK_TYPE] = value.name }
+    }
+
+    suspend fun saveBiometricEnabled(value: Boolean) {
+        dataStore.edit { it[PreferencesKeys.KEY_IS_BIOMETRIC_ENABLED] = value }
     }
 
     suspend fun saveTimeDisplayOption(value: SavedTimeDisplayOption) {

@@ -18,20 +18,25 @@
 package org.openpsychonaut.openjournal
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import org.openpsychonaut.openjournal.ui.main.MainScreen
+import org.openpsychonaut.openjournal.ui.security.SecurityViewModel
+import org.openpsychonaut.openjournal.ui.security.UnlockScreen
 import org.openpsychonaut.openjournal.ui.theme.OpenJournalTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
+
+    private val securityViewModel: SecurityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -39,13 +44,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OpenJournalTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    MainScreen()
+                if (securityViewModel.isLocked) {
+                    UnlockScreen(
+                        viewModel = securityViewModel,
+                        onUnlockSuccess = { securityViewModel.unlock() }
+                    )
+                } else {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background,
+                    ) {
+                        MainScreen()
+                    }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        securityViewModel.lock()
     }
 }

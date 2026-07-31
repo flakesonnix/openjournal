@@ -4,6 +4,9 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:openjournal/models/experience/shulgin_rating_option.dart';
+import 'package:openjournal/models/experience/stomach_fullness.dart';
+import 'package:openjournal/models/experience/adaptive_color.dart';
 
 part 'database_service.g.dart';
 
@@ -30,16 +33,16 @@ class Ingestions extends Table {
   BoolColumn get isDoseAnEstimate => boolean()();
   RealColumn get estimatedDoseStandardDeviation => real().nullable()();
   TextColumn get units => text().nullable()();
-  IntColumn get experienceId => integer()();
+  IntColumn get experienceId => integer().references(Experiences, #id)();
   TextColumn get notes => text().nullable()();
-  TextColumn get stomachFullness => text().nullable()();
+  TextColumn get stomachFullness => textEnum<StomachFullness>().nullable()();
   TextColumn get consumerName => text().nullable()();
   IntColumn get customUnitId => integer().nullable()();
 }
 
 class SubstanceCompanions extends Table {
   TextColumn get substanceName => text()();
-  TextColumn get color => text()();
+  TextColumn get color => textEnum<AdaptiveColor>()();
 
   @override
   Set<Column> get primaryKey => {substanceName};
@@ -56,8 +59,8 @@ class ShulginRatings extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get time => dateTime().nullable()();
   DateTimeColumn get creationDate => dateTime().nullable()();
-  TextColumn get option => text()();
-  IntColumn get experienceId => integer()();
+  TextColumn get option => textEnum<ShulginRatingOption>()();
+  IntColumn get experienceId => integer().references(Experiences, #id)();
 }
 
 class TimedNotes extends Table {
@@ -65,8 +68,8 @@ class TimedNotes extends Table {
   DateTimeColumn get creationDate => dateTime()();
   DateTimeColumn get time => dateTime()();
   TextColumn get note => text()();
-  TextColumn get color => text()();
-  IntColumn get experienceId => integer()();
+  TextColumn get color => textEnum<AdaptiveColor>()();
+  IntColumn get experienceId => integer().references(Experiences, #id)();
   BoolColumn get isPartOfTimeline => boolean()();
 }
 
@@ -100,17 +103,21 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  // Complex Queries to mirror ExperienceDao.kt
+
+  Stream<List<Experience>> getSortedExperiences() {
+    return (select(experiences)..orderBy([(t) => OrderingTerm(expression: t.creationDate, mode: OrderingMode.desc)])).watch();
+  }
+
+  // Example of a joined query/relation
+  // Drift handles relations differently than Room. We often return custom classes or tuples.
 }
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsMethod();
+    final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'db.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
-}
-
-// Wrapper for getApplicationDocumentsDirectory to make it mockable or handled
-Future<Directory> getApplicationDocumentsMethod() async {
-  return await getApplicationDocumentsDirectory();
 }

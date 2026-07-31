@@ -91,5 +91,6 @@ dependencies {
     implementation(libs.compose)
 
     implementation(libs.androidx.core.splashscreen)
-
+    implementation(libs.androidx.biometric)
+    implementation(libs.argon2kt)
 }

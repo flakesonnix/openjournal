@@ -1,0 +1,8 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:openjournal/theme/colors.dart",
+    "package:openjournal/theme/typography.dart"
+  ]
+}

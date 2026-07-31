@@ -1,0 +1,1 @@
+{"valid_import":true,"imports":[{"uri":"package:json_annotation/json_annotation.dart","transitive":false},{"uri":"package:openjournal/models/substance/administration_route.dart","transitive":false},{"uri":"package:openjournal/models/experience/stomach_fullness.dart","transitive":false}],"elements":[]}

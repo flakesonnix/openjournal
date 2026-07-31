@@ -1,0 +1,1656 @@
+{
+  "elements": {
+    "AppDatabase": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "AppDatabase"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 3725,
+        "name": "AppDatabase"
+      },
+      "references": [
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "experiences"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "ingestions"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "substance_companions"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "custom_substances"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "shulgin_ratings"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "timed_notes"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "custom_units"
+        }
+      ],
+      "type": "database",
+      "tables": [
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "experiences"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "ingestions"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "substance_companions"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "custom_substances"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "shulgin_ratings"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "timed_notes"
+        },
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "custom_units"
+        }
+      ],
+      "views": [],
+      "includes": [],
+      "queries": [],
+      "schema_version": 1,
+      "daos": [],
+      "has_constructor_arg": false
+    },
+    "experiences": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "experiences"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 432,
+        "name": "Experiences"
+      },
+      "references": [],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 476,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "title",
+          "nameInDart": "title",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 528,
+            "name": "title"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "text",
+          "nameInDart": "textContent",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 564,
+            "name": "textContent"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "creation_date",
+          "nameInDart": "creationDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 624,
+            "name": "creationDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "sort_date",
+          "nameInDart": "sortDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 675,
+            "name": "sortDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "bool"
+          },
+          "nullable": false,
+          "nameInSql": "is_favorite",
+          "nameInDart": "isFavorite",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 718,
+            "name": "isFavorite"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "name",
+          "nameInDart": "locationName",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 762,
+            "name": "locationName"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "longitude",
+          "nameInDart": "longitude",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 830,
+            "name": "longitude"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "latitude",
+          "nameInDart": "latitude",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 881,
+            "name": "latitude"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "Experiences",
+      "row_class_name": "Experience",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "ingestions": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "ingestions"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 923,
+        "name": "Ingestions"
+      },
+      "references": [
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "experiences"
+        }
+      ],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 966,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "substance_name",
+          "nameInDart": "substanceName",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1018,
+            "name": "substanceName"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "time",
+          "nameInDart": "time",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1066,
+            "name": "time"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": true,
+          "nameInSql": "end_time",
+          "nameInDart": "endTime",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1109,
+            "name": "endTime"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": true,
+          "nameInSql": "creation_date",
+          "nameInDart": "creationDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1166,
+            "name": "creationDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "administration_route",
+          "nameInDart": "administrationRoute",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1224,
+            "name": "administrationRoute"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "dose",
+          "nameInDart": "dose",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1274,
+            "name": "dose"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "bool"
+          },
+          "nullable": false,
+          "nameInSql": "is_dose_an_estimate",
+          "nameInDart": "isDoseAnEstimate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1320,
+            "name": "isDoseAnEstimate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "estimated_dose_standard_deviation",
+          "nameInDart": "estimatedDoseStandardDeviation",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1370,
+            "name": "estimatedDoseStandardDeviation"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "units",
+          "nameInDart": "units",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1442,
+            "name": "units"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "experience_id",
+          "nameInDart": "experienceId",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1488,
+            "name": "experienceId"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "foreign_key",
+              "column": {
+                "table": {
+                  "library_uri": "package:openjournal/services/database_service.dart",
+                  "name": "experiences"
+                },
+                "name": "id"
+              },
+              "onUpdate": null,
+              "onDelete": null,
+              "initiallyDeferred": false
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "notes",
+          "nameInDart": "notes",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1563,
+            "name": "notes"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "stomach_fullness",
+          "nameInDart": "stomachFullness",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1610,
+            "name": "stomachFullness"
+          },
+          "typeConverter": {
+            "expression": {
+              "elements": [
+                "const ",
+                {
+                  "lexeme": "EnumNameConverter",
+                  "import_uri": "package:drift/drift.dart"
+                },
+                "<",
+                {
+                  "lexeme": "StomachFullness",
+                  "import_uri": "package:openjournal/models/experience/stomach_fullness.dart"
+                },
+                ">(",
+                {
+                  "lexeme": "StomachFullness",
+                  "import_uri": "package:openjournal/models/experience/stomach_fullness.dart"
+                },
+                ".values)"
+              ]
+            },
+            "dart_type": 0,
+            "json_type": 1,
+            "sql_type": {
+              "builtin": "string"
+            },
+            "dart_type_is_nullable": false,
+            "sql_type_is_nullable": false,
+            "json_type_is_nullable": false,
+            "is_drift_enum_converter": true
+          },
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "consumer_name",
+          "nameInDart": "consumerName",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1688,
+            "name": "consumerName"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": true,
+          "nameInSql": "custom_unit_id",
+          "nameInDart": "customUnitId",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1741,
+            "name": "customUnitId"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "Ingestions",
+      "row_class_name": "Ingestion",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "substance_companions": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "substance_companions"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 1790,
+        "name": "SubstanceCompanions"
+      },
+      "references": [],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "substance_name",
+          "nameInDart": "substanceName",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1843,
+            "name": "substanceName"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "color",
+          "nameInDart": "color",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 1887,
+            "name": "color"
+          },
+          "typeConverter": {
+            "expression": {
+              "elements": [
+                "const ",
+                {
+                  "lexeme": "EnumNameConverter",
+                  "import_uri": "package:drift/drift.dart"
+                },
+                "<",
+                {
+                  "lexeme": "AdaptiveColor",
+                  "import_uri": "package:openjournal/models/experience/adaptive_color.dart"
+                },
+                ">(",
+                {
+                  "lexeme": "AdaptiveColor",
+                  "import_uri": "package:openjournal/models/experience/adaptive_color.dart"
+                },
+                ".values)"
+              ]
+            },
+            "dart_type": 2,
+            "json_type": 3,
+            "sql_type": {
+              "builtin": "string"
+            },
+            "dart_type_is_nullable": false,
+            "sql_type_is_nullable": false,
+            "json_type_is_nullable": false,
+            "is_drift_enum_converter": true
+          },
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [
+        {
+          "type": "primary_key",
+          "columns": [
+            "substance_name"
+          ]
+        }
+      ],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "SubstanceCompanions",
+      "row_class_name": "SubstanceCompanion",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "custom_substances": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "custom_substances"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 1996,
+        "name": "CustomSubstances"
+      },
+      "references": [],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2045,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "name",
+          "nameInDart": "name",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2097,
+            "name": "name"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "units",
+          "nameInDart": "units",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2132,
+            "name": "units"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "description",
+          "nameInDart": "description",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2168,
+            "name": "description"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "CustomSubstances",
+      "row_class_name": "CustomSubstance",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "shulgin_ratings": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "shulgin_ratings"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 2202,
+        "name": "ShulginRatings"
+      },
+      "references": [
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "experiences"
+        }
+      ],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2249,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": true,
+          "nameInSql": "time",
+          "nameInDart": "time",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2305,
+            "name": "time"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": true,
+          "nameInSql": "creation_date",
+          "nameInDart": "creationDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2359,
+            "name": "creationDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "option",
+          "nameInDart": "option",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2417,
+            "name": "option"
+          },
+          "typeConverter": {
+            "expression": {
+              "elements": [
+                "const ",
+                {
+                  "lexeme": "EnumNameConverter",
+                  "import_uri": "package:drift/drift.dart"
+                },
+                "<",
+                {
+                  "lexeme": "ShulginRatingOption",
+                  "import_uri": "package:openjournal/models/experience/shulgin_rating_option.dart"
+                },
+                ">(",
+                {
+                  "lexeme": "ShulginRatingOption",
+                  "import_uri": "package:openjournal/models/experience/shulgin_rating_option.dart"
+                },
+                ".values)"
+              ]
+            },
+            "dart_type": 4,
+            "json_type": 5,
+            "sql_type": {
+              "builtin": "string"
+            },
+            "dart_type_is_nullable": false,
+            "sql_type_is_nullable": false,
+            "json_type_is_nullable": false,
+            "is_drift_enum_converter": true
+          },
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "experience_id",
+          "nameInDart": "experienceId",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2478,
+            "name": "experienceId"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "foreign_key",
+              "column": {
+                "table": {
+                  "library_uri": "package:openjournal/services/database_service.dart",
+                  "name": "experiences"
+                },
+                "name": "id"
+              },
+              "onUpdate": null,
+              "onDelete": null,
+              "initiallyDeferred": false
+            }
+          ],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "ShulginRatings",
+      "row_class_name": "ShulginRating",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "timed_notes": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "timed_notes"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 2545,
+        "name": "TimedNotes"
+      },
+      "references": [
+        {
+          "library_uri": "package:openjournal/services/database_service.dart",
+          "name": "experiences"
+        }
+      ],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2588,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "creation_date",
+          "nameInDart": "creationDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2644,
+            "name": "creationDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "time",
+          "nameInDart": "time",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2695,
+            "name": "time"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "note",
+          "nameInDart": "note",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2734,
+            "name": "note"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "color",
+          "nameInDart": "color",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2769,
+            "name": "color"
+          },
+          "typeConverter": {
+            "expression": {
+              "elements": [
+                "const ",
+                {
+                  "lexeme": "EnumNameConverter",
+                  "import_uri": "package:drift/drift.dart"
+                },
+                "<",
+                {
+                  "lexeme": "AdaptiveColor",
+                  "import_uri": "package:openjournal/models/experience/adaptive_color.dart"
+                },
+                ">(",
+                {
+                  "lexeme": "AdaptiveColor",
+                  "import_uri": "package:openjournal/models/experience/adaptive_color.dart"
+                },
+                ".values)"
+              ]
+            },
+            "dart_type": 6,
+            "json_type": 7,
+            "sql_type": {
+              "builtin": "string"
+            },
+            "dart_type_is_nullable": false,
+            "sql_type_is_nullable": false,
+            "json_type_is_nullable": false,
+            "is_drift_enum_converter": true
+          },
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "experience_id",
+          "nameInDart": "experienceId",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2823,
+            "name": "experienceId"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "foreign_key",
+              "column": {
+                "table": {
+                  "library_uri": "package:openjournal/services/database_service.dart",
+                  "name": "experiences"
+                },
+                "name": "id"
+              },
+              "onUpdate": null,
+              "onDelete": null,
+              "initiallyDeferred": false
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "bool"
+          },
+          "nullable": false,
+          "nameInSql": "is_part_of_timeline",
+          "nameInDart": "isPartOfTimeline",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2898,
+            "name": "isPartOfTimeline"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "TimedNotes",
+      "row_class_name": "TimedNote",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    },
+    "custom_units": {
+      "id": {
+        "library_uri": "package:openjournal/services/database_service.dart",
+        "name": "custom_units"
+      },
+      "declaration": {
+        "source_uri": "package:openjournal/services/database_service.dart",
+        "offset": 2940,
+        "name": "CustomUnits"
+      },
+      "references": [],
+      "type": "table",
+      "columns": [
+        {
+          "sqlType": {
+            "builtin": "int"
+          },
+          "nullable": false,
+          "nameInSql": "id",
+          "nameInDart": "id",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 2984,
+            "name": "id"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [
+            {
+              "type": "primary",
+              "is_auto_increment": true
+            }
+          ],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "substance_name",
+          "nameInDart": "substanceName",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3036,
+            "name": "substanceName"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "name",
+          "nameInDart": "name",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3080,
+            "name": "name"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "dateTime"
+          },
+          "nullable": false,
+          "nameInSql": "creation_date",
+          "nameInDart": "creationDate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3119,
+            "name": "creationDate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "administration_route",
+          "nameInDart": "administrationRoute",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3166,
+            "name": "administrationRoute"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "dose",
+          "nameInDart": "dose",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3216,
+            "name": "dose"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "double"
+          },
+          "nullable": true,
+          "nameInSql": "estimated_dose_standard_deviation",
+          "nameInDart": "estimatedDoseStandardDeviation",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3262,
+            "name": "estimatedDoseStandardDeviation"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "bool"
+          },
+          "nullable": false,
+          "nameInSql": "is_estimate",
+          "nameInDart": "isEstimate",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3334,
+            "name": "isEstimate"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "bool"
+          },
+          "nullable": false,
+          "nameInSql": "is_archived",
+          "nameInDart": "isArchived",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3378,
+            "name": "isArchived"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "unit",
+          "nameInDart": "unit",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3422,
+            "name": "unit"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": true,
+          "nameInSql": "unit_plural",
+          "nameInDart": "unitPlural",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3457,
+            "name": "unitPlural"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "original_unit",
+          "nameInDart": "originalUnit",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3509,
+            "name": "originalUnit"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        },
+        {
+          "sqlType": {
+            "builtin": "string"
+          },
+          "nullable": false,
+          "nameInSql": "note",
+          "nameInDart": "note",
+          "declaration": {
+            "source_uri": "package:openjournal/services/database_service.dart",
+            "offset": 3552,
+            "name": "note"
+          },
+          "typeConverter": null,
+          "clientDefaultCode": null,
+          "defaultArgument": null,
+          "overriddenJsonName": null,
+          "referenceName": null,
+          "documentationComment": null,
+          "constraints": [],
+          "customConstraints": null
+        }
+      ],
+      "existing_data_class": null,
+      "table_constraints": [],
+      "custom_parent_class": null,
+      "interfaces_for_row_class": [],
+      "fixed_entity_info_name": null,
+      "base_dart_name": "CustomUnits",
+      "row_class_name": "CustomUnit",
+      "companion_class_name": null,
+      "without_rowid": false,
+      "strict": false,
+      "write_default_constraints": true,
+      "custom_constraints": [],
+      "attached_indices": []
+    }
+  },
+  "imports": [
+    "package:drift/drift.dart",
+    "package:drift/native.dart",
+    "package:path_provider/path_provider.dart",
+    "package:path/path.dart",
+    "package:openjournal/models/experience/shulgin_rating_option.dart",
+    "package:openjournal/models/experience/stomach_fullness.dart",
+    "package:openjournal/models/experience/adaptive_color.dart"
+  ]
+}
