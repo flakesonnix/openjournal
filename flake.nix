@@ -19,7 +19,7 @@
           buildInputs = with pkgs; [
             temurin-bin-21
             flutter
-            # Linux desktop build dependencies
+            # Linux desktop build dependencies (Flutter currently requires GTK3)
             at-spi2-core
             clang
             cmake
@@ -34,8 +34,8 @@
             ninja
             pcre
             pkg-config
-            xorg.libXdmcp
-            xorg.libXtst
+            libxdmcp
+            libxtst
             util-linux
           ];
 
