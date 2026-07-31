@@ -102,6 +102,9 @@ class ExperienceDetailScreen extends ConsumerWidget {
                         title: Text(i.ingestion.substanceName),
                         subtitle: Text("${i.ingestion.dose} ${i.ingestion.units}"),
                         trailing: Text(DateUtilsOpenJournal.getTimeText(i.ingestion.time)),
+                        onTap: () {
+                          context.push('/edit-ingestion/${i.ingestion.id}');
+                        },
                       )).toList(),
                     ),
                   ),
