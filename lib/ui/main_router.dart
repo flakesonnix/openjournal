@@ -6,6 +6,8 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
+import 'package:openjournal/ui/tabs/search/search_screen.dart';
+import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -26,6 +28,13 @@ final router = GoRouter(
           return const MainScreen();
         }
         return ExperienceDetailScreen(experienceId: id);
+      },
+    ),
+    GoRoute(
+      path: '/substance/:name',
+      builder: (context, state) {
+        final name = state.pathParameters['name']!;
+        return SubstanceDetailScreen(substanceName: name);
       },
     ),
     GoRoute(

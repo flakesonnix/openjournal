@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/ui/tabs/openjournal/openjournal_screen.dart';
 import 'package:openjournal/ui/tabs/settings/settings_screen.dart';
 import 'package:openjournal/ui/tabs/stats/stats_screen.dart';
+import 'package:openjournal/ui/tabs/search/search_screen.dart';
+import 'package:openjournal/ui/tabs/safer/safer_use_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -17,8 +19,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   final List<Widget> _tabs = [
     const StatsScreen(),
     const OpenJournalScreen(),
-    const Center(child: Text('Search Tab')),
-    const Center(child: Text('Safer Tab')),
+    const SearchScreen(),
+    const SaferUseScreen(),
     const SettingsScreen(),
   ];
 
