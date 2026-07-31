@@ -130,7 +130,9 @@ class ChooseDoseScreen extends ConsumerWidget {
         floatingActionButton: state.isValidDose
             ? FloatingActionButton.extended(
                 onPressed: () {
-                  // TODO: Navigate to finish screen
+                  context.go(
+                    '/add-ingestion/finish/${substanceName}/${route}/${state.dose}/${state.units.isEmpty ? 'null' : state.units}/${state.isEstimate}',
+                  );
                 },
                 icon: const Icon(Icons.navigate_next),
                 label: const Text('Next'),

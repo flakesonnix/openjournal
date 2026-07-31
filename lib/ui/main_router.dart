@@ -4,6 +4,8 @@ import 'package:openjournal/ui/main_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/search/add_ingestion_search_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
+import 'package:openjournal/models/substance/administration_route.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -32,6 +34,24 @@ final router = GoRouter(
             final substanceName = state.pathParameters['substanceName']!;
             final route = state.pathParameters['route']!;
             return ChooseDoseScreen(substanceName: substanceName, route: route);
+          },
+        ),
+        GoRoute(
+          path: 'finish/:substanceName/:route/:dose/:units/:isEstimate',
+          builder: (context, state) {
+            final sub = state.pathParameters['substanceName']!;
+            final route = AdministrationRoute.values.firstWhere((r) => r.name == state.pathParameters['route']!);
+            final dose = double.tryParse(state.pathParameters['dose']!);
+            final units = state.pathParameters['units'] == 'null' ? null : state.pathParameters['units'];
+            final isEstimate = state.pathParameters['isEstimate'] == 'true';
+
+            return FinishIngestionScreen(
+              substanceName: sub,
+              route: route,
+              dose: dose,
+              units: units,
+              isEstimate: isEstimate,
+            );
           },
         ),
       ],

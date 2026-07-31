@@ -63,6 +63,82 @@ class OpenJournalRepository {
   Future<void> insertIngestion(IngestionsCompanion ingestion) {
     return _db.into(_db.ingestions).insert(ingestion);
   }
+
+  Future<List<String>> getRecentConsumerNames() async {
+    final query = _db.selectOnly(_db.ingestions, distinct: true)
+      ..addColumns([_db.ingestions.consumerName])
+      ..limit(50);
+    final results = await query.get();
+    return results.map((r) => r.read(_db.ingestions.consumerName)).whereType<String>().toList();
+  }
+
+  Future<List<String>> getRecentNotesForSubstance(String substanceName) async {
+    final query = _db.select(_db.ingestions)
+      ..where((t) => t.substanceName.equals(substanceName))
+      ..orderBy([(t) => OrderingTerm(expression: t.time, mode: OrderingMode.desc)])
+      ..limit(10);
+    final results = await query.get();
+    return results.map((r) => r.notes).whereType<String>().where((n) => n.isNotEmpty).toSet().toList();
+  }
+
+  Future<List<ExperienceListItem>> getExperiencesInRange(DateTime start, DateTime end) async {
+    final query = _db.select(_db.experiences)
+      ..where((t) => t.sortDate.isBetweenValues(start, end))
+      ..orderBy([(t) => OrderingTerm(expression: t.sortDate, mode: OrderingMode.desc)]);
+
+    final exps = await query.get();
+    final result = <ExperienceListItem>[];
+
+    for (var exp in exps) {
+      final ingestions = await (_db.select(_db.ingestions)
+            ..where((t) => t.experienceId.equals(exp.id)))
+          .join([
+        leftOuterJoin(_db.substanceCompanions,
+            _db.substanceCompanions.substanceName.equalsExp(_db.ingestions.substanceName)),
+        leftOuterJoin(_db.customUnits,
+            _db.customUnits.id.equalsExp(_db.ingestions.customUnitId)),
+      ]).get();
+
+      final ratings = await (_db.select(_db.shulginRatings)
+            ..where((t) => t.experienceId.equals(exp.id)))
+          .get();
+
+      result.add(ExperienceListItem(
+        experience: exp,
+        ingestions: ingestions.map((row) => IngestionWithCompanionAndCustomUnit(
+          ingestion: row.readTable(_db.ingestions),
+          substanceCompanion: row.readTableOrNull(_db.substanceCompanions),
+          customUnit: row.readTableOrNull(_db.customUnits),
+        )).toList(),
+        ratings: ratings,
+      ));
+    }
+    return result;
+  }
+
+  Future<SubstanceCompanion?> getSubstanceCompanion(String substanceName) {
+    return (_db.select(_db.substanceCompanions)
+          ..where((t) => t.substanceName.equals(substanceName)))
+        .getSingleOrNull();
+  }
+
+  Future<int> saveIngestionFlow({
+    required IngestionsCompanion ingestion,
+    ExperiencesCompanion? newExperience,
+    required SubstanceCompanionsCompanion companion,
+  }) async {
+    return await _db.transaction(() async {
+      await _db.into(_db.substanceCompanions).insertOnConflictUpdate(companion);
+
+      int experienceId = ingestion.experienceId.value;
+      if (newExperience != null) {
+        experienceId = await _db.into(_db.experiences).insert(newExperience);
+      }
+
+      await _db.into(_db.ingestions).insert(ingestion.copyWith(experienceId: Value(experienceId)));
+      return experienceId;
+    });
+  }
 }
 
 final databaseProvider = Provider<AppDatabase>((ref) {
