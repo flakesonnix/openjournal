@@ -6,6 +6,7 @@ import 'package:openjournal/ui/main_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:openjournal/services/security_service.dart';
 import 'package:openjournal/ui/security/app_lock_guard.dart';
+import 'package:openjournal/ui/tabs/settings/settings_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,17 +27,19 @@ void main() async {
   );
 }
 
-class OpenJournalApp extends StatelessWidget {
+class OpenJournalApp extends ConsumerWidget {
   const OpenJournalApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp.router(
       title: 'OpenJournal',
       routerConfig: router,
       theme: OpenJournalTheme.lightTheme,
       darkTheme: OpenJournalTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => AppLockGuard(child: child!),
     );
