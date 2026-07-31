@@ -76,7 +76,18 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                   ),
                 ),
               ],
-              // TODO: Add Custom Substances and Custom Units slivers
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      context.push('/add-custom-substance?name=${state.searchText}');
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add custom substance'),
+                  ),
+                ),
+              ),
               const SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           ],

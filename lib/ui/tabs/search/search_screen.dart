@@ -82,7 +82,8 @@ class SearchScreen extends ConsumerWidget {
                       name: sub.name,
                       commonNames: const [],
                       onTap: () {
-                        // TODO: Navigate to custom substance detail
+                        // For now we don't have a detail screen for custom substances
+                        // but we can at least show a toast or navigate to edit
                       },
                     );
                   },

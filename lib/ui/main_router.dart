@@ -11,6 +11,7 @@ import 'package:openjournal/ui/tabs/safer/volumetric_dosing_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
 import 'package:openjournal/ui/tabs/search/search_screen.dart';
 import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
+import 'package:openjournal/ui/tabs/search/custom/add_custom_substance_screen.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -53,6 +54,13 @@ final router = GoRouter(
       builder: (context, state) {
         final name = state.pathParameters['name']!;
         return SubstanceDetailScreen(substanceName: name);
+      },
+    ),
+    GoRoute(
+      path: '/add-custom-substance',
+      builder: (context, state) {
+        final name = state.uri.queryParameters['name'];
+        return AddCustomSubstanceScreen(initialName: name);
       },
     ),
     GoRoute(
