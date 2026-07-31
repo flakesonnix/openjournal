@@ -1,6 +1,0 @@
-- Complete rebranding to OpenJournal.
-- Modernized user interface with Material 3 components.
-- Added support for "save and add another" in the ingestion flow.
-- Improved experience list and finish screen design.
-- Introduced a formal Typography system to the theme.
-- Various bug fixes and SDK updates.
