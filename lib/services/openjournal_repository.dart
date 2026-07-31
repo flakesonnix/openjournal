@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/services/database_service.dart';
+import 'package:openjournal/models/experience/experience_detail_item.dart';
 import 'package:openjournal/models/experience/experience_list_item.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -54,6 +55,60 @@ class OpenJournalRepository {
         }).toList();
       },
     );
+  }
+
+  Stream<ExperienceDetailItem> watchExperienceDetail(int experienceId) {
+    final experienceStream = (_db.select(_db.experiences)
+          ..where((t) => t.id.equals(experienceId)))
+        .watchSingle();
+
+    final ingestionsStream = (_db.select(_db.ingestions)
+          ..where((t) => t.experienceId.equals(experienceId))
+          ..orderBy([(t) => OrderingTerm(expression: t.time, mode: OrderingMode.asc)]))
+        .join([
+      leftOuterJoin(_db.substanceCompanions,
+          _db.substanceCompanions.substanceName.equalsExp(_db.ingestions.substanceName)),
+      leftOuterJoin(_db.customUnits,
+          _db.customUnits.id.equalsExp(_db.ingestions.customUnitId)),
+    ]).watch();
+
+    final ratingsStream = (_db.select(_db.shulginRatings)
+          ..where((t) => t.experienceId.equals(experienceId))
+          ..orderBy([(t) => OrderingTerm(expression: t.time, mode: OrderingMode.asc)]))
+        .watch();
+
+    final timedNotesStream = (_db.select(_db.timedNotes)
+          ..where((t) => t.experienceId.equals(experienceId))
+          ..orderBy([(t) => OrderingTerm(expression: t.time, mode: OrderingMode.asc)]))
+        .watch();
+
+    return Rx.combineLatest4(
+      experienceStream,
+      ingestionsStream,
+      ratingsStream,
+      timedNotesStream,
+      (Experience exp, List<TypedResult> ingRows, List<ShulginRating> rats, List<TimedNote> notes) {
+        return ExperienceDetailItem(
+          listItem: ExperienceListItem(
+            experience: exp,
+            ingestions: ingRows
+                .map((row) => IngestionWithCompanionAndCustomUnit(
+                      ingestion: row.readTable(_db.ingestions),
+                      substanceCompanion: row.readTableOrNull(_db.substanceCompanions),
+                      customUnit: row.readTableOrNull(_db.customUnits),
+                    ))
+                .toList(),
+            ratings: rats,
+          ),
+          timedNotes: notes,
+        );
+      },
+    );
+  }
+
+  Future<void> setExperienceFavorite(int experienceId, bool isFavorite) {
+    return (_db.update(_db.experiences)..where((t) => t.id.equals(experienceId)))
+        .write(ExperiencesCompanion(isFavorite: Value(isFavorite)));
   }
 
   Future<int> insertExperience(ExperiencesCompanion experience) {

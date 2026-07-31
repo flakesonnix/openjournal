@@ -4,6 +4,7 @@ import 'package:openjournal/ui/main_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/search/add_ingestion_search_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
 
@@ -16,6 +17,16 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const MainScreen(),
+    ),
+    GoRoute(
+      path: '/experience/:id',
+      builder: (context, state) {
+        final id = int.tryParse(state.pathParameters['id']!);
+        if (id == null) {
+          return const MainScreen();
+        }
+        return ExperienceDetailScreen(experienceId: id);
+      },
     ),
     GoRoute(
       path: '/add-ingestion',

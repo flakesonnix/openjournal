@@ -1,30 +1,53 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:openjournal/main.dart';
+import 'package:openjournal/services/database_service.dart';
+import 'package:openjournal/services/openjournal_repository.dart';
+import 'package:openjournal/services/substance_service.dart';
+import 'package:openjournal/services/security_service.dart';
+import 'package:drift/native.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App boots to journal tab', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final container = ProviderContainer(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(await SharedPreferences.getInstance()),
+        databaseProvider.overrideWithValue(db),
+        openJournalRepositoryProvider.overrideWithValue(OpenJournalRepository(db)),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container.read(substanceServiceProvider).init();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const OpenJournalApp(),
+      ),
+    );
+    await _pumpUntil(tester, find.text('No experiences yet'));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('OpenJournal'), findsOneWidget);
+    expect(find.text('No experiences yet'), findsOneWidget);
   });
+}
+
+Future<void> _pumpUntil(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final end = DateTime.now().add(timeout);
+  while (finder.evaluate().isEmpty) {
+    if (DateTime.now().isAfter(end)) {
+      fail('Timed out waiting for ${finder.description}');
+    }
+    await tester.pump(const Duration(milliseconds: 50));
+  }
 }

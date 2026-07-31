@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/ui/tabs/openjournal/openjournal_screen.dart';
 import 'package:openjournal/ui/tabs/settings/settings_screen.dart';
+import 'package:openjournal/ui/tabs/stats/stats_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -14,7 +15,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   int _selectedIndex = 1; // Default to Journal tab
 
   final List<Widget> _tabs = [
-    const Center(child: Text('Stats Tab')),
+    const StatsScreen(),
     const OpenJournalScreen(),
     const Center(child: Text('Search Tab')),
     const Center(child: Text('Safer Tab')),

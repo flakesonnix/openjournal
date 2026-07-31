@@ -61,7 +61,7 @@ class OpenJournalScreen extends ConsumerWidget {
             // Riverpod handles refresh by invalidating providers if needed
             return ref.refresh(openJournalProvider.future);
           },
-          child: _buildList(state, notifier),
+          child: _buildList(context, state, notifier),
         ),
         floatingActionButton: !state.isSearchEnabled
             ? FloatingActionButton.extended(
@@ -84,7 +84,7 @@ class OpenJournalScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildList(OpenJournalState state, OpenJournalNotifier notifier) {
+  Widget _buildList(BuildContext context, OpenJournalState state, OpenJournalNotifier notifier) {
     if (state.activeExperiences.isEmpty && state.pastExperiences.isEmpty) {
       return Center(
         child: SingleChildScrollView(
@@ -107,7 +107,7 @@ class OpenJournalScreen extends ConsumerWidget {
           ...state.activeExperiences.map((item) => ExperienceRow(
                 item: item,
                 onTap: () {
-                  // TODO: Navigate to experience
+                  context.go('/experience/${item.experience.id}');
                 },
                 isTimeRelativeToNow: state.isTimeRelativeToNow,
               )),
@@ -122,7 +122,7 @@ class OpenJournalScreen extends ConsumerWidget {
           ...state.pastExperiences.map((item) => ExperienceRow(
                 item: item,
                 onTap: () {
-                  // TODO: Navigate to experience
+                  context.go('/experience/${item.experience.id}');
                 },
                 isTimeRelativeToNow: state.isTimeRelativeToNow,
               )),
