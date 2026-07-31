@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openjournal/ui/main_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/search/add_ingestion_search_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/addingestion/interactions/check_interactions_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
@@ -91,6 +92,16 @@ final router = GoRouter(
       path: '/add-ingestion',
       builder: (context, state) => const AddIngestionSearchScreen(),
       routes: [
+        GoRoute(
+          path: 'interactions/:substanceName',
+          builder: (context, state) {
+            final substanceName = state.pathParameters['substanceName']!;
+            return CheckInteractionsScreen(
+              substanceName: substanceName,
+              onNext: () => context.go('/add-ingestion/route/$substanceName'),
+            );
+          },
+        ),
         GoRoute(
           path: 'route/:substanceName',
           builder: (context, state) {
