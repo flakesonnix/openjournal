@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'roa_dose.g.dart';
@@ -22,6 +23,21 @@ enum DoseClass {
         return "A strong dose renders its subject mostly incapable of functioning, interacting normally, or thinking in a straightforward manner.\nThe effects of the substance are clear and can no longer be ignored or suppressed, leaving the subject entirely engaged in the experience regardless of their desire or volition. Negative effects become more common at this level.\nAs subjects are not able to alter the trajectory of their behavior at strong doses, it is vital that they have prepared their environment and activities in advance as well as taken any precautionary measures.";
       case DoseClass.heavy:
         return "A heavy dose is the upper limit of what a substance is capable of producing in terms of psychoactive effects; doses past this range are associated with rapidly increasing side effects and marginal desirable effects.\nDepending on the substance consumed, the user may be rendered incapable of functioning and communicating in addition to experiencing extremely uncomfortable side effects that overshadow the positive effects experienced at lower doses.\nIt is absolutely vital to employ harm reduction measures with heavy doses as the user will likely be unable to properly take care of themselves in the event of an emergency. Trip sitters are strongly advised.\nUsers should also be aware that the line between a heavy dose and overdose is often very blurry and they are placing themselves at a significantly higher risk of injury, hospitalization, and death whenever they choose to take a heavy dose.\nThe desire or compulsion to regularly take heavy doses (\"chronic use\") may also be an indicator of tolerance, addiction or other mental health problems.";
+    }
+  }
+
+  Color getColor(bool isDarkTheme) {
+    switch (this) {
+      case DoseClass.threshold:
+        return isDarkTheme ? const Color(0xFF64D2FF) : const Color(0xFF32ADE6);
+      case DoseClass.light:
+        return isDarkTheme ? const Color(0xFF30D158) : const Color(0xFF34C759);
+      case DoseClass.common:
+        return isDarkTheme ? const Color(0xFFFFD60A) : const Color(0xFFFFCC00);
+      case DoseClass.strong:
+        return isDarkTheme ? const Color(0xFFFF9F0A) : const Color(0xFFFF9500);
+      case DoseClass.heavy:
+        return isDarkTheme ? const Color(0xFFFF453A) : const Color(0xFFFF3B30);
     }
   }
 }
