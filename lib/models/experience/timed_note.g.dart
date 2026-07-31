@@ -1,0 +1,45 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'timed_note.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+TimedNote _$TimedNoteFromJson(Map<String, dynamic> json) => TimedNote(
+  id: (json['id'] as num?)?.toInt() ?? 0,
+  creationDate: json['creationDate'] == null
+      ? null
+      : DateTime.parse(json['creationDate'] as String),
+  time: DateTime.parse(json['time'] as String),
+  note: json['note'] as String,
+  color: $enumDecode(_$AdaptiveColorEnumMap, json['color']),
+  experienceId: (json['experienceId'] as num).toInt(),
+  isPartOfTimeline: json['isPartOfTimeline'] as bool,
+);
+
+Map<String, dynamic> _$TimedNoteToJson(TimedNote instance) => <String, dynamic>{
+  'id': instance.id,
+  'creationDate': instance.creationDate?.toIso8601String(),
+  'time': instance.time.toIso8601String(),
+  'note': instance.note,
+  'color': _$AdaptiveColorEnumMap[instance.color]!,
+  'experienceId': instance.experienceId,
+  'isPartOfTimeline': instance.isPartOfTimeline,
+};
+
+const _$AdaptiveColorEnumMap = {
+  AdaptiveColor.blue: 'blue',
+  AdaptiveColor.pink: 'pink',
+  AdaptiveColor.indigo: 'indigo',
+  AdaptiveColor.purple: 'purple',
+  AdaptiveColor.cyan: 'cyan',
+  AdaptiveColor.teal: 'teal',
+  AdaptiveColor.green: 'green',
+  AdaptiveColor.mint: 'mint',
+  AdaptiveColor.yellow: 'yellow',
+  AdaptiveColor.orange: 'orange',
+  AdaptiveColor.red: 'red',
+  AdaptiveColor.brown: 'brown',
+  AdaptiveColor.grey: 'grey',
+};

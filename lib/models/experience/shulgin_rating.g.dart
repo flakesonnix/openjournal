@@ -1,0 +1,38 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'shulgin_rating.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ShulginRating _$ShulginRatingFromJson(Map<String, dynamic> json) =>
+    ShulginRating(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      time: json['time'] == null
+          ? null
+          : DateTime.parse(json['time'] as String),
+      creationDate: json['creationDate'] == null
+          ? null
+          : DateTime.parse(json['creationDate'] as String),
+      option: $enumDecode(_$ShulginRatingOptionEnumMap, json['option']),
+      experienceId: (json['experienceId'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$ShulginRatingToJson(ShulginRating instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'time': instance.time?.toIso8601String(),
+      'creationDate': instance.creationDate?.toIso8601String(),
+      'option': _$ShulginRatingOptionEnumMap[instance.option]!,
+      'experienceId': instance.experienceId,
+    };
+
+const _$ShulginRatingOptionEnumMap = {
+  ShulginRatingOption.minus: 'minus',
+  ShulginRatingOption.plusMinus: 'plusMinus',
+  ShulginRatingOption.plus: 'plus',
+  ShulginRatingOption.twoPlus: 'twoPlus',
+  ShulginRatingOption.threePlus: 'threePlus',
+  ShulginRatingOption.fourPlus: 'fourPlus',
+};

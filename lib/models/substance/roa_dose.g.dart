@@ -1,0 +1,23 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'roa_dose.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+RoaDose _$RoaDoseFromJson(Map<String, dynamic> json) => RoaDose(
+  units: json['units'] as String,
+  lightMin: (json['lightMin'] as num?)?.toDouble(),
+  commonMin: (json['commonMin'] as num?)?.toDouble(),
+  strongMin: (json['strongMin'] as num?)?.toDouble(),
+  heavyMin: (json['heavyMin'] as num?)?.toDouble(),
+);
+
+Map<String, dynamic> _$RoaDoseToJson(RoaDose instance) => <String, dynamic>{
+  'units': instance.units,
+  'lightMin': instance.lightMin,
+  'commonMin': instance.commonMin,
+  'strongMin': instance.strongMin,
+  'heavyMin': instance.heavyMin,
+};
