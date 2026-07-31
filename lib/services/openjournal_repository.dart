@@ -286,6 +286,10 @@ class OpenJournalRepository {
     return _db.into(_db.experiences).insert(experience);
   }
 
+  Future<int> insertCustomSubstance(CustomSubstancesCompanion customSubstance) {
+    return _db.into(_db.customSubstances).insert(customSubstance);
+  }
+
   Future<bool> updateExperience(ExperiencesCompanion experience) {
     return _db.update(_db.experiences).replace(experience);
   }
