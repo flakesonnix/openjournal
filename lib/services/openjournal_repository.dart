@@ -321,6 +321,18 @@ class OpenJournalRepository {
     return (_db.delete(_db.ingestions)..where((t) => t.id.equals(id))).go();
   }
 
+  Future<int> insertTimedNote(TimedNotesCompanion note) {
+    return _db.into(_db.timedNotes).insert(note);
+  }
+
+  Future<bool> updateTimedNote(TimedNotesCompanion note) {
+    return _db.update(_db.timedNotes).replace(note);
+  }
+
+  Future<int> deleteTimedNote(int id) {
+    return (_db.delete(_db.timedNotes)..where((t) => t.id.equals(id))).go();
+  }
+
   Future<Map<DateTime, List<AdaptiveColor>>> getExperienceColorsByDay(DateTime start, DateTime end) async {
     final experiences = await getExperiencesInRange(start, end);
     final result = <DateTime, List<AdaptiveColor>>{};
