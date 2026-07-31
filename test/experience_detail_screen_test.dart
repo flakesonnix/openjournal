@@ -72,6 +72,12 @@ void main() {
     expect(find.text('Come up after 40 min'), findsOneWidget);
     expect(find.text('Peak'), findsOneWidget);
     expect(find.text('++'), findsOneWidget);
+
+    await tester.dragUntilVisible(
+      find.text('A lovely evening'),
+      find.byType(Scrollable).first,
+      const Offset(0, -200),
+    );
     expect(find.text('A lovely evening'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
   });
