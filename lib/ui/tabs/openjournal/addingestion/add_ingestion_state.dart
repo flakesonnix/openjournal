@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/models/substance/substance.dart';
 import 'package:openjournal/services/substance_service.dart';
@@ -6,7 +7,9 @@ import 'package:openjournal/services/openjournal_repository.dart';
 import 'package:openjournal/services/database_service.dart';
 import 'package:openjournal/models/substance/suggestion.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
+import 'package:openjournal/models/experience/adaptive_color.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:collection/collection.dart';
 
 class AddIngestionSearchState {
   final List<Substance> filteredSubstances;
@@ -45,22 +48,18 @@ class AddIngestionSearchState {
 }
 
 class AddIngestionSearchNotifier extends AutoDisposeAsyncNotifier<AddIngestionSearchState> {
-  final _searchTextController = StreamController<String>.broadcast();
+  final _searchTextController = BehaviorSubject<String>.seeded("");
 
   @override
   FutureOr<AddIngestionSearchState> build() async {
     final substanceService = ref.watch(substanceServiceProvider);
-    final repo = ref.watch(openJournalRepositoryProvider);
     final db = ref.watch(databaseProvider);
 
-    // Initial search text
-    _searchTextController.add("");
-
     final combinedStream = Rx.combineLatest4(
-      _searchTextController.stream.startWith(""),
-      Stream.fromFuture(db.select(db.customSubstances).get()), // In real app, might want to watch
-      Stream.fromFuture(db.select(db.customUnits).get()),
-      Stream.fromFuture(_getSuggestions()), // Simplified for now
+      _searchTextController.stream,
+      db.select(db.customSubstances).watch(),
+      db.select(db.customUnits).watch(),
+      _getSuggestionsStream(),
       (String query, List<CustomSubstance> customSubs, List<CustomUnit> customUnits, List<Suggestion> suggs) {
 
         final lowerQuery = query.toLowerCase();
@@ -79,7 +78,6 @@ class AddIngestionSearchNotifier extends AutoDisposeAsyncNotifier<AddIngestionSe
               u.unit.toLowerCase().contains(lowerQuery);
         }).toList();
 
-        // Filter suggestions based on search
         final filteredSuggs = suggs.where((s) {
           final matchedSubs = filteredSubs.map((sub) => sub.name).toList();
           return s.isInSearch(query, matchedSubs);
@@ -100,17 +98,70 @@ class AddIngestionSearchNotifier extends AutoDisposeAsyncNotifier<AddIngestionSe
       _searchTextController.close();
     });
 
-    return await combinedStream.first;
+    final first = await combinedStream.first;
+
+    combinedStream.listen((state) {
+      this.state = AsyncValue.data(state);
+    });
+
+    return first;
   }
 
   void updateSearchText(String text) {
     _searchTextController.add(text);
   }
 
-  Future<List<Suggestion>> _getSuggestions() async {
-    // TODO: Implement complex suggestion logic from Kotlin
-    // For now returning empty list to avoid blocking UI build
-    return [];
+  Stream<List<Suggestion>> _getSuggestionsStream() {
+    final db = ref.watch(databaseProvider);
+
+    final query = db.select(db.ingestions).join([
+      leftOuterJoin(db.substanceCompanions,
+          db.substanceCompanions.substanceName.equalsExp(db.ingestions.substanceName)),
+      leftOuterJoin(db.customUnits,
+          db.customUnits.id.equalsExp(db.ingestions.customUnitId)),
+    ])
+    ..orderBy([OrderingTerm(expression: db.ingestions.time, mode: OrderingMode.desc)])
+    ..limit(1000);
+
+    return query.watch().map((rows) {
+      final grouped = groupBy(rows, (row) => row.readTable(db.ingestions).substanceName);
+
+      final results = <Suggestion>[];
+      for (var entry in grouped.entries) {
+        final substanceName = entry.key;
+        final ingestionRows = entry.value;
+
+        final color = ingestionRows.first.readTableOrNull(db.substanceCompanions)?.color ?? AdaptiveColor.grey;
+        final latestTime = ingestionRows.first.readTable(db.ingestions).time;
+
+        final routeGrouped = groupBy(ingestionRows, (row) => row.readTable(db.ingestions).administrationRoute);
+
+        for (var routeEntry in routeGrouped.entries) {
+          final routeName = routeEntry.key;
+          final routeRows = routeEntry.value;
+          final route = AdministrationRoute.values.firstWhere((r) => r.name == routeName);
+
+          final doses = routeRows.map((r) {
+            final ing = r.readTable(db.ingestions);
+            return DoseAndUnit(
+              dose: ing.dose,
+              unit: ing.units ?? "",
+              isEstimate: ing.isDoseAnEstimate,
+              estimatedDoseStandardDeviation: ing.estimatedDoseStandardDeviation,
+            );
+          }).toSet().take(8).toList();
+
+          results.add(PureSubstanceSuggestion(
+            administrationRoute: route,
+            substanceName: substanceName,
+            adaptiveColor: color,
+            dosesAndUnit: doses,
+            sortInstant: latestTime,
+          ));
+        }
+      }
+      return results..sort((a, b) => b.sortInstant.compareTo(a.sortInstant));
+    });
   }
 }
 

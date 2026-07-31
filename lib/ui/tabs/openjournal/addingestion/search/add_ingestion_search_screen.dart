@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/add_ingestion_state.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/search/widgets/section_header.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/search/widgets/substance_row_add_ingestion.dart';
+import 'package:openjournal/ui/tabs/openjournal/addingestion/search/widgets/suggestion_row.dart';
 import 'package:openjournal/theme/theme.dart';
 
 class AddIngestionSearchScreen extends ConsumerWidget {
@@ -45,11 +46,32 @@ class AddIngestionSearchScreen extends ConsumerWidget {
               )
             else if (state.filteredSubstances.isEmpty &&
                 state.filteredCustomSubstances.isEmpty &&
-                state.filteredCustomUnits.isEmpty)
+                state.filteredCustomUnits.isEmpty &&
+                state.suggestions.isEmpty)
               const SliverFillRemaining(
                 child: Center(child: Text('No substances found')),
               )
             else ...[
+              if (state.suggestions.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SectionHeader(title: 'Quick logging')),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final suggestion = state.suggestions[index];
+                      return SuggestionRow(
+                        suggestion: suggestion,
+                        onOtherDose: (name, route) {
+                          context.go('/add-ingestion/route/$name');
+                        },
+                        onDoseSelected: (name, route, dose, units, isEst, sd) {
+                          context.go('/add-ingestion/finish/$name/$route/$dose/$units/$isEst');
+                        },
+                      );
+                    },
+                    childCount: state.suggestions.length,
+                  ),
+                ),
+              ],
               if (state.filteredSubstances.isNotEmpty) ...[
                 const SliverToBoxAdapter(
                   child: SectionHeader(title: 'Substances'),
@@ -64,7 +86,11 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                             name: substance.name,
                             commonNames: substance.commonNames,
                             onTap: () {
-                              context.go('/add-ingestion/route/${substance.name}');
+                              if (substance.hasInteractions) {
+                                context.go('/add-ingestion/interactions/${substance.name}');
+                              } else {
+                                context.go('/add-ingestion/route/${substance.name}');
+                              }
                             },
                           ),
                           if (index < state.filteredSubstances.length - 1)
