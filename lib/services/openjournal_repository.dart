@@ -4,6 +4,10 @@ import 'package:openjournal/services/database_service.dart';
 import 'package:openjournal/models/experience/experience_detail_item.dart';
 import 'package:openjournal/models/experience/experience_list_item.dart';
 import 'package:openjournal/models/experience/adaptive_color.dart';
+import 'package:openjournal/models/experience/openjournal_export.dart';
+import 'package:openjournal/models/experience/location.dart' as loc;
+import 'package:openjournal/models/experience/substance_companion.dart' as model;
+import 'package:openjournal/models/substance/administration_route.dart';
 import 'package:rxdart/rxdart.dart';
 
 class OpenJournalRepository {
@@ -11,11 +15,177 @@ class OpenJournalRepository {
 
   OpenJournalRepository(this._db);
 
-  Stream<List<ExperienceListItem>> watchExperienceList() {
-    // In Drift, we can watch multiple tables and combine them.
-    // For a complex join with lists (like Experience -> List<Ingestion>),
-    // it's often easier to watch all three tables and combine in Dart.
+  Future<void> deleteAllData() async {
+    await _db.transaction(() async {
+      await _db.delete(_db.experiences).go();
+      await _db.delete(_db.ingestions).go();
+      await _db.delete(_db.substanceCompanions).go();
+      await _db.delete(_db.customSubstances).go();
+      await _db.delete(_db.shulginRatings).go();
+      await _db.delete(_db.timedNotes).go();
+      await _db.delete(_db.customUnits).go();
+    });
+  }
 
+  Future<OpenJournalExport> exportAllData() async {
+    final experiences = await watchExperienceList().first;
+    final companionsRows = await _db.select(_db.substanceCompanions).get();
+    final customSubstances = await _db.select(_db.customSubstances).get();
+    final customUnits = await _db.select(_db.customUnits).get();
+
+    final experiencesSerializable = experiences.map((e) {
+      return ExperienceSerializable(
+        title: e.experience.title,
+        text: e.experience.textContent,
+        creationDate: e.experience.creationDate,
+        sortDate: e.experience.sortDate,
+        isFavorite: e.experience.isFavorite,
+        location: e.experience.locationName != null
+            ? loc.Location(
+                name: e.experience.locationName!,
+                longitude: e.experience.longitude,
+                latitude: e.experience.latitude)
+            : null,
+        ingestions: e.ingestions.map((i) {
+          return IngestionSerializable(
+            substanceName: i.ingestion.substanceName,
+            time: i.ingestion.time,
+            endTime: i.ingestion.endTime,
+            creationDate: i.ingestion.creationDate,
+            administrationRoute:
+                AdministrationRoute.values.firstWhere((r) => r.name == i.ingestion.administrationRoute),
+            dose: i.ingestion.dose,
+            isDoseAnEstimate: i.ingestion.isDoseAnEstimate,
+            estimatedDoseStandardDeviation: i.ingestion.estimatedDoseStandardDeviation,
+            units: i.ingestion.units,
+            notes: i.ingestion.notes,
+            stomachFullness: i.ingestion.stomachFullness,
+            consumerName: i.ingestion.consumerName,
+            customUnitId: i.ingestion.customUnitId,
+          );
+        }).toList(),
+        ratings: e.ratings.map((r) {
+          return RatingSerializable(
+            option: r.option,
+            time: r.time,
+            creationDate: r.creationDate,
+          );
+        }).toList(),
+        timedNotes: [], // TODO: fetch timed notes if needed
+      );
+    }).toList();
+
+    return OpenJournalExport(
+      experiences: experiencesSerializable,
+      substanceCompanions: companionsRows.map((r) => model.SubstanceCompanion(
+        substanceName: r.substanceName,
+        color: r.color,
+      )).toList(),
+      customSubstances: customSubstances
+          .map((s) => CustomSubstanceSerializable(
+              id: s.id, name: s.name, units: s.units, description: s.description))
+          .toList(),
+      customUnits: customUnits
+          .map((u) => CustomUnitSerializable(
+                id: u.id,
+                substanceName: u.substanceName,
+                name: u.name,
+                creationDate: u.creationDate,
+                administrationRoute: AdministrationRoute.values
+                    .firstWhere((r) => r.name == u.administrationRoute),
+                dose: u.dose,
+                estimatedDoseStandardDeviation: u.estimatedDoseStandardDeviation,
+                isEstimate: u.isEstimate,
+                isArchived: u.isArchived,
+                unit: u.unit,
+                unitPlural: u.unitPlural,
+                originalUnit: u.originalUnit,
+                note: u.note,
+              ))
+          .toList(),
+    );
+  }
+
+  Future<void> importData(OpenJournalExport data) async {
+    await _db.transaction(() async {
+      await deleteAllData();
+
+      for (var expSer in data.experiences) {
+        final experienceId = await _db.into(_db.experiences).insert(ExperiencesCompanion.insert(
+          title: expSer.title,
+          textContent: expSer.text,
+          creationDate: expSer.creationDate,
+          sortDate: expSer.sortDate,
+          isFavorite: expSer.isFavorite,
+          locationName: Value(expSer.location?.name),
+          longitude: Value(expSer.location?.longitude),
+          latitude: Value(expSer.location?.latitude),
+        ));
+
+        for (var ingSer in expSer.ingestions) {
+          await _db.into(_db.ingestions).insert(IngestionsCompanion.insert(
+            substanceName: ingSer.substanceName,
+            time: ingSer.time,
+            endTime: Value(ingSer.endTime),
+            creationDate: Value(ingSer.creationDate),
+            administrationRoute: ingSer.administrationRoute.name,
+            dose: Value(ingSer.dose),
+            isDoseAnEstimate: ingSer.isDoseAnEstimate,
+            estimatedDoseStandardDeviation: Value(ingSer.estimatedDoseStandardDeviation),
+            units: Value(ingSer.units),
+            experienceId: experienceId,
+            notes: Value(ingSer.notes),
+            stomachFullness: Value(ingSer.stomachFullness),
+            consumerName: Value(ingSer.consumerName),
+            customUnitId: Value(ingSer.customUnitId),
+          ));
+        }
+
+        for (var ratSer in expSer.ratings) {
+          await _db.into(_db.shulginRatings).insert(ShulginRatingsCompanion.insert(
+            option: ratSer.option,
+            time: Value(ratSer.time),
+            creationDate: Value(ratSer.creationDate),
+            experienceId: experienceId,
+          ));
+        }
+      }
+
+      for (var comp in data.substanceCompanions) {
+        await _db.into(_db.substanceCompanions).insert(SubstanceCompanionsCompanion.insert(
+          substanceName: comp.substanceName,
+          color: comp.color,
+        ));
+      }
+
+      for (var sub in data.customSubstances) {
+        await _db.into(_db.customSubstances).insert(CustomSubstancesCompanion.insert(
+          name: sub.name,
+          units: sub.units,
+          description: sub.description,
+        ));
+      }
+
+      for (var unit in data.customUnits) {
+        await _db.into(_db.customUnits).insert(CustomUnitsCompanion.insert(
+          substanceName: unit.substanceName,
+          name: unit.name,
+          creationDate: unit.creationDate,
+          administrationRoute: unit.administrationRoute.name,
+          dose: Value(unit.dose),
+          estimatedDoseStandardDeviation: Value(unit.estimatedDoseStandardDeviation),
+          isEstimate: unit.isEstimate,
+          isArchived: unit.isArchived,
+          unit: unit.unit,
+          unitPlural: Value(unit.unitPlural),
+          originalUnit: unit.originalUnit,
+          note: unit.note,
+        ));
+      }
+    });
+  }
+
+  Stream<List<ExperienceListItem>> watchExperienceList() {
     final experiencesStream = (_db.select(_db.experiences)
           ..orderBy([
             (t) => OrderingTerm(expression: t.sortDate, mode: OrderingMode.desc)
