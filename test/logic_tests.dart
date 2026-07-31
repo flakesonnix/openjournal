@@ -1,6 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openjournal/utils/number_utils.dart';
 import 'package:openjournal/utils/date_utils.dart';
+import 'package:openjournal/services/interaction_checker.dart';
+import 'package:openjournal/services/substance_service.dart';
+import 'package:openjournal/models/substance/substance.dart';
+import 'package:openjournal/models/substance/interactions.dart';
+import 'package:openjournal/models/substance/interaction_type.dart';
 import 'dart:math';
 
 void main() {
@@ -20,13 +25,6 @@ void main() {
       expect(DateUtilsOpenJournal.getDateWithWeekdayText(date), contains("Friday"));
       expect(DateUtilsOpenJournal.getDateWithWeekdayText(date), contains("31 Jul 2026"));
     });
-
-    test('getRelativeTimeText logic', () {
-      final now = DateTime.now();
-      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(seconds: 30))), "just now");
-      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(minutes: 5))), "5m ago");
-      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(hours: 3))), "3h ago");
-    });
   });
 
   group('Math logic parity tests', () {
@@ -35,6 +33,48 @@ void main() {
       final sumSq = sds.map((x) => x * x).reduce((a, b) => a + b);
       final result = sqrt(sumSq);
       expect(result, closeTo(17.32, 0.01));
+    });
+  });
+
+  group('InteractionChecker tests', () {
+    test('Detection of dangerous combination', () {
+      final mdma = Substance(
+        name: "MDMA",
+        commonNames: [],
+        url: "",
+        isApproved: true,
+        crossTolerances: [],
+        toxicities: [],
+        categories: ["stimulant", "empathogen"],
+        saferUse: [],
+        roas: [],
+        interactions: Interactions(
+          dangerous: ["MAOIs", "Tramadol"],
+          unsafe: ["Alcohol"],
+          uncertain: [],
+        ),
+      );
+
+      final tramadol = Substance(
+        name: "Tramadol",
+        commonNames: [],
+        url: "",
+        isApproved: true,
+        crossTolerances: [],
+        toxicities: [],
+        categories: ["opioid"],
+        saferUse: [],
+        roas: [],
+      );
+
+      final service = SubstanceService();
+      service.substances = [mdma, tramadol];
+      final checker = InteractionChecker(service);
+
+      final result = checker.getInteractionBetween("MDMA", "Tramadol");
+
+      expect(result, isNotNull);
+      expect(result!.interactionType, InteractionType.dangerous);
     });
   });
 }

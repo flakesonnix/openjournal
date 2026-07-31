@@ -15,6 +15,9 @@ class SubstanceService {
 
   List<Substance> get substances => _substances;
 
+  // Added for unit testing
+  set substances(List<Substance> value) => _substances = value;
+
   List<Substance> searchSubstances(String query) {
     if (query.isEmpty) return [];
     return _substances.where((s) {
