@@ -50,7 +50,7 @@ class OpenJournalScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.calendar_month),
               onPressed: () {
-                // TODO: Navigate to calendar
+                context.push('/calendar');
               },
               tooltip: 'Calendar',
             ),

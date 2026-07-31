@@ -44,7 +44,12 @@ class ExperienceDetailScreen extends ConsumerWidget {
                 actions: [
                   IconButton(icon: const Icon(Icons.timer_outlined), onPressed: () {}),
                   IconButton(icon: const Icon(Icons.star_outline), onPressed: () {}),
-                  IconButton(icon: const Icon(Icons.edit), onPressed: () {}),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      context.push('/edit-experience/${exp.id}');
+                    },
+                  ),
                 ],
               ),
               SliverList(

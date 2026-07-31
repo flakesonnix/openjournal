@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/services/database_service.dart';
 import 'package:openjournal/models/experience/experience_detail_item.dart';
 import 'package:openjournal/models/experience/experience_list_item.dart';
+import 'package:openjournal/models/experience/adaptive_color.dart';
 import 'package:rxdart/rxdart.dart';
 
 class OpenJournalRepository {
@@ -115,8 +116,44 @@ class OpenJournalRepository {
     return _db.into(_db.experiences).insert(experience);
   }
 
+  Future<bool> updateExperience(ExperiencesCompanion experience) {
+    return _db.update(_db.experiences).replace(experience);
+  }
+
+  Future<int> deleteExperience(int id) {
+    return (_db.delete(_db.experiences)..where((t) => t.id.equals(id))).go();
+  }
+
   Future<void> insertIngestion(IngestionsCompanion ingestion) {
     return _db.into(_db.ingestions).insert(ingestion);
+  }
+
+  Future<bool> updateIngestion(IngestionsCompanion ingestion) {
+    return _db.update(_db.ingestions).replace(ingestion);
+  }
+
+  Future<int> deleteIngestion(int id) {
+    return (_db.delete(_db.ingestions)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<Map<DateTime, List<AdaptiveColor>>> getExperienceColorsByDay(DateTime start, DateTime end) async {
+    final experiences = await getExperiencesInRange(start, end);
+    final result = <DateTime, List<AdaptiveColor>>{};
+
+    for (var exp in experiences) {
+      final date = DateTime(exp.sortInstant.year, exp.sortInstant.month, exp.sortInstant.day);
+      final colors = exp.ingestions
+          .map((i) => i.substanceCompanion?.color)
+          .whereType<AdaptiveColor>()
+          .toList();
+
+      if (result.containsKey(date)) {
+        result[date]!.addAll(colors);
+      } else {
+        result[date] = colors;
+      }
+    }
+    return result;
   }
 
   Future<List<String>> getRecentConsumerNames() async {

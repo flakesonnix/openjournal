@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
 
 class SaferUseScreen extends StatelessWidget {
@@ -26,7 +27,9 @@ class SaferUseScreen extends StatelessWidget {
                   leading: const Icon(Icons.water_drop_outlined),
                   title: const Text('Volumetric Dosing'),
                   subtitle: const Text('Precise liquid measurements'),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/volumetric-dosing');
+                  },
                 ),
               ],
             ),

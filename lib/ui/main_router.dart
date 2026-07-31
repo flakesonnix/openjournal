@@ -5,6 +5,9 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/search/add_ingestio
 import 'package:openjournal/ui/tabs/openjournal/addingestion/route/choose_route_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/experience/edit/edit_experience_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/calendar/calendar_screen.dart';
+import 'package:openjournal/ui/tabs/safer/volumetric_dosing_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
 import 'package:openjournal/ui/tabs/search/search_screen.dart';
 import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
@@ -29,6 +32,21 @@ final router = GoRouter(
         }
         return ExperienceDetailScreen(experienceId: id);
       },
+    ),
+    GoRoute(
+      path: '/edit-experience/:id',
+      builder: (context, state) {
+        final id = int.parse(state.pathParameters['id']!);
+        return EditExperienceScreen(experienceId: id);
+      },
+    ),
+    GoRoute(
+      path: '/calendar',
+      builder: (context, state) => const CalendarScreen(),
+    ),
+    GoRoute(
+      path: '/volumetric-dosing',
+      builder: (context, state) => const VolumetricDosingScreen(),
     ),
     GoRoute(
       path: '/substance/:name',

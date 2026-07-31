@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openjournal/utils/number_utils.dart';
+import 'package:openjournal/utils/date_utils.dart';
 import 'dart:math';
 
 void main() {
@@ -13,13 +14,26 @@ void main() {
     });
   });
 
+  group('DateUtils tests', () {
+    test('getDateWithWeekdayText format', () {
+      final date = DateTime(2026, 7, 31);
+      expect(DateUtilsOpenJournal.getDateWithWeekdayText(date), contains("Friday"));
+      expect(DateUtilsOpenJournal.getDateWithWeekdayText(date), contains("31 Jul 2026"));
+    });
+
+    test('getRelativeTimeText logic', () {
+      final now = DateTime.now();
+      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(seconds: 30))), "just now");
+      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(minutes: 5))), "5m ago");
+      expect(DateUtilsOpenJournal.getRelativeTimeText(now.subtract(const Duration(hours: 3))), "3h ago");
+    });
+  });
+
   group('Math logic parity tests', () {
     test('Gaussian error propagation (Uncertainty)', () {
-      // Correct way to sum independent SDs: sqrt(sd1^2 + sd2^2 + ...)
       final sds = [10.0, 10.0, 10.0];
       final sumSq = sds.map((x) => x * x).reduce((a, b) => a + b);
       final result = sqrt(sumSq);
-
       expect(result, closeTo(17.32, 0.01));
     });
   });
