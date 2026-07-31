@@ -18,6 +18,7 @@
 
           buildInputs = with pkgs; [
             temurin-bin-21
+            flutter
           ];
 
           shellHook = ''
@@ -25,10 +26,11 @@
             export ANDROID_HOME="${androidSdk}"
             export ANDROID_SDK_ROOT="${androidSdk}"
             export ANDROID_AVD_HOME="$HOME/.android/avd"
-            echo "OpenJournal dev shell"
-            echo "  JDK:    $JAVA_HOME"
-            echo "  SDK:    $ANDROID_HOME"
-            echo "  Gradle: $(./gradlew --version 2>/dev/null | grep 'Gradle ' | head -1 || echo 'use wrapper')"
+            echo "OpenJournal dev shell (Flutter Migration)"
+            echo "  JDK:     $JAVA_HOME"
+            echo "  SDK:     $ANDROID_HOME"
+            echo "  Flutter: $(flutter --version 2>/dev/null | head -1 || echo 'not found in path yet')"
+            echo "  Gradle:  $(./gradlew --version 2>/dev/null | grep 'Gradle ' | head -1 || echo 'use wrapper')"
           '';
         };
       });
