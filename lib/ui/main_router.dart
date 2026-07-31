@@ -9,6 +9,8 @@ import 'package:openjournal/ui/tabs/openjournal/experience/edit/edit_experience_
 import 'package:openjournal/ui/tabs/openjournal/experience/rating/add_rating_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/calendar/calendar_screen.dart';
 import 'package:openjournal/ui/tabs/safer/volumetric_dosing_screen.dart';
+import 'package:openjournal/ui/tabs/safer/safer_stimulants_screen.dart';
+import 'package:openjournal/ui/tabs/safer/safer_hallucinogens_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
 import 'package:openjournal/ui/tabs/search/search_screen.dart';
 import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
@@ -57,6 +59,14 @@ final router = GoRouter(
     GoRoute(
       path: '/volumetric-dosing',
       builder: (context, state) => const VolumetricDosingScreen(),
+    ),
+    GoRoute(
+      path: '/safer-stimulants',
+      builder: (context, state) => const SaferStimulantsScreen(),
+    ),
+    GoRoute(
+      path: '/safer-hallucinogens',
+      builder: (context, state) => const SaferHallucinogensScreen(),
     ),
     GoRoute(
       path: '/substance/:name',

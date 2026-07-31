@@ -41,13 +41,17 @@ class SaferUseScreen extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.bolt),
                   title: const Text('Safer Stimulants'),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/safer-stimulants');
+                  },
                 ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.remove_red_eye_outlined),
                   title: const Text('Safer Hallucinogens'),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/safer-hallucinogens');
+                  },
                 ),
               ],
             ),
