@@ -19,6 +19,24 @@
           buildInputs = with pkgs; [
             temurin-bin-21
             flutter
+            # Linux desktop build dependencies
+            at-spi2-core
+            clang
+            cmake
+            dbus
+            gtk3
+            libdatrie
+            libepoxy
+            libselinux
+            libsepol
+            libthai
+            libxkbcommon
+            ninja
+            pcre
+            pkg-config
+            xorg.libXdmcp
+            xorg.libXtst
+            util-linux
           ];
 
           shellHook = ''
