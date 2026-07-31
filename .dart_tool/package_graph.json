@@ -7,8 +7,8 @@
       "name": "openjournal",
       "version": "1.0.0+1",
       "dependencies": [
-        "argon2",
         "crypto",
+        "cryptography",
         "cupertino_icons",
         "drift",
         "flutter",
@@ -141,17 +141,20 @@
       ]
     },
     {
+      "name": "cryptography",
+      "version": "2.9.0",
+      "dependencies": [
+        "collection",
+        "crypto",
+        "ffi",
+        "meta",
+        "typed_data"
+      ]
+    },
+    {
       "name": "rxdart",
       "version": "0.28.0",
       "dependencies": []
-    },
-    {
-      "name": "argon2",
-      "version": "1.0.1",
-      "dependencies": [
-        "hex",
-        "pointycastle"
-      ]
     },
     {
       "name": "crypto",
@@ -683,25 +686,16 @@
       ]
     },
     {
-      "name": "hex",
-      "version": "0.2.0",
-      "dependencies": []
-    },
-    {
-      "name": "pointycastle",
-      "version": "3.9.1",
-      "dependencies": [
-        "collection",
-        "convert",
-        "js"
-      ]
-    },
-    {
       "name": "typed_data",
       "version": "1.4.0",
       "dependencies": [
         "collection"
       ]
+    },
+    {
+      "name": "ffi",
+      "version": "2.2.0",
+      "dependencies": []
     },
     {
       "name": "flutter_web_plugins",
@@ -980,11 +974,6 @@
       ]
     },
     {
-      "name": "ffi",
-      "version": "2.2.0",
-      "dependencies": []
-    },
-    {
       "name": "leak_tracker_testing",
       "version": "3.0.2",
       "dependencies": [
@@ -1011,11 +1000,6 @@
         "source_span",
         "string_scanner"
       ]
-    },
-    {
-      "name": "js",
-      "version": "0.7.2",
-      "dependencies": []
     },
     {
       "name": "plugin_platform_interface",

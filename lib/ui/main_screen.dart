@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/ui/tabs/openjournal/openjournal_screen.dart';
+import 'package:openjournal/ui/tabs/settings/settings_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +18,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     const OpenJournalScreen(),
     const Center(child: Text('Search Tab')),
     const Center(child: Text('Safer Tab')),
-    const Center(child: Text('Settings Tab')),
+    const SettingsScreen(),
   ];
 
   @override

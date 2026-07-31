@@ -45,8 +45,8 @@ dependencies:
   local_auth: ^3.0.2
   go_router: ^17.3.0
   crypto: ^3.0.7
-  argon2: ^1.0.1
   rxdart: ^0.28.0
+  cryptography: ^2.9.0
 
 dev_dependencies:
   flutter_test:
