@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:openjournal/ui/tabs/openjournal/openjournal_state.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/experience_row.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/empty_screen_disclaimer.dart';
@@ -65,7 +66,7 @@ class OpenJournalScreen extends ConsumerWidget {
         floatingActionButton: !state.isSearchEnabled
             ? FloatingActionButton.extended(
                 onPressed: () {
-                  // TODO: Navigate to log dose
+                  context.go('/add-ingestion');
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Log Dose'),

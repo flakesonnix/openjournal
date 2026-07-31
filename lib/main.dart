@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/services/substance_service.dart';
 import 'package:openjournal/theme/theme.dart';
-import 'package:openjournal/ui/main_screen.dart';
+import 'package:openjournal/ui/main_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,12 +23,13 @@ class OpenJournalApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'OpenJournal',
+      routerConfig: router,
       theme: OpenJournalTheme.lightTheme,
       darkTheme: OpenJournalTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: const MainScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
