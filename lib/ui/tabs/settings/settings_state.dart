@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/services/openjournal_repository.dart';
 import 'package:openjournal/services/file_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:openjournal/services/security_service.dart';
 
 enum AppThemeMode { system, light, dark }
 
