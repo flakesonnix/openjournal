@@ -16,6 +16,7 @@ import 'package:openjournal/ui/tabs/safer/safer_stimulants_screen.dart';
 import 'package:openjournal/ui/tabs/safer/safer_hallucinogens_screen.dart';
 import 'package:openjournal/ui/tabs/safer/safer_sniffing_screen.dart';
 import 'package:openjournal/ui/tabs/safer/reagent_testing_screen.dart';
+import 'package:openjournal/ui/tabs/safer/drug_testing_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/time/finish_ingestion_screen.dart';
 import 'package:openjournal/ui/tabs/search/search_screen.dart';
 import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
@@ -87,6 +88,10 @@ final router = GoRouter(
     GoRoute(
       path: '/reagent-testing',
       builder: (context, state) => const ReagentTestingScreen(),
+    ),
+    GoRoute(
+      path: '/drug-testing',
+      builder: (context, state) => const DrugTestingScreen(),
     ),
     GoRoute(
       path: '/substance/:name',

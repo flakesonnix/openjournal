@@ -33,6 +33,15 @@ class SaferUseScreen extends StatelessWidget {
                     context.push('/volumetric-dosing');
                   },
                 ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.biotech_outlined),
+                  title: const Text('Drug Testing Services'),
+                  subtitle: const Text('Find local checking services'),
+                  onTap: () {
+                    context.push('/drug-testing');
+                  },
+                ),
               ],
             ),
           ),
