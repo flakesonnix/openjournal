@@ -8,7 +8,7 @@ import 'package:openjournal/services/database_service.dart';
 import 'package:openjournal/models/substance/roa_dose.dart';
 import 'package:openjournal/models/substance/roa_duration.dart';
 import 'package:openjournal/services/substance_service.dart';
-import 'package:openjournal/ui/tabs/openjournal/addingestion/add_ingestion_state.dart'; // for hourLimit
+import 'package:openjournal/models/experience/experience_detail_item.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -55,26 +55,26 @@ class IngestionWithAssociatedData {
 }
 
 class ExperienceDetailState {
-  final ExperienceListItem? experienceItem;
+  final ExperienceDetailItem? experienceDetail;
   final List<CumulativeDose> cumulativeDoses;
   final bool isCurrentExperience;
   final bool isLoading;
 
   ExperienceDetailState({
-    this.experienceItem,
+    this.experienceDetail,
     this.cumulativeDoses = const [],
     this.isCurrentExperience = false,
     this.isLoading = true,
   });
 
   ExperienceDetailState copyWith({
-    ExperienceListItem? experienceItem,
+    ExperienceDetailItem? experienceDetail,
     List<CumulativeDose>? cumulativeDoses,
     bool? isCurrentExperience,
     bool? isLoading,
   }) {
     return ExperienceDetailState(
-      experienceItem: experienceItem ?? this.experienceItem,
+      experienceDetail: experienceDetail ?? this.experienceDetail,
       cumulativeDoses: cumulativeDoses ?? this.cumulativeDoses,
       isCurrentExperience: isCurrentExperience ?? this.isCurrentExperience,
       isLoading: isLoading ?? this.isLoading,
@@ -88,11 +88,8 @@ class ExperienceDetailNotifier extends AutoDisposeFamilyAsyncNotifier<Experience
     final repo = ref.watch(openJournalRepositoryProvider);
     final substanceService = ref.watch(substanceServiceProvider);
 
-    final stream = repo.watchExperienceList().map((list) {
-      final item = list.firstWhereOrNull((e) => e.experience.id == experienceId);
-      if (item == null) return ExperienceDetailState(isLoading: false);
-
-      final ingestionsWithData = item.ingestions.map((i) {
+    final stream = repo.watchExperienceDetail(experienceId).map((detail) {
+      final ingestionsWithData = detail.listItem.ingestions.map((i) {
         final substance = substanceService.substances.firstWhereOrNull((s) => s.name == i.ingestion.substanceName);
         final route = AdministrationRoute.values.firstWhereOrNull((r) => r.name == i.ingestion.administrationRoute);
         final roa = route != null ? substance?.getRoa(route) : null;
@@ -106,11 +103,13 @@ class ExperienceDetailNotifier extends AutoDisposeFamilyAsyncNotifier<Experience
       final cumulative = _calculateCumulativeDoses(ingestionsWithData);
 
       final now = DateTime.now();
-      final lastTime = item.ingestions.isEmpty ? null : item.ingestions.map((i) => i.ingestion.time).reduce((a, b) => a.isAfter(b) ? a : b);
+      final lastTime = detail.listItem.ingestions.isEmpty
+          ? null
+          : detail.listItem.ingestions.map((i) => i.ingestion.time).reduce((a, b) => a.isAfter(b) ? a : b);
       final isCurrent = lastTime != null && lastTime.isAfter(now.subtract(const Duration(hours: 12)));
 
       return ExperienceDetailState(
-        experienceItem: item,
+        experienceDetail: detail,
         cumulativeDoses: cumulative,
         isCurrentExperience: isCurrent,
         isLoading: false,

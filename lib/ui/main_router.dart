@@ -8,6 +8,7 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/choose_dose_sc
 import 'package:openjournal/ui/tabs/openjournal/experience/experience_detail_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/edit/edit_experience_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/editingestion/edit_ingestion_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/experience/timednote/timed_note_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/experience/rating/add_rating_screen.dart';
 import 'package:openjournal/ui/tabs/openjournal/calendar/calendar_screen.dart';
 import 'package:openjournal/ui/tabs/safer/volumetric_dosing_screen.dart';
@@ -94,6 +95,21 @@ final router = GoRouter(
       builder: (context, state) {
         final name = state.uri.queryParameters['name'];
         return AddCustomSubstanceScreen(initialName: name);
+      },
+    ),
+    GoRoute(
+      path: '/add-timed-note/:experienceId',
+      builder: (context, state) {
+        final expId = int.parse(state.pathParameters['experienceId']!);
+        return TimedNoteScreen(experienceId: expId);
+      },
+    ),
+    GoRoute(
+      path: '/edit-timed-note/:noteId/:experienceId',
+      builder: (context, state) {
+        final noteId = int.parse(state.pathParameters['noteId']!);
+        final expId = int.parse(state.pathParameters['experienceId']!);
+        return TimedNoteScreen(noteId: noteId, experienceId: expId);
       },
     ),
     GoRoute(
