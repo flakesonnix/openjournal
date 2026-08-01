@@ -38,6 +38,7 @@
             libxdmcp
             libxtst
             util-linux
+            sysprof
           ];
 
           shellHook = ''

@@ -1,10 +1,6 @@
 #include "my_application.h"
 
 #include <flutter_linux/flutter_linux.h>
-#ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
-#endif
-
 #include <adwaita.h>
 
 #include "flutter/generated_plugin_registrant.h"
@@ -22,21 +18,19 @@ static void my_application_activate(GApplication* application) {
   GtkWindow* window = GTK_WINDOW(adw_application_window_new(ADW_APPLICATION(application)));
 
   GtkWidget* header_bar = adw_header_bar_new();
-  adw_application_window_set_content(ADW_APPLICATION_WINDOW(window), header_bar);
+  // Set title in GTK4 style
+  adw_header_bar_set_title_widget(ADW_HEADER_BAR(header_bar), gtk_label_new("openjournal"));
 
   gtk_window_set_default_size(window, 1280, 720);
-  gtk_window_set_title(window, "openjournal");
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
 
   FlView* view = fl_view_new(project);
 
-  // In GTK4 we set the child
-  adw_application_window_set_content(ADW_APPLICATION_WINDOW(window),
-    gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  GtkWidget* content_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+  adw_application_window_set_content(ADW_APPLICATION_WINDOW(window), content_box);
 
-  GtkWidget* content_box = adw_application_window_get_content(ADW_APPLICATION_WINDOW(window));
   gtk_box_append(GTK_BOX(content_box), header_bar);
   gtk_box_append(GTK_BOX(content_box), GTK_WIDGET(view));
 

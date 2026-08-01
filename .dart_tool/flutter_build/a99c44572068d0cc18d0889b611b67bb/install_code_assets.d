@@ -1,0 +1,1 @@
+ /home/lucy/AndroidStudioProjects/openjournal/.dart_tool/flutter_build/a99c44572068d0cc18d0889b611b67bb/native_assets.json /home/lucy/AndroidStudioProjects/openjournal/build/native_assets/linux/libsqlite3.so:  /home/lucy/AndroidStudioProjects/openjournal/.dart_tool/hooks_runner/shared/sqlite3/build/download-2219febf/libsqlite3.so
