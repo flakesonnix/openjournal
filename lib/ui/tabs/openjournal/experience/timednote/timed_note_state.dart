@@ -76,7 +76,7 @@ class TimedNoteNotifier extends AutoDisposeFamilyAsyncNotifier<TimedNoteState, T
       id: s.id == null ? const Value.absent() : Value(s.id!),
       note: s.note,
       time: s.time,
-      color: s.color.name,
+      color: s.color, // Passing AdaptiveColor enum directly
       experienceId: arg.experienceId,
       isPartOfTimeline: s.isPartOfTimeline,
       creationDate: DateTime.now(),

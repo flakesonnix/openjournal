@@ -74,9 +74,11 @@ class ChooseDoseState {
   }
 }
 
-class ChooseDoseNotifier extends AutoDisposeFamilyAsyncNotifier<ChooseDoseState, ({String substanceName, String routeName})> {
+typedef ChooseDoseArg = ({String substanceName, String routeName});
+
+class ChooseDoseNotifier extends AutoDisposeFamilyAsyncNotifier<ChooseDoseState, ChooseDoseArg> {
   @override
-  FutureOr<ChooseDoseState> build(({String substanceName, String routeName}) async {
+  FutureOr<ChooseDoseState> build(ChooseDoseArg arg) async {
     final substanceService = ref.watch(substanceServiceProvider);
     final repo = ref.watch(openJournalRepositoryProvider);
     final substance = substanceService.substances.firstWhere((s) => s.name == arg.substanceName);
@@ -128,6 +130,6 @@ class ChooseDoseNotifier extends AutoDisposeFamilyAsyncNotifier<ChooseDoseState,
   }
 }
 
-final chooseDoseProvider = AsyncNotifierProvider.autoDispose.family<ChooseDoseNotifier, ChooseDoseState, ({String substanceName, String routeName})>(() {
+final chooseDoseProvider = AsyncNotifierProvider.autoDispose.family<ChooseDoseNotifier, ChooseDoseState, ChooseDoseArg>(() {
   return ChooseDoseNotifier();
 });
