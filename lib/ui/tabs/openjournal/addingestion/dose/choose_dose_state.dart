@@ -3,12 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/models/substance/substance.dart';
 import 'package:openjournal/models/substance/roa_dose.dart';
 import 'package:openjournal/services/substance_service.dart';
+import 'package:openjournal/services/openjournal_repository.dart';
+import 'package:openjournal/services/database_service.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
+import 'package:collection/collection.dart';
 
 class ChooseDoseState {
   final Substance substance;
   final AdministrationRoute route;
   final RoaDose? roaDose;
+  final List<CustomUnit> customUnits;
   final String doseText;
   final String estimatedDoseStandardDeviationText;
   final String purityText;
@@ -19,6 +23,7 @@ class ChooseDoseState {
     required this.substance,
     required this.route,
     this.roaDose,
+    this.customUnits = const [],
     this.doseText = "",
     this.estimatedDoseStandardDeviationText = "",
     this.purityText = "100",
@@ -48,6 +53,7 @@ class ChooseDoseState {
   DoseClass? get currentDoseClass => roaDose?.getDoseClass(dose, units);
 
   ChooseDoseState copyWith({
+    List<CustomUnit>? customUnits,
     String? doseText,
     String? estimatedDoseStandardDeviationText,
     String? purityText,
@@ -58,6 +64,7 @@ class ChooseDoseState {
       substance: substance,
       route: route,
       roaDose: roaDose,
+      customUnits: customUnits ?? this.customUnits,
       doseText: doseText ?? this.doseText,
       estimatedDoseStandardDeviationText: estimatedDoseStandardDeviationText ?? this.estimatedDoseStandardDeviationText,
       purityText: purityText ?? this.purityText,
@@ -69,18 +76,35 @@ class ChooseDoseState {
 
 class ChooseDoseNotifier extends AutoDisposeFamilyAsyncNotifier<ChooseDoseState, ({String substanceName, String routeName})> {
   @override
-  FutureOr<ChooseDoseState> build(({String substanceName, String routeName}) arg) async {
+  FutureOr<ChooseDoseState> build(({String substanceName, String routeName}) async {
     final substanceService = ref.watch(substanceServiceProvider);
+    final repo = ref.watch(openJournalRepositoryProvider);
     final substance = substanceService.substances.firstWhere((s) => s.name == arg.substanceName);
     final route = AdministrationRoute.values.firstWhere((r) => r.name == arg.routeName);
     final roaDose = substance.getRoa(route)?.roaDose;
 
-    return ChooseDoseState(
-      substance: substance,
-      route: route,
-      roaDose: roaDose,
-      units: roaDose?.units ?? "",
-    );
+    final stream = repo.watchCustomUnits(arg.substanceName).map((units) {
+      return ChooseDoseState(
+        substance: substance,
+        route: route,
+        roaDose: roaDose,
+        customUnits: units.where((u) => u.administrationRoute == route.name).toList(),
+        units: roaDose?.units ?? "",
+      );
+    });
+
+    final first = await stream.first;
+    stream.listen((s) {
+      state = AsyncValue.data(s.copyWith(
+        doseText: state.value?.doseText,
+        estimatedDoseStandardDeviationText: state.value?.estimatedDoseStandardDeviationText,
+        purityText: state.value?.purityText,
+        isEstimate: state.value?.isEstimate,
+        units: state.value?.units,
+      ));
+    });
+
+    return first;
   }
 
   void updateDoseText(String text) {

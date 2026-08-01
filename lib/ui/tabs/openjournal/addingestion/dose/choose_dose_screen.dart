@@ -125,9 +125,20 @@ class ChooseDoseScreen extends ConsumerWidget {
                 ),
               ),
             CardWithTitle(
-              title: "Units",
+              title: "Custom Units",
               child: Column(
                 children: [
+                  if (state.customUnits.isNotEmpty) ...[
+                    ...state.customUnits.map((u) => ListTile(
+                      title: Text(u.name),
+                      subtitle: Text("${u.dose} ${u.originalUnit} / ${u.unit}"),
+                      trailing: const Icon(Icons.add),
+                      onTap: () {
+                         // TODO: Select custom unit
+                      },
+                    )),
+                    const Divider(),
+                  ],
                   Text("Prefer to log with a different unit?"),
                   const SizedBox(height: 8),
                   OutlinedButton(
