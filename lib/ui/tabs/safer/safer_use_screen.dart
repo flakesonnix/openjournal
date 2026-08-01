@@ -65,7 +65,9 @@ class SaferUseScreen extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.air),
                   title: const Text('Safer Sniffing'),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/safer-sniffing');
+                  },
                 ),
               ],
             ),
