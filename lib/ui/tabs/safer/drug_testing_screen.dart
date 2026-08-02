@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:openjournal/utils/url_launcher.dart';
 import 'package:openjournal/theme/theme.dart';
 
 class DrugTestingScreen extends StatelessWidget {
@@ -30,7 +30,7 @@ class DrugTestingScreen extends StatelessWidget {
           // ... more can be added later
           const SizedBox(height: 16),
           TextButton(
-            onPressed: () => launchUrl(Uri.parse('https://t.me/isaakhanimann')),
+            onPressed: () => UrlLauncher.openUrl('https://t.me/openpsychonaut'),
             child: const Text('Report missing service', style: TextStyle(decoration: TextDecoration.underline)),
           ),
           const SizedBox(height: 32),
@@ -63,7 +63,7 @@ class DrugTestingScreen extends StatelessWidget {
                 title: Text(s.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 subtitle: Text(s.city, style: const TextStyle(fontSize: 12)),
                 trailing: const Icon(Icons.open_in_new, size: 16),
-                onTap: () => launchUrl(Uri.parse(s.url)),
+                onTap: () => UrlLauncher.openUrl(s.url),
               )),
         ],
       ),

@@ -48,9 +48,8 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 
 # System-level dependencies.
 find_package(PkgConfig REQUIRED)
-# UPGRADED TO GTK4
+# Target GTK4
 pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk4)
-pkg_check_modules(ADWAITA REQUIRED IMPORTED_TARGET libadwaita-1)
 
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
