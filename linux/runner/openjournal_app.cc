@@ -12,8 +12,7 @@ struct _OpenJournalApplication {
 
 G_DEFINE_TYPE(OpenJournalApplication, openjournal_app, GTK_TYPE_APPLICATION)
 
-static FlMethodResponse* handle_open_url(FlMethodChannel* channel,
-                                        FlValue* args) {
+static FlMethodResponse* handle_open_url(FlValue* args) {
   if (fl_value_get_type(args) != FL_VALUE_TYPE_MAP) {
     return FL_METHOD_RESPONSE(fl_method_error_response_new(
         "Bad Arguments", "Expected map", nullptr));
@@ -27,8 +26,10 @@ static FlMethodResponse* handle_open_url(FlMethodChannel* channel,
 
   const gchar* url = fl_value_get_string(url_value);
 
-  // GTK4: gtk_show_uri
-  gtk_show_uri(nullptr, url, GDK_CURRENT_TIME);
+  // GTK4: gtk_uri_launcher_launch
+  GtkUriLauncher* launcher = gtk_uri_launcher_new(url);
+  gtk_uri_launcher_launch(launcher, nullptr, nullptr, nullptr, nullptr);
+  g_object_unref(launcher);
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
 }
@@ -41,7 +42,7 @@ static void method_call_cb(FlMethodChannel* channel,
 
   g_autoptr(FlMethodResponse) response = nullptr;
   if (g_strcmp0(method, "open_url") == 0) {
-    response = handle_open_url(channel, args);
+    response = handle_open_url(args);
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
@@ -64,8 +65,12 @@ static void openjournal_app_activate(GApplication* application) {
 
   FlView* view = fl_view_new(project);
 
+  // Fix: Use FlBinaryMessenger
+  FlEngine* engine = fl_view_get_engine(view);
+  FlBinaryMessenger* messenger = fl_engine_get_binary_messenger(engine);
+
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
-  FlMethodChannel* channel = fl_method_channel_new(fl_view_get_engine(view),
+  FlMethodChannel* channel = fl_method_channel_new(messenger,
                                                    "org.openpsychonaut.openjournal/launcher",
                                                    FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(channel, method_call_cb, self, nullptr);
