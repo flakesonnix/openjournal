@@ -4,7 +4,7 @@ import 'package:openjournal/services/security_service.dart';
 import 'package:openjournal/ui/tabs/settings/settings_state.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:openjournal/utils/url_launcher.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -119,13 +119,13 @@ class SettingsScreen extends ConsumerWidget {
                   ListTile(
                     leading: const Icon(Icons.question_answer_outlined),
                     title: const Text('FAQ'),
-                    onTap: () => launchUrl(Uri.parse('https://github.com/OpenPsychonaut/openjournal/wiki/FAQ')),
+                    onTap: () => UrlLauncher.openUrl('https://github.com/OpenPsychonaut/openjournal/wiki/FAQ'),
                   ),
                   const Divider(),
                   ListTile(
                     leading: const Icon(Icons.code),
                     title: const Text('Source Code'),
-                    onTap: () => launchUrl(Uri.parse('https://github.com/OpenPsychonaut/openjournal')),
+                    onTap: () => UrlLauncher.openUrl('https://github.com/OpenPsychonaut/openjournal'),
                   ),
                   const Divider(),
                   FutureBuilder<PackageInfo>(

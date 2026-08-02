@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/ui/tabs/openjournal/addingestion/interactions/check_interactions_state.dart';
 import 'package:openjournal/models/substance/interaction_type.dart';
 import 'package:openjournal/theme/theme.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:openjournal/utils/url_launcher.dart';
 
 class CheckInteractionsScreen extends ConsumerWidget {
   final String substanceName;
@@ -49,7 +49,7 @@ class CheckInteractionsScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: OutlinedButton.icon(
-                        onPressed: () => launchUrl(Uri.parse(state.substance.url)),
+                        onPressed: () => UrlLauncher.openUrl(state.substance.url),
                         icon: const Icon(Icons.open_in_new),
                         label: const Text("View on PsychonautWiki"),
                       ),

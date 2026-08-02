@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:openjournal/utils/url_launcher.dart';
 
 class VolumetricDosingScreen extends StatelessWidget {
   const VolumetricDosingScreen({super.key});
@@ -11,7 +11,7 @@ class VolumetricDosingScreen extends StatelessWidget {
         title: const Text('Volumetric liquid dosing'),
         actions: [
           TextButton(
-            onPressed: () => launchUrl(Uri.parse('https://psychonautwiki.org/wiki/Volumetric_liquid_dosing')),
+            onPressed: () => UrlLauncher.openUrl('https://psychonautwiki.org/wiki/Volumetric_liquid_dosing'),
             child: const Text('Article'),
           ),
         ],

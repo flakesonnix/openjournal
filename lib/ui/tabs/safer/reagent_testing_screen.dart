@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:openjournal/utils/url_launcher.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
 
 class ReagentTestingScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class ReagentTestingScreen extends StatelessWidget {
         title: const Text('Reagent testing'),
         actions: [
           TextButton(
-            onPressed: () => launchUrl(Uri.parse('https://psychonautwiki.org/wiki/Reagent_testing_kits')),
+            onPressed: () => UrlLauncher.openUrl('https://psychonautwiki.org/wiki/Reagent_testing_kits'),
             child: const Text('Article'),
           ),
         ],
@@ -37,13 +37,13 @@ class ReagentTestingScreen extends StatelessWidget {
                 ListTile(
                   title: const Text('DanceSafe'),
                   trailing: const Icon(Icons.open_in_new, size: 16),
-                  onTap: () => launchUrl(Uri.parse('https://dancesafe.org/testing-kit-instructions/')),
+                  onTap: () => UrlLauncher.openUrl('https://dancesafe.org/testing-kit-instructions/'),
                 ),
                 const Divider(),
                 ListTile(
                   title: const Text('Bunk Police'),
                   trailing: const Icon(Icons.open_in_new, size: 16),
-                  onTap: () => launchUrl(Uri.parse('https://bunkpolice.com')),
+                  onTap: () => UrlLauncher.openUrl('https://bunkpolice.com'),
                 ),
               ],
             ),
