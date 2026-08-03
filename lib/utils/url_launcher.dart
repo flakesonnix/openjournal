@@ -1,19 +1,12 @@
-import 'dart:io';
-import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 class UrlLauncher {
-  static const _channel = MethodChannel('org.openpsychonaut.openjournal/launcher');
-
   static Future<void> openUrl(String url) async {
-    if (Platform.isLinux) {
-      try {
-        await _channel.invokeMethod('open_url', {'url': url});
-      } on PlatformException catch (e) {
-        print("Failed to open URL on Linux: '${e.message}'.");
-      }
+    final uri = Uri.parse(url);
+    if (await ul.canLaunchUrl(uri)) {
+      await ul.launchUrl(uri, mode: ul.LaunchMode.externalApplication);
     } else {
-      // TODO: Implement other platforms using standard url_launcher if needed
-      // For now focusing on Linux stability.
+      print('Could not launch $url');
     }
   }
 }
