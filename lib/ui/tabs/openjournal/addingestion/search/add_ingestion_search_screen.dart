@@ -64,7 +64,7 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                           context.go('/add-ingestion/route/$name');
                         },
                         onCustomUnitOtherDose: (unitId) {
-                          // TODO: Navigate to custom unit dose selection
+                          context.go('/add-ingestion/choose-dose-custom-unit/$unitId');
                         },
                         onDoseSelected: (name, route, dose, units, isEst, sd, customUnitId) {
                           context.go('/add-ingestion/finish/$name/$route/$dose/${units ?? 'null'}/$isEst/${customUnitId ?? 'null'}');

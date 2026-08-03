@@ -22,6 +22,7 @@ import 'package:openjournal/ui/tabs/search/search_screen.dart';
 import 'package:openjournal/ui/tabs/search/substance_detail_screen.dart';
 import 'package:openjournal/ui/tabs/search/custom/add_custom_substance_screen.dart';
 import 'package:openjournal/ui/tabs/settings/customunits/add_custom_unit_screen.dart';
+import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/customunit/choose_dose_custom_unit_screen.dart';
 import 'package:openjournal/models/substance/administration_route.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -157,6 +158,13 @@ final router = GoRouter(
             final substanceName = state.pathParameters['substanceName']!;
             final routeName = state.pathParameters['route']!;
             return AddCustomUnitScreen(substanceName: substanceName, routeName: routeName);
+          },
+        ),
+        GoRoute(
+          path: 'choose-dose-custom-unit/:unitId',
+          builder: (context, state) {
+            final unitId = int.parse(state.pathParameters['unitId']!);
+            return ChooseDoseCustomUnitScreen(customUnitId: unitId);
           },
         ),
         GoRoute(
