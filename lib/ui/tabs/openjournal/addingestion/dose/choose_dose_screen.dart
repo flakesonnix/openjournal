@@ -6,15 +6,18 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/widgets/dose_c
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/widgets/purity_calculation_widget.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
 import 'package:openjournal/theme/theme.dart';
+import 'package:openjournal/models/substance/administration_route.dart';
 
 class ChooseDoseScreen extends ConsumerWidget {
   final String substanceName;
   final String route;
+  final int? experienceId;
 
   const ChooseDoseScreen({
     super.key,
     required this.substanceName,
     required this.route,
+    this.experienceId,
   });
 
   @override
@@ -134,7 +137,7 @@ class ChooseDoseScreen extends ConsumerWidget {
                       subtitle: Text("${u.dose} ${u.originalUnit} / ${u.unit}"),
                       trailing: const Icon(Icons.add),
                       onTap: () {
-                         context.push('/add-ingestion/choose-dose-custom-unit/${u.id}');
+                         context.push('/add-ingestion/choose-dose-custom-unit/${u.id}?experienceId=${experienceId ?? 'null'}');
                       },
                     )),
                     const Divider(),
@@ -157,7 +160,7 @@ class ChooseDoseScreen extends ConsumerWidget {
             ? FloatingActionButton.extended(
                 onPressed: () {
                   context.go(
-                    '/add-ingestion/finish/${substanceName}/${route}/${state.dose}/${state.units.isEmpty ? 'null' : state.units}/${state.isEstimate}/null',
+                    '/add-ingestion/finish/${substanceName}/${route}/${state.dose}/${state.units.isEmpty ? 'null' : state.units}/${state.isEstimate}/${experienceId ?? 'null'}',
                   );
                 },
                 icon: const Icon(Icons.navigate_next),

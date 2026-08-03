@@ -125,15 +125,19 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/add-ingestion',
-      builder: (context, state) => const AddIngestionSearchScreen(),
+      builder: (context, state) {
+        final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
+        return AddIngestionSearchScreen(experienceId: expId);
+      },
       routes: [
         GoRoute(
           path: 'interactions/:substanceName',
           builder: (context, state) {
             final substanceName = state.pathParameters['substanceName']!;
+            final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
             return CheckInteractionsScreen(
               substanceName: substanceName,
-              onNext: () => context.go('/add-ingestion/route/$substanceName'),
+              onNext: () => context.go('/add-ingestion/route/$substanceName?experienceId=${expId ?? 'null'}'),
             );
           },
         ),
@@ -141,7 +145,8 @@ final router = GoRouter(
           path: 'route/:substanceName',
           builder: (context, state) {
             final substanceName = state.pathParameters['substanceName']!;
-            return ChooseRouteScreen(substanceName: substanceName);
+            final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
+            return ChooseRouteScreen(substanceName: substanceName, experienceId: expId);
           },
         ),
         GoRoute(
@@ -149,7 +154,8 @@ final router = GoRouter(
           builder: (context, state) {
             final substanceName = state.pathParameters['substanceName']!;
             final route = state.pathParameters['route']!;
-            return ChooseDoseScreen(substanceName: substanceName, route: route);
+            final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
+            return ChooseDoseScreen(substanceName: substanceName, route: route, experienceId: expId);
           },
         ),
         GoRoute(
@@ -164,7 +170,8 @@ final router = GoRouter(
           path: 'choose-dose-custom-unit/:unitId',
           builder: (context, state) {
             final unitId = int.parse(state.pathParameters['unitId']!);
-            return ChooseDoseCustomUnitScreen(customUnitId: unitId);
+            final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
+            return ChooseDoseCustomUnitScreen(customUnitId: unitId, experienceId: expId);
           },
         ),
         GoRoute(
@@ -176,6 +183,7 @@ final router = GoRouter(
             final units = state.pathParameters['units'] == 'null' ? null : state.pathParameters['units'];
             final isEstimate = state.pathParameters['isEstimate'] == 'true';
             final customUnitId = int.tryParse(state.pathParameters['customUnitId']!);
+            final expId = int.tryParse(state.uri.queryParameters['experienceId'] ?? "");
 
             return FinishIngestionScreen(
               substanceName: sub,
@@ -184,6 +192,7 @@ final router = GoRouter(
               units: units,
               isEstimate: isEstimate,
               customUnitId: customUnitId,
+              experienceId: expId,
             );
           },
         ),

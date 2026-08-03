@@ -8,7 +8,8 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/search/widgets/sugg
 import 'package:openjournal/theme/theme.dart';
 
 class AddIngestionSearchScreen extends ConsumerWidget {
-  const AddIngestionSearchScreen({super.key});
+  final int? experienceId;
+  const AddIngestionSearchScreen({super.key, this.experienceId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,13 +62,13 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                       return SuggestionRow(
                         suggestion: suggestion,
                         onOtherDose: (name, route) {
-                          context.go('/add-ingestion/route/$name');
+                          context.go('/add-ingestion/route/$name?experienceId=${experienceId ?? 'null'}');
                         },
                         onCustomUnitOtherDose: (unitId) {
-                          context.go('/add-ingestion/choose-dose-custom-unit/$unitId');
+                          context.go('/add-ingestion/choose-dose-custom-unit/$unitId?experienceId=${experienceId ?? 'null'}');
                         },
                         onDoseSelected: (name, route, dose, units, isEst, sd, customUnitId) {
-                          context.go('/add-ingestion/finish/$name/$route/$dose/${units ?? 'null'}/$isEst/${customUnitId ?? 'null'}');
+                          context.go('/add-ingestion/finish/$name/$route/$dose/${units ?? 'null'}/$isEst/${customUnitId ?? 'null'}?experienceId=${experienceId ?? 'null'}');
                         },
                       );
                     },
@@ -84,7 +85,7 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                       return SubstanceRowAddIngestion(
                         name: sub.name,
                         commonNames: const [],
-                        onTap: () => context.go('/add-ingestion/route/${sub.name}'),
+                        onTap: () => context.go('/add-ingestion/route/${sub.name}?experienceId=${experienceId ?? 'null'}'),
                       );
                     },
                     childCount: state.filteredCustomSubstances.length,
@@ -100,7 +101,7 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                       return ListTile(
                         title: Text(unit.name),
                         subtitle: Text('${unit.substanceName} ${unit.administrationRoute}'),
-                        onTap: () => context.go('/add-ingestion/choose-dose-custom-unit/${unit.id}'),
+                        onTap: () => context.go('/add-ingestion/choose-dose-custom-unit/${unit.id}?experienceId=${experienceId ?? 'null'}'),
                       );
                     },
                     childCount: state.filteredCustomUnits.length,
@@ -122,9 +123,9 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                             commonNames: substance.commonNames,
                             onTap: () {
                               if (substance.hasInteractions) {
-                                context.go('/add-ingestion/interactions/${substance.name}');
+                                context.go('/add-ingestion/interactions/${substance.name}?experienceId=${experienceId ?? 'null'}');
                               } else {
-                                context.go('/add-ingestion/route/${substance.name}');
+                                context.go('/add-ingestion/route/${substance.name}?experienceId=${experienceId ?? 'null'}');
                               }
                             },
                           ),

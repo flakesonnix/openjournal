@@ -7,8 +7,9 @@ import 'package:openjournal/theme/theme.dart';
 
 class ChooseRouteScreen extends ConsumerWidget {
   final String substanceName;
+  final int? experienceId;
 
-  const ChooseRouteScreen({super.key, required this.substanceName});
+  const ChooseRouteScreen({super.key, required this.substanceName, this.experienceId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +39,7 @@ class ChooseRouteScreen extends ConsumerWidget {
                 final roa = substance.roas[index];
                 return InkWell(
                   onTap: () {
-                    context.go('/add-ingestion/dose/$substanceName/${roa.route.name}');
+                    context.go('/add-ingestion/dose/$substanceName/${roa.route.name}?experienceId=${experienceId ?? 'null'}');
                   },
                   child: Card(
                     color: roa.route.color.getComposeColor(Theme.of(context).brightness == Brightness.dark).withOpacity(0.2),

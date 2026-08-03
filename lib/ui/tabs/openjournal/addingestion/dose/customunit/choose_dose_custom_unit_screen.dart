@@ -4,12 +4,12 @@ import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/customunit/cho
 import 'package:openjournal/ui/tabs/openjournal/addingestion/dose/widgets/dose_classification_row.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
 import 'package:go_router/go_router.dart';
-import 'package:openjournal/utils/number_utils.dart';
 
 class ChooseDoseCustomUnitScreen extends ConsumerWidget {
   final int customUnitId;
+  final int? experienceId;
 
-  const ChooseDoseCustomUnitScreen({super.key, required this.customUnitId});
+  const ChooseDoseCustomUnitScreen({super.key, required this.customUnitId, this.experienceId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +24,7 @@ class ChooseDoseCustomUnitScreen extends ConsumerWidget {
                 onPressed: () {
                   final d = state.calculatedPureDose;
                   context.go(
-                    '/add-ingestion/finish/${state.customUnit.substanceName}/${state.customUnit.administrationRoute}/$d/${state.customUnit.originalUnit}/${state.isEstimate}/$customUnitId',
+                    '/add-ingestion/finish/${state.customUnit.substanceName}/${state.customUnit.administrationRoute}/$d/${state.customUnit.originalUnit}/${state.isEstimate}/$customUnitId?experienceId=${experienceId ?? 'null'}',
                   );
                 },
                 icon: const Icon(Icons.navigate_next),
