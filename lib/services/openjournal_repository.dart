@@ -32,8 +32,19 @@ class OpenJournalRepository {
     final companionsRows = await _db.select(_db.substanceCompanions).get();
     final customSubstances = await _db.select(_db.customSubstances).get();
     final customUnits = await _db.select(_db.customUnits).get();
+    final allTimedNotes = await _db.select(_db.timedNotes).get();
 
     final experiencesSerializable = experiences.map((e) {
+      final expNotes = allTimedNotes.where((n) => n.experienceId == e.experience.id).map((n) {
+        return TimedNoteSerializable(
+          creationDate: n.creationDate,
+          time: n.time,
+          note: n.note,
+          color: AdaptiveColor.values.firstWhere((c) => c.name == n.color, orElse: () => AdaptiveColor.blue),
+          isPartOfTimeline: n.isPartOfTimeline,
+        );
+      }).toList();
+
       return ExperienceSerializable(
         title: e.experience.title,
         text: e.experience.textContent,
@@ -71,7 +82,7 @@ class OpenJournalRepository {
             creationDate: r.creationDate,
           );
         }).toList(),
-        timedNotes: [], // TODO: fetch timed notes if needed
+        timedNotes: expNotes,
       );
     }).toList();
 
