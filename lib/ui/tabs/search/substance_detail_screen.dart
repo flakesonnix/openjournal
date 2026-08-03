@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openjournal/services/substance_service.dart';
 import 'package:openjournal/models/substance/substance.dart';
 import 'package:openjournal/ui/tabs/openjournal/components/card_with_title.dart';
+import 'package:openjournal/ui/tabs/search/widgets/dosage_detail_modal.dart';
 
 class SubstanceDetailScreen extends ConsumerWidget {
   final String substanceName;
@@ -42,7 +43,13 @@ class SubstanceDetailScreen extends ConsumerWidget {
                     subtitle: Text(roa.roaDose?.units ?? ""),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // TODO: Show dosage details
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => DosageDetailModal(roa: roa),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                        ),
+                      );
                     },
                   )).toList(),
                 ),
