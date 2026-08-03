@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openjournal/models/substance/roa_dose.dart';
 import 'package:openjournal/models/substance/roa.dart';
-import 'package:openjournal/theme/theme.dart';
 
 class DosageDetailModal extends StatelessWidget {
   final Roa roa;
@@ -28,10 +27,10 @@ class DosageDetailModal extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildRangeRow(context, "Threshold", dose.thresholdMin, dose.thresholdMax, DoseClass.threshold),
-          _buildRangeRow(context, "Light", dose.lightMin, dose.lightMax, DoseClass.light),
-          _buildRangeRow(context, "Common", dose.commonMin, dose.commonMax, DoseClass.common),
-          _buildRangeRow(context, "Strong", dose.strongMin, dose.strongMax, DoseClass.strong),
+          _buildRangeRow(context, "Threshold", null, dose.lightMin, DoseClass.threshold),
+          _buildRangeRow(context, "Light", dose.lightMin, dose.commonMin, DoseClass.light),
+          _buildRangeRow(context, "Common", dose.commonMin, dose.strongMin, DoseClass.common),
+          _buildRangeRow(context, "Strong", dose.strongMin, dose.heavyMin, DoseClass.strong),
           _buildRangeRow(context, "Heavy", dose.heavyMin, null, DoseClass.heavy),
           const SizedBox(height: 24),
           Text(
@@ -47,10 +46,13 @@ class DosageDetailModal extends StatelessWidget {
   Widget _buildRangeRow(BuildContext context, String label, double? min, double? max, DoseClass doseClass) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     String rangeText = "";
+
     if (min != null && max != null) {
       rangeText = "$min - $max";
     } else if (min != null) {
       rangeText = "$min+";
+    } else if (max != null) {
+      rangeText = "up to $max";
     } else {
       return const SizedBox.shrink();
     }
