@@ -28,7 +28,6 @@ static FlMethodResponse* handle_open_url(FlValue* args) {
 
   const gchar* url = fl_value_get_string(url_value);
 
-  // GTK3 way to open URI
   g_autoptr(GError) error = nullptr;
   if (!gtk_show_uri_on_window(nullptr, url, GDK_CURRENT_TIME, &error)) {
     return FL_METHOD_RESPONSE(fl_method_error_response_new(
@@ -57,16 +56,14 @@ static void method_call_cb(FlMethodChannel* channel,
   }
 }
 
-// Called when first Flutter frame received.
 static void first_frame_cb(OpenJournalApplication* self, FlView* view) {
   gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
 }
 
 static void openjournal_app_activate(GApplication* application) {
-  OpenJournalApplication* self = OPENJOURNAL_APP(application);
+  OpenJournalApplication* self = OPENJOURNAL_APPLICATION(application);
   GtkWindow* window = GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
 
-  // Use a header bar when running in GNOME
   gboolean use_header_bar = TRUE;
 #ifdef GDK_WINDOWING_X11
   GdkScreen* screen = gtk_window_get_screen(window);
@@ -94,7 +91,6 @@ static void openjournal_app_activate(GApplication* application) {
 
   FlView* view = fl_view_new(project);
 
-  // Method Channel for URL launching
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   FlBinaryMessenger* messenger = fl_engine_get_binary_messenger(fl_view_get_engine(view));
   FlMethodChannel* channel = fl_method_channel_new(messenger,
@@ -116,7 +112,7 @@ static void openjournal_app_activate(GApplication* application) {
 static gboolean openjournal_app_local_command_line(GApplication* application,
                                                   gchar*** arguments,
                                                   int* exit_status) {
-  OpenJournalApplication* self = OPENJOURNAL_APP(application);
+  OpenJournalApplication* self = OPENJOURNAL_APPLICATION(application);
   self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
 
   g_autoptr(GError) error = nullptr;
@@ -133,7 +129,7 @@ static gboolean openjournal_app_local_command_line(GApplication* application,
 }
 
 static void openjournal_app_dispose(GObject* object) {
-  OpenJournalApplication* self = OPENJOURNAL_APP(object);
+  OpenJournalApplication* self = OPENJOURNAL_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
   G_OBJECT_CLASS(openjournal_app_parent_class)->dispose(object);
 }
@@ -149,7 +145,7 @@ static void openjournal_app_init(OpenJournalApplication* self) {}
 OpenJournalApplication* openjournal_app_new() {
   g_set_prgname(APPLICATION_ID);
 
-  return OPENJOURNAL_APP(g_object_new(openjournal_app_get_type(),
+  return OPENJOURNAL_APPLICATION(g_object_new(openjournal_app_get_type(),
                                      "application-id", APPLICATION_ID, "flags",
                                      G_APPLICATION_NON_UNIQUE, nullptr));
 }
