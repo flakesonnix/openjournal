@@ -25,6 +25,9 @@ class FileService {
   Future<void> exportAndShare(OpenJournalExport data) async {
     final jsonString = json.encode(data.toJson());
     final directory = await getTemporaryDirectory();
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
     final dateString = DateTime.now().toIso8601String().split('T').first;
     final filePath = p.join(directory.path, 'OpenJournal_Backup_$dateString.json');
     final file = File(filePath);
