@@ -75,6 +75,38 @@ class AddIngestionSearchScreen extends ConsumerWidget {
                   ),
                 ),
               ],
+              if (state.filteredCustomSubstances.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SectionHeader(title: 'Custom Substances')),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final sub = state.filteredCustomSubstances[index];
+                      return SubstanceRowAddIngestion(
+                        name: sub.name,
+                        commonNames: const [],
+                        onTap: () => context.go('/add-ingestion/route/${sub.name}'),
+                      );
+                    },
+                    childCount: state.filteredCustomSubstances.length,
+                  ),
+                ),
+              ],
+              if (state.filteredCustomUnits.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SectionHeader(title: 'Custom Units')),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final unit = state.filteredCustomUnits[index];
+                      return ListTile(
+                        title: Text(unit.name),
+                        subtitle: Text('${unit.substanceName} ${unit.administrationRoute}'),
+                        onTap: () => context.go('/add-ingestion/choose-dose-custom-unit/${unit.id}'),
+                      );
+                    },
+                    childCount: state.filteredCustomUnits.length,
+                  ),
+                ),
+              ],
               if (state.filteredSubstances.isNotEmpty) ...[
                 const SliverToBoxAdapter(
                   child: SectionHeader(title: 'Substances'),
