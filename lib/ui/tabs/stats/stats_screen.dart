@@ -146,7 +146,7 @@ class StatsScreen extends ConsumerWidget {
         ...state.statItems.map((item) => StatItemCard(
               item: item,
               onTap: () {
-                // TODO: Navigate to substance detail
+                context.push('/substance/${item.substanceName}');
               },
             )),
       ],
