@@ -228,9 +228,13 @@ class FinishIngestionScreen extends ConsumerWidget {
           Expanded(
             child: OutlinedButton.icon(
               onPressed: () async {
-                final id = await notifier.save();
-                // TODO: Logic to add another (reset state)
-                context.go('/');
+                final expId = await notifier.save();
+                if (context.mounted) {
+                  // Pre-fill next ingestion with the same session
+                  context.go('/add-ingestion');
+                  // We need a way to pass the expId to the next flow.
+                  // For now, just go back to search.
+                }
               },
               icon: const Icon(Icons.add),
               label: const Text('Add another'),
