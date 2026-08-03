@@ -926,12 +926,11 @@ packages:
     source: hosted
     version: "1.4.0"
   url_launcher_linux:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: url_launcher_linux
-      sha256: d5e14138b3bc193a0f63c10a53c94b91d399df0512b1f29b94a043db7482384a
-      url: "https://pub.dev"
-    source: hosted
+      path: "plugins/url_launcher_linux"
+      relative: true
+    source: path
     version: "3.2.2"
   url_launcher_platform_interface:
     dependency: transitive

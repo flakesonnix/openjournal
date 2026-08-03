@@ -1,6 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:openjournal/models/experience/adaptive_color.dart"
-  ]
-}

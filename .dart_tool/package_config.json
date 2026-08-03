@@ -705,7 +705,7 @@
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///home/lucy/.pub-cache/hosted/pub.dev/url_launcher_linux-3.2.2",
+      "rootUri": "../plugins/url_launcher_linux",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },

@@ -6,7 +6,7 @@
 G_DECLARE_FINAL_TYPE(OpenJournalApplication,
                      openjournal_app,
                      OPENJOURNAL,
-                     APPLICATION,
+                     APP,
                      GtkApplication)
 
 OpenJournalApplication* openjournal_app_new();

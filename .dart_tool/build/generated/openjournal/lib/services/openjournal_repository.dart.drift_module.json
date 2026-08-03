@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:drift/drift.dart",
-    "package:flutter_riverpod/flutter_riverpod.dart",
-    "package:openjournal/services/database_service.dart"
-  ]
-}
