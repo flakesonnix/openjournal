@@ -48,8 +48,8 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 
 # System-level dependencies.
 find_package(PkgConfig REQUIRED)
-# Target GTK4
-pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk4)
+# Back to GTK3 for compatibility with Flutter Engine
+pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
 
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")

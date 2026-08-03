@@ -1,7 +1,9 @@
 #include "openjournal_app.h"
 
 #include <flutter_linux/flutter_linux.h>
-#include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 
 #include "flutter/generated_plugin_registrant.h"
 
@@ -26,10 +28,12 @@ static FlMethodResponse* handle_open_url(FlValue* args) {
 
   const gchar* url = fl_value_get_string(url_value);
 
-  // GTK4: gtk_uri_launcher_launch
-  GtkUriLauncher* launcher = gtk_uri_launcher_new(url);
-  gtk_uri_launcher_launch(launcher, nullptr, nullptr, nullptr, nullptr);
-  g_object_unref(launcher);
+  // GTK3 way to open URI
+  g_autoptr(GError) error = nullptr;
+  if (!gtk_show_uri_on_window(nullptr, url, GDK_CURRENT_TIME, &error)) {
+    return FL_METHOD_RESPONSE(fl_method_error_response_new(
+        "Launch Error", error->message, nullptr));
+  }
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
 }
@@ -53,11 +57,36 @@ static void method_call_cb(FlMethodChannel* channel,
   }
 }
 
+// Called when first Flutter frame received.
+static void first_frame_cb(OpenJournalApplication* self, FlView* view) {
+  gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
+}
+
 static void openjournal_app_activate(GApplication* application) {
   OpenJournalApplication* self = OPENJOURNAL_APP(application);
-
   GtkWindow* window = GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
-  gtk_window_set_title(window, "OpenJournal");
+
+  // Use a header bar when running in GNOME
+  gboolean use_header_bar = TRUE;
+#ifdef GDK_WINDOWING_X11
+  GdkScreen* screen = gtk_window_get_screen(window);
+  if (GDK_IS_X11_SCREEN(screen)) {
+    const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
+    if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
+      use_header_bar = FALSE;
+    }
+  }
+#endif
+  if (use_header_bar) {
+    GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
+    gtk_widget_show(GTK_WIDGET(header_bar));
+    gtk_header_bar_set_title(header_bar, "OpenJournal");
+    gtk_header_bar_set_show_close_button(header_bar, TRUE);
+    gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
+  } else {
+    gtk_window_set_title(window, "OpenJournal");
+  }
+
   gtk_window_set_default_size(window, 1280, 720);
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
@@ -65,21 +94,23 @@ static void openjournal_app_activate(GApplication* application) {
 
   FlView* view = fl_view_new(project);
 
-  // Fix: Use FlBinaryMessenger
-  FlEngine* engine = fl_view_get_engine(view);
-  FlBinaryMessenger* messenger = fl_engine_get_binary_messenger(engine);
-
+  // Method Channel for URL launching
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
+  FlBinaryMessenger* messenger = fl_engine_get_binary_messenger(fl_view_get_engine(view));
   FlMethodChannel* channel = fl_method_channel_new(messenger,
                                                    "org.openpsychonaut.openjournal/launcher",
                                                    FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(channel, method_call_cb, self, nullptr);
 
-  gtk_window_set_child(window, GTK_WIDGET(view));
+  gtk_widget_show(GTK_WIDGET(view));
+  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
+
+  g_signal_connect_swapped(view, "first-frame", G_CALLBACK(first_frame_cb), self);
+  gtk_widget_realize(GTK_WIDGET(view));
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
-  gtk_window_present(window);
+  gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
 static gboolean openjournal_app_local_command_line(GApplication* application,

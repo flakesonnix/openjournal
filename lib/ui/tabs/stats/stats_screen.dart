@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:openjournal/ui/tabs/stats/stats_state.dart';
 import 'package:openjournal/ui/tabs/stats/widgets/activity_bar_chart.dart';
 import 'package:openjournal/ui/tabs/stats/widgets/stat_item_card.dart';
