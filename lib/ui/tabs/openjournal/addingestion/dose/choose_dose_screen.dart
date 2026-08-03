@@ -134,7 +134,7 @@ class ChooseDoseScreen extends ConsumerWidget {
                       subtitle: Text("${u.dose} ${u.originalUnit} / ${u.unit}"),
                       trailing: const Icon(Icons.add),
                       onTap: () {
-                         // TODO: Select custom unit
+                         context.push('/add-ingestion/choose-dose-custom-unit/${u.id}');
                       },
                     )),
                     const Divider(),
