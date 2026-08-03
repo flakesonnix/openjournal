@@ -19,13 +19,12 @@
           buildInputs = with pkgs; [
             temurin-bin-21
             flutter
-            # Linux desktop build dependencies (GTK4 + Adwaita)
+            # Linux desktop build dependencies (Back to GTK3 for Engine compatibility)
             at-spi2-core
             clang
             cmake
             dbus
-            gtk4
-            libadwaita
+            gtk3
             libdatrie
             libepoxy
             libselinux
@@ -38,7 +37,6 @@
             libxdmcp
             libxtst
             util-linux
-            sysprof
           ];
 
           shellHook = ''
@@ -46,8 +44,9 @@
             export ANDROID_HOME="${androidSdk}"
             export ANDROID_SDK_ROOT="${androidSdk}"
             export ANDROID_AVD_HOME="$HOME/.android/avd"
-            echo "OpenJournal Flutter Dev Shell (GTK4)"
+            echo "OpenJournal Flutter Dev Shell (GTK3 Compatibility Mode)"
             echo "  JDK:     $JAVA_HOME"
+            echo "  SDK:     $ANDROID_HOME"
             echo "  Flutter: $(flutter --version 2>/dev/null | head -1 || echo 'not found')"
           '';
         };
