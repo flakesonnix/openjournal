@@ -157,7 +157,7 @@ class ChooseDoseScreen extends ConsumerWidget {
             ? FloatingActionButton.extended(
                 onPressed: () {
                   context.go(
-                    '/add-ingestion/finish/${substanceName}/${route}/${state.dose}/${state.units.isEmpty ? 'null' : state.units}/${state.isEstimate}',
+                    '/add-ingestion/finish/${substanceName}/${route}/${state.dose}/${state.units.isEmpty ? 'null' : state.units}/${state.isEstimate}/null',
                   );
                 },
                 icon: const Icon(Icons.navigate_next),

@@ -160,13 +160,14 @@ final router = GoRouter(
           },
         ),
         GoRoute(
-          path: 'finish/:substanceName/:route/:dose/:units/:isEstimate',
+          path: 'finish/:substanceName/:route/:dose/:units/:isEstimate/:customUnitId',
           builder: (context, state) {
             final sub = state.pathParameters['substanceName']!;
             final route = AdministrationRoute.values.firstWhere((r) => r.name == state.pathParameters['route']!);
             final dose = double.tryParse(state.pathParameters['dose']!);
             final units = state.pathParameters['units'] == 'null' ? null : state.pathParameters['units'];
             final isEstimate = state.pathParameters['isEstimate'] == 'true';
+            final customUnitId = int.tryParse(state.pathParameters['customUnitId']!);
 
             return FinishIngestionScreen(
               substanceName: sub,
@@ -174,6 +175,7 @@ final router = GoRouter(
               dose: dose,
               units: units,
               isEstimate: isEstimate,
+              customUnitId: customUnitId,
             );
           },
         ),
